@@ -2,7 +2,7 @@
 
 A 3D reference project and tech demo for the Bevy Engine. Try it out [in your browser on itch.io](https://janhohenheim.itch.io/foxtrot) :)
 
-![image](https://github.com/user-attachments/assets/5050ba4e-45c1-4e73-b2ae-3d4aad3f4712)
+![image](https://github.com/user-attachments/assets/471da7bd-16e9-4ec9-af2a-936425c37d0d)
 
 <details><summary>Gameplay</summary>
     
