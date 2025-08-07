@@ -1,14 +1,9 @@
 //! Extension methods and utilities to make using TrenchBroom easier.
 
 use bevy::{ecs::world::DeferredWorld, prelude::*};
-use bevy_trenchbroom::{class::QuakeClass, prelude::*};
+use bevy_trenchbroom::class::QuakeClass;
 
 pub(super) fn plugin(_app: &mut App) {}
-
-#[derive(SolidClass, Component, Reflect, Default)]
-#[reflect(Component, QuakeClass)]
-#[spawn_hooks(SpawnHooks::new().convex_collider().smooth_by_default_angle())]
-pub(crate) struct Worldspawn;
 
 pub(crate) trait GetTrenchbroomModelPath: QuakeClass {
     fn model_path() -> String {

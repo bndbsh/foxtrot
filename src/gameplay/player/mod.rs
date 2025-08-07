@@ -6,7 +6,6 @@
 use animation::{PlayerAnimationState, setup_player_animations};
 use avian3d::prelude::*;
 use bevy::prelude::*;
-use bevy_enhanced_input::prelude::*;
 use bevy_landmass::{Character, prelude::*};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
@@ -45,12 +44,11 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(PreUpdate, assert_only_one_player);
 }
 
-#[derive(PointClass, Component, Debug, Clone, Copy, PartialEq, Eq, Default, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model("models/view_model/view_model.gltf")]
-// In Wasm, TrenchBroom classes are not automatically registered.
-// So, we need to manually register the class in `src/third_party/bevy_trenchbroom/mod.rs`.
+#[point_class(
+    base(Transform, Visibility),
+    model("models/view_model/view_model.gltf"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
+)]
 pub(crate) struct Player;
 
 /// The radius of the player character's capsule.
@@ -81,7 +79,7 @@ fn setup_player(
         .entity(trigger.target())
         .insert((
             RigidBody::Dynamic,
-            Actions::<DefaultInputContext>::default(),
+            DefaultInputContext,
             // The player character needs to be configured as a dynamic rigid body of the physics
             // engine.
             Collider::capsule(PLAYER_RADIUS, PLAYER_CAPSULE_LENGTH),

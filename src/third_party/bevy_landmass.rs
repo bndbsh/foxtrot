@@ -1,7 +1,6 @@
 //! [Landmass](https://github.com/andriyDev/landmass) powers out agent navigation.
 //! The underlying navmesh is generated using [Oxidized Navigation](https://github.com/TheGrimsey/oxidized_navigation).
 
-use super::bevy_trenchbroom::Worldspawn;
 use crate::gameplay::npc::{NPC_HEIGHT, NPC_RADIUS, ai::NPC_MAX_SLOPE};
 use avian3d::prelude::*;
 use bevy::ecs::relationship::Relationship as _;
@@ -9,6 +8,7 @@ use bevy::prelude::*;
 use bevy_landmass::{PointSampleDistance3d, prelude::*};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
+use bevy_trenchbroom::class::builtin::Worldspawn;
 use landmass_oxidized_navigation::{LandmassOxidizedNavigationPlugin, OxidizedArchipelago};
 use oxidized_navigation::{
     NavMeshAffector, NavMeshSettings, OxidizedNavigationPlugin, colliders::avian::AvianCollider,

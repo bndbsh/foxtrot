@@ -26,12 +26,11 @@ pub(super) fn plugin(app: &mut App) {
     app.add_observer(on_add);
 }
 
-#[derive(PointClass, Component, Debug, Clone, Copy, PartialEq, Eq, Default, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model("models/fox/Fox.gltf")]
-// In Wasm, TrenchBroom classes are not automatically registered.
-// So, we need to manually register the class in `src/third_party/bevy_trenchbroom/mod.rs`.
+#[point_class(
+    base(Transform, Visibility),
+    model("models/fox/Fox.gltf"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
+)]
 pub(crate) struct Npc;
 
 pub(crate) const NPC_RADIUS: f32 = 0.6;

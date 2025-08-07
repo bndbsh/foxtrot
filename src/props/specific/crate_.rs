@@ -18,18 +18,18 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<CrateSmall>();
 }
 
-#[derive(PointClass, Component, Debug, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model("models/darkmod/containers/crate01_big.gltf")]
-#[spawn_hooks(SpawnHooks::new().preload_model::<Self>())]
+#[point_class(
+    base(Transform, Visibility),
+    model("models/darkmod/containers/crate01_big.gltf"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
+)]
 pub(crate) struct CrateBig;
 
-#[derive(PointClass, Component, Debug, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model("models/darkmod/containers/crate01_small.gltf")]
-#[spawn_hooks(SpawnHooks::new().preload_model::<Self>())]
+#[point_class(
+    base(Transform, Visibility),
+    model("models/darkmod/containers/crate01_small.gltf"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
+)]
 pub(crate) struct CrateSmall;
 
 #[cfg_attr(feature = "hot_patch", hot)]

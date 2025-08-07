@@ -11,14 +11,14 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<LampWallElectric>();
 }
 
-#[derive(PointClass, Component, Debug, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model(
-    "models/darkmod/lights/non-extinguishable/lamp_wall_electric_01/lamp_wall_electric_01.gltf"
+#[point_class(
+    base(Transform, Visibility),
+    model(
+        "models/darkmod/lights/non-extinguishable/lamp_wall_electric_01/lamp_wall_electric_01.gltf"
+    ),
+    classname("light_lamp_wall_electric"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
 )]
-#[spawn_hooks(SpawnHooks::new().preload_model::<Self>())]
-#[classname("light_lamp_wall_electric")]
 pub(crate) struct LampWallElectric;
 
 #[cfg_attr(feature = "hot_patch", hot)]
@@ -40,8 +40,6 @@ fn setup_lamp_wall_electric(
                 radius: 0.05,
                 range: 20.0,
                 shadows_enabled: true,
-                #[cfg(feature = "native")]
-                soft_shadows_enabled: true,
                 ..default()
             },
         ))

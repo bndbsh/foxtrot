@@ -10,10 +10,7 @@ pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_light_window_brush_entity);
 }
 
-#[derive(SolidClass, Component, Debug, Default, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[spawn_hooks(SpawnHooks::new().convex_collider().smooth_by_default_angle())]
+#[solid_class(base(Transform, Visibility))]
 pub(crate) struct LightWindow;
 
 #[cfg_attr(feature = "hot_patch", hot)]
@@ -27,8 +24,6 @@ fn setup_light_window_brush_entity(trigger: Trigger<OnAdd, LightWindow>, mut com
             intensity: 200_000.0,
             radius: 0.1,
             shadows_enabled: true,
-            #[cfg(feature = "native")]
-            soft_shadows_enabled: true,
             ..default()
         })
         .queue(disable_shadow_casting);
