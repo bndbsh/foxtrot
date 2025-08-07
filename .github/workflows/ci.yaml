@@ -12,7 +12,7 @@ concurrency:
 
 env:
   # Use the same Rust toolchain across jobs so they can share a cache.
-  toolchain: nightly-2025-05-14
+  toolchain: nightly-2025-06-26
 
 jobs:
   # Run tests.
