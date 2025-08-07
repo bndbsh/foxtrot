@@ -29,9 +29,7 @@ pub(super) fn plugin(app: &mut App) {
         },
     });
     app.add_plugins((
-        EguiPlugin {
-            enable_multipass_for_primary_context: true,
-        },
+        EguiPlugin::default(),
         WorldInspectorPlugin::new().run_if(is_inspector_active),
     ));
 

@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
-use bevy_trenchbroom::prelude::BaseClass;
+use bevy_trenchbroom::prelude::*;
 use bevy_yarnspinner::{events::DialogueCompleteEvent, prelude::*};
 use bevy_yarnspinner_example_dialogue_view::prelude::*;
 
@@ -50,10 +50,10 @@ pub(crate) fn is_dialogue_running(dialogue_runner: Option<Single<&DialogueRunner
     dialogue_runner.is_some_and(|dialogue_runner| dialogue_runner.is_running())
 }
 
-#[derive(BaseClass, Component, Debug, Clone, Reflect, Eq, PartialEq)]
-#[reflect(Component, Default, Debug)]
+#[base_class]
+#[derive(Eq, PartialEq, Clone)]
 pub(crate) struct YarnNode {
-    #[no_default]
+    #[class(must_set)]
     pub(crate) yarn_node: String,
     pub(crate) prompt: String,
 }

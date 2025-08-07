@@ -12,11 +12,11 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<Chair>();
 }
 
-#[derive(PointClass, Component, Debug, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model("models/darkmod/furniture/seating/wchair1.gltf")]
-#[spawn_hooks(SpawnHooks::new().preload_model::<Self>())]
+#[point_class(
+    base(Transform, Visibility),
+    model("models/darkmod/furniture/seating/wchair1.gltf"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
+)]
 pub(crate) struct Chair;
 
 #[cfg_attr(feature = "hot_patch", hot)]

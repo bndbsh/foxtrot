@@ -12,13 +12,13 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<LampSitting>();
 }
 
-#[derive(PointClass, Component, Debug, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model(
-    "models/darkmod/lights/non-extinguishable/round_lantern_sitting/round_lantern_sitting.gltf"
+#[point_class(
+    base(Transform, Visibility),
+    model(
+        "models/darkmod/lights/non-extinguishable/round_lantern_sitting/round_lantern_sitting.gltf"
+    ),
+    hooks(SpawnHooks::new().preload_model::<Self>())
 )]
-#[spawn_hooks(SpawnHooks::new().preload_model::<Self>())]
 pub(crate) struct LampSitting;
 
 #[cfg_attr(feature = "hot_patch", hot)]

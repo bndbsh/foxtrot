@@ -11,12 +11,12 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<LampPlain>();
 }
 
-#[derive(PointClass, Component, Debug, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model("models/darkmod/lights/non-extinguishable/electric_plain1_unattached.gltf")]
-#[spawn_hooks(SpawnHooks::new().preload_model::<Self>())]
-#[classname("light_lamp_plain")]
+#[point_class(
+    base(Transform, Visibility),
+    model("models/darkmod/lights/non-extinguishable/electric_plain1_unattached.gltf"),
+    classname("light_lamp_plain"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
+)]
 struct LampPlain {
     color: Color,
     intensity: f32,

@@ -32,11 +32,11 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<BurningLogs>();
 }
 
-#[derive(PointClass, Component, Debug, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model("models/darkmod/fireplace/burntwood.gltf")]
-#[spawn_hooks(SpawnHooks::new().preload_model::<Self>())]
+#[point_class(
+    base(Transform, Visibility),
+    model("models/darkmod/fireplace/burntwood.gltf"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
+)]
 pub(crate) struct BurningLogs;
 
 #[derive(Resource, Asset, Clone, TypePath)]

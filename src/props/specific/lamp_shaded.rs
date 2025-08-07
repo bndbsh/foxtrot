@@ -13,12 +13,12 @@ pub(super) fn plugin(app: &mut App) {
     app.register_type::<LampShaded>();
 }
 
-#[derive(PointClass, Component, Debug, Reflect)]
-#[reflect(QuakeClass, Component)]
-#[base(Transform, Visibility)]
-#[model("models/darkmod/lights/non-extinguishable/lamp_shaded03/lamp_shaded03.gltf")]
-#[spawn_hooks(SpawnHooks::new().preload_model::<Self>())]
-#[classname("light_lamp_shaded03")]
+#[point_class(
+    base(Transform, Visibility),
+    model("models/darkmod/lights/non-extinguishable/lamp_shaded03/lamp_shaded03.gltf"),
+    classname("light_lamp_shaded03"),
+    hooks(SpawnHooks::new().preload_model::<Self>())
+)]
 pub(crate) struct LampShaded;
 
 #[cfg_attr(feature = "hot_patch", hot)]
