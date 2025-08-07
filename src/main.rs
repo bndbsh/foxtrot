@@ -24,6 +24,7 @@ use bitflags::bitflags;
 
 use bevy::{asset::AssetMetaCheck, audio::AudioPlugin, prelude::*, render::view::RenderLayers};
 
+#[cfg(feature = "native")]
 use bevy::core_pipeline::experimental::taa::TemporalAntiAliasPlugin;
 use oxidized_navigation::OxidizedNavigation;
 
