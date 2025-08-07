@@ -45,7 +45,11 @@ bevy_trenchbroom = { version = "0.9.2", features = ["avian"] }
 bevy_yarnspinner = "0.5"
 bevy_yarnspinner_example_dialogue_view = "0.5"
 
-bevy_hanabi = "0.16.0"
+bevy_hanabi = { version = "0.16.0", default-features = false, features = [
+    "3d",
+    "gpu_tests",
+    # "serde" fails on Wasm
+] }
 bevy_shuffle_bag = "0.2"
 
 # Keep this in sync with Bevy
@@ -74,7 +78,7 @@ default = [
     # Default to a native dev build.
     "dev_native",
 ]
-native = ["bevy/experimental_pbr_pcss"]
+native = []
 dev = [
     # Improve compile times for dev builds by linking Bevy as a dynamic library.
     "bevy/dynamic_linking",

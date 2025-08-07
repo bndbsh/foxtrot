@@ -51,8 +51,6 @@ fn setup_lamp_wall_electric(
                 radius: 0.05,
                 range: 20.0,
                 shadows_enabled: true,
-                #[cfg(feature = "native")]
-                soft_shadows_enabled: true,
                 ..default()
             },
         ))

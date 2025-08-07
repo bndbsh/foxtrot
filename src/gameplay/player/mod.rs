@@ -49,8 +49,6 @@ pub(super) fn plugin(app: &mut App) {
     model("models/view_model/view_model.gltf"),
     hooks(SpawnHooks::new().preload_model::<Self>())
 )]
-// In Wasm, TrenchBroom classes are not automatically registered.
-// So, we need to manually register the class in `src/third_party/bevy_trenchbroom/mod.rs`.
 pub(crate) struct Player;
 
 /// The radius of the player character's capsule.

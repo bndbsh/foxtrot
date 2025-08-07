@@ -43,8 +43,6 @@ fn setup_lamp_sitting(
                 intensity: 40_000.0,
                 radius: 0.05,
                 shadows_enabled: true,
-                #[cfg(feature = "native")]
-                soft_shadows_enabled: true,
                 ..default()
             },
         ))
