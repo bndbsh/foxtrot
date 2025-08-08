@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_seedling::{prelude::*, sample::Sample};
+use bevy_seedling::prelude::*;
 
 pub(crate) mod perceptual;
 
