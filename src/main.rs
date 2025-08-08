@@ -22,10 +22,8 @@ use audio::DEFAULT_VOLUME;
 use bevy_landmass::LandmassSystemSet;
 use bitflags::bitflags;
 
-use bevy::{asset::AssetMetaCheck, audio::AudioPlugin, prelude::*, render::view::RenderLayers};
-
-#[cfg(feature = "native")]
 use bevy::core_pipeline::experimental::taa::TemporalAntiAliasPlugin;
+use bevy::{asset::AssetMetaCheck, audio::AudioPlugin, prelude::*, render::view::RenderLayers};
 use oxidized_navigation::OxidizedNavigation;
 
 fn main() -> AppExit {
@@ -61,7 +59,6 @@ fn main() -> AppExit {
             }),
     );
     app.insert_resource(AmbientLight::NONE);
-    #[cfg(feature = "native")]
     app.add_plugins(TemporalAntiAliasPlugin);
 
     // Order new `AppSet` variants by adding them here:
