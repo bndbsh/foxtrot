@@ -1,6 +1,8 @@
 use avian3d::prelude::*;
 use bevy::render::view::RenderLayers;
 use bevy_hanabi::prelude::*;
+use bevy_seedling::prelude::*;
+use bevy_seedling::sample::Sample;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 use bevy_trenchbroom::prelude::*;
@@ -8,14 +10,12 @@ use std::f32::consts::TAU;
 
 use crate::{
     PostPhysicsAppSystems,
+    audio::Sfx,
     props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle},
     screens::Screen,
 };
 use crate::{RenderLayer, asset_tracking::LoadResource as _};
-use bevy::{
-    audio::{SpatialScale, Volume},
-    prelude::*,
-};
+use bevy::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
     // This causes https://github.com/bevyengine/bevy/issues/18980
@@ -44,7 +44,7 @@ struct BurningLogsAssets {
     #[dependency]
     texture: Handle<Image>,
     #[dependency]
-    sound: Handle<AudioSource>,
+    sound: Handle<Sample>,
 }
 
 impl FromWorld for BurningLogsAssets {
@@ -62,7 +62,7 @@ pub(crate) const TEXTURE_PATH: &str = {
     {
         "images/Flame.png"
     }
-    #[cfg(not(feature = "dev"))]
+    #[cfg(feature = "release")]
     {
         "images/Flame.ktx2"
     }
@@ -79,17 +79,17 @@ fn setup_burning_logs(
 ) {
     let static_bundle =
         static_bundle::<BurningLogs>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
-    let sound_effect: Handle<AudioSource> = asset_server.load(SOUND_PATH);
+    let sound_effect: Handle<Sample> = asset_server.load(SOUND_PATH);
 
     commands
         .entity(trigger.target())
         .insert((
             static_bundle,
-            AudioPlayer(sound_effect),
-            PlaybackSettings::LOOP
-                .with_spatial(true)
-                .with_volume(Volume::Linear(0.25))
-                .with_spatial_scale(SpatialScale::new(0.3)),
+            SamplePlayer::new(sound_effect)
+                .looping()
+                .with_volume(Volume::Linear(0.25)),
+            sample_effects![SpatialBasicNode::default(), SpatialScale::default()],
+            Sfx,
         ))
         .observe(disable_shadow_casting_on_instance_ready)
         .with_child((

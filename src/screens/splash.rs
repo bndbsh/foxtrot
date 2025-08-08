@@ -68,7 +68,7 @@ fn spawn_splash_screen(mut commands: Commands, asset_server: Res<AssetServer>) {
                     // currently [broken on Windows Wasm builds](https://github.com/bevyengine/bevy/issues/14246).
                     #[cfg(feature = "dev")]
                     "images/splash.png",
-                    #[cfg(not(feature = "dev"))]
+                    #[cfg(feature = "release")]
                     "images/splash.ktx2",
                     |settings: &mut ImageLoaderSettings| {
                         // Make an exception for the splash image in case

@@ -68,7 +68,7 @@ impl LoadedPipelineCount {
             {
                 76
             }
-            #[cfg(not(feature = "native"))]
+            #[cfg(feature = "web")]
             {
                 57
             }
@@ -77,7 +77,7 @@ impl LoadedPipelineCount {
         {
             count
         }
-        #[cfg(not(feature = "dev"))]
+        #[cfg(feature = "release")]
         {
             count - 1
         }

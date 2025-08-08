@@ -3,6 +3,7 @@
 use bevy::{
     ecs::spawn::SpawnIter, input::common_conditions::input_just_pressed, prelude::*, ui::Val::*,
 };
+use bevy_seedling::sample::Sample;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
@@ -122,7 +123,7 @@ fn go_back(mut next_menu: ResMut<NextState<Menu>>) {
 #[reflect(Resource)]
 struct CreditsAssets {
     #[dependency]
-    music: Handle<AudioSource>,
+    music: Handle<Sample>,
 }
 
 impl FromWorld for CreditsAssets {

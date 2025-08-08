@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_seedling::sample::Sample;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
@@ -67,9 +68,9 @@ fn apply_interaction_palette(
 #[derive(Resource, Asset, Reflect, Clone)]
 pub(crate) struct InteractionAssets {
     #[dependency]
-    hover: Handle<AudioSource>,
+    hover: Handle<Sample>,
     #[dependency]
-    press: Handle<AudioSource>,
+    press: Handle<Sample>,
 }
 
 impl InteractionAssets {

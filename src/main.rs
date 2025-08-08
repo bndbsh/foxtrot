@@ -1,5 +1,5 @@
 // Disable console on Windows for non-dev builds.
-#![cfg_attr(not(feature = "dev"), windows_subsystem = "windows")]
+#![cfg_attr(feature = "release", windows_subsystem = "windows")]
 
 mod asset_processing;
 mod asset_tracking;
@@ -18,13 +18,29 @@ mod third_party;
 mod ui_camera;
 
 use asset_processing::default_image_sampler_descriptor;
-use audio::DEFAULT_VOLUME;
 use bevy_landmass::LandmassSystemSet;
 use bitflags::bitflags;
 
 use bevy::core_pipeline::experimental::taa::TemporalAntiAliasPlugin;
-use bevy::{asset::AssetMetaCheck, audio::AudioPlugin, prelude::*, render::view::RenderLayers};
+use bevy::{asset::AssetMetaCheck, prelude::*, render::view::RenderLayers};
 use oxidized_navigation::OxidizedNavigation;
+
+#[cfg(all(feature = "native", feature = "web"))]
+compile_error!(
+    "Exactly one of the `native` or the `web` feature must be active at the same time. Instead, both are currently enabled."
+);
+#[cfg(not(any(feature = "native", feature = "web")))]
+compile_error!(
+    "Exactly one of the `native` or the `web` feature must be active at the same time. Instead, both are currently disabled."
+);
+#[cfg(all(feature = "dev", feature = "release"))]
+compile_error!(
+    "Exactly one of the `dev` or the `release` feature must be active at the same time. Instead, both are currently enabled."
+);
+#[cfg(not(any(feature = "dev", feature = "release")))]
+compile_error!(
+    "Exactly one of the `dev` or the `release` feature must be active at the same time. Instead, both are currently disabled."
+);
 
 fn main() -> AppExit {
     let mut app = App::new();
@@ -48,15 +64,23 @@ fn main() -> AppExit {
                 .into(),
                 ..default()
             })
-            .set(AudioPlugin {
-                global_volume: GlobalVolume {
-                    volume: DEFAULT_VOLUME,
-                },
-                ..default()
-            })
             .set(ImagePlugin {
                 default_sampler: default_image_sampler_descriptor(),
             }),
+    );
+
+    #[cfg(feature = "native")]
+    app.add_plugins(bevy_seedling::SeedlingPlugin::default());
+
+    // right now, `Default` isn't implemented for any non-cpal backend
+    #[cfg(feature = "web")]
+    app.add_plugins(
+        bevy_seedling::SeedlingPlugin::<firewheel_web_audio::WebAudioBackend> {
+            config: Default::default(),
+            stream_config: Default::default(),
+            spawn_default_pool: true,
+            pool_size: 4..=32,
+        },
     );
     app.insert_resource(AmbientLight::NONE);
     app.add_plugins(TemporalAntiAliasPlugin);

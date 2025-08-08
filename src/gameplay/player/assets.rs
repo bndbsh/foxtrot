@@ -1,6 +1,7 @@
 //! Assets for the player.
 
 use bevy::{asset::RenderAssetUsages, gltf::GltfLoaderSettings, prelude::*};
+use bevy_seedling::sample::Sample;
 use bevy_shuffle_bag::ShuffleBag;
 
 use crate::{
@@ -20,15 +21,15 @@ pub(crate) struct PlayerAssets {
     #[dependency]
     pub(crate) _model: Handle<Scene>,
     #[dependency]
-    pub(crate) throw_sound: Handle<AudioSource>,
+    pub(crate) throw_sound: Handle<Sample>,
     #[dependency]
-    pub(crate) steps: ShuffleBag<Handle<AudioSource>>,
+    pub(crate) steps: ShuffleBag<Handle<Sample>>,
     #[dependency]
-    pub(crate) jump_grunts: ShuffleBag<Handle<AudioSource>>,
+    pub(crate) jump_grunts: ShuffleBag<Handle<Sample>>,
     #[dependency]
-    pub(crate) land_sounds: ShuffleBag<Handle<AudioSource>>,
+    pub(crate) land_sounds: ShuffleBag<Handle<Sample>>,
     #[dependency]
-    pub(crate) jump_start_sounds: ShuffleBag<Handle<AudioSource>>,
+    pub(crate) jump_start_sounds: ShuffleBag<Handle<Sample>>,
     #[dependency]
     pub(crate) idle_animation: Handle<AnimationClip>,
     #[dependency]

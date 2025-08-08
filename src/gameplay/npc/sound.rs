@@ -1,12 +1,10 @@
 //! NPC sound handling. The only sound is a step sound that plays when the NPC is walking.
 
 use super::{Npc, assets::NpcAssets};
-use crate::{PostPhysicsAppSystems, audio::SoundEffect, screens::Screen};
+use crate::{PostPhysicsAppSystems, audio::Sfx, screens::Screen};
 use avian3d::prelude::LinearVelocity;
-use bevy::{
-    audio::{SpatialScale, Volume},
-    prelude::*,
-};
+use bevy::prelude::*;
+use bevy_seedling::prelude::*;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 use bevy_tnua::prelude::*;
@@ -55,12 +53,12 @@ fn play_step_sound(
 
     commands.entity(entity).with_child((
         Transform::default(),
-        AudioPlayer(sound_effect),
-        PlaybackSettings::DESPAWN
-            .with_spatial(true)
-            .with_speed(1.5)
-            .with_volume(Volume::Linear(1.6))
-            .with_spatial_scale(SpatialScale::new(1.0 / 3.6)),
-        SoundEffect,
+        SamplePlayer::new(sound_effect).with_volume(Volume::Linear(1.6)),
+        PlaybackSettings {
+            speed: 1.5,
+            ..default()
+        },
+        sample_effects![SpatialBasicNode::default(), SpatialScale::default()],
+        Sfx,
     ));
 }

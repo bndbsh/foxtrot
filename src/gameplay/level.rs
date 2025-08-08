@@ -1,6 +1,7 @@
 //! Spawn the main level.
 
 use bevy::prelude::*;
+use bevy_seedling::sample::Sample;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
@@ -35,7 +36,7 @@ pub(crate) struct LevelAssets {
     #[dependency]
     pub(crate) level: Handle<Scene>,
     #[dependency]
-    pub(crate) music: Handle<AudioSource>,
+    pub(crate) music: Handle<Sample>,
     #[dependency]
     pub(crate) env_map_specular: Handle<Image>,
     #[dependency]

@@ -2,13 +2,14 @@
 //! We can add all manner of settings and accessibility options here.
 //! For 3D, we'd also place the camera sensitivity and FOV here.
 
-use bevy::{audio::Volume, input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
+use bevy::{input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
+use bevy_seedling::prelude::*;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
 use crate::{
     Pause,
-    audio::{DEFAULT_VOLUME, max_volume},
+    audio::perceptual::PerceptualVolumeConverter,
     gameplay::player::camera::{CameraSensitivity, WorldModelFov},
     menus::Menu,
     screens::Screen,
@@ -107,26 +108,8 @@ impl VolumeSliderSettings {
         self.0 = self.0.saturating_sub(1);
     }
 
-    fn volume(&self) -> Volume {
-        let max_gain = max_volume().to_linear();
-        let mid_gain = DEFAULT_VOLUME.to_linear();
-
-        let t = self.0 as f32 / Self::MAX_TICK_COUNT as f32;
-        let gain = Self::curved_interpolation(t, mid_gain, max_gain);
-        Volume::Linear(gain)
-    }
-
-    /// Interpolates between 0, a, and b nonlinearly,
-    /// such that t = 0 -> 0, t = 0.5 -> a, t = 1 -> b
-    fn curved_interpolation(t: f32, a: f32, b: f32) -> f32 {
-        if t <= 0.5 {
-            let t2 = t / 0.5;
-            a * (3.0 * t2.powi(2) - 2.0 * t2.powi(3))
-        } else {
-            let t2 = (t - 0.5) / 0.5;
-            let smooth = 3.0 * t2.powi(2) - 2.0 * t2.powi(3);
-            a + (b - a) * smooth
-        }
+    fn fraction(&self) -> f32 {
+        self.0 as f32 / Self::MAX_TICK_COUNT as f32
     }
 
     /// How many ticks the volume slider supports
@@ -141,10 +124,10 @@ impl Default for VolumeSliderSettings {
 
 #[cfg_attr(feature = "hot_patch", hot)]
 fn update_global_volume(
-    mut global_volume: ResMut<GlobalVolume>,
+    mut master: Single<&mut VolumeNode, With<MainBus>>,
     volume_step: Res<VolumeSliderSettings>,
 ) {
-    global_volume.volume = volume_step.volume();
+    master.volume = PerceptualVolumeConverter::default().to_volume(volume_step.fraction());
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]

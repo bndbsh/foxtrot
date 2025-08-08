@@ -9,7 +9,7 @@ pub(crate) const CROSSHAIR_DOT_PATH: &str = {
     {
         "ui/crosshair_dot.png"
     }
-    #[cfg(not(feature = "dev"))]
+    #[cfg(feature = "release")]
     {
         "ui/crosshair_dot.ktx2"
     }
@@ -20,7 +20,7 @@ pub(crate) const CROSSHAIR_SQUARE_PATH: &str = {
     {
         "ui/crosshair_square.png"
     }
-    #[cfg(not(feature = "dev"))]
+    #[cfg(feature = "release")]
     {
         "ui/crosshair_square.ktx2"
     }
