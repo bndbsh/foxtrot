@@ -58,13 +58,6 @@ fn play_step_sound(
             speed: 1.5,
             ..default()
         },
-        sample_effects![(
-            SpatialBasicNode {
-                panning_threshold: 1.0,
-                ..default()
-            },
-            SpatialScale::default()
-        )],
         Sfx,
     ));
 }

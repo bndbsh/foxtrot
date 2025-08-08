@@ -88,13 +88,6 @@ fn setup_burning_logs(
             SamplePlayer::new(sound_effect)
                 .looping()
                 .with_volume(Volume::Linear(0.25)),
-            sample_effects![(
-                SpatialBasicNode {
-                    panning_threshold: 1.0,
-                    ..default()
-                },
-                SpatialScale::default()
-            )],
             Sfx,
         ))
         .observe(disable_shadow_casting_on_instance_ready)

@@ -46,7 +46,13 @@ fn initialize_audio(mut master: Single<&mut VolumeNode, With<MainBus>>, mut comm
     commands.spawn((
         Name::new("SFX audio sampler pool"),
         SamplerPool(Sfx),
-        sample_effects![SpatialBasicNode::default()],
+        sample_effects![(
+            SpatialBasicNode {
+                panning_threshold: 1.0,
+                ..default()
+            },
+            SpatialScale(Vec3::splat(2.0))
+        )],
         VolumeNode {
             volume: DEFAULT_VOLUME,
         },
