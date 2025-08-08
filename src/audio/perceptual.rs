@@ -6,13 +6,13 @@ use bevy_seedling::prelude::*;
 pub(crate) struct PerceptualVolumeConverter {
     /// When the perceptual control value is below this value, the mapping will be linear between:
     /// - 0 perceptual = 0 volume
-    /// - [`Self::pivot_pos`] perceptual = [`Self::pivot_db`] volume
+    /// - [`Self::pivot_pos`] perceptual = [`Self::pivot_volume`] volume
     ///
     /// When above this value, the mapping will be exponential between:
-    /// - [`Self::pivot_pos`] perceptual = [`Self::pivot_db`] volume
+    /// - [`Self::pivot_pos`] perceptual = [`Self::pivot_volume`] volume
     /// - 1.0 perceptual = 0 dB
     pub(crate) pivot_pos: f32,
-    /// The volume to use at [`Self::volume_stop_pos`]
+    /// The volume to use at [`Self::pivot_pos`]
     pub(crate) pivot_volume: Volume,
 }
 impl Default for PerceptualVolumeConverter {
