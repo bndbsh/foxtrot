@@ -16,7 +16,7 @@ pub(crate) struct Sfx;
 
 #[derive(PoolLabel, Reflect, PartialEq, Eq, Debug, Hash, Clone)]
 #[reflect(Component)]
-pub(crate) struct GlobalSfx;
+pub(crate) struct UiSfx;
 
 #[derive(PoolLabel, Reflect, PartialEq, Eq, Debug, Hash, Clone)]
 #[reflect(Component)]
@@ -53,8 +53,8 @@ fn initialize_audio(mut master: Single<&mut VolumeNode, With<MainBus>>, mut comm
         },
     ));
     commands.spawn((
-        Name::new("Global SFX audio sampler pool"),
-        SamplerPool(GlobalSfx),
+        Name::new("UI SFX audio sampler pool"),
+        SamplerPool(UiSfx),
         VolumeNode {
             volume: DEFAULT_POOL_VOLUME,
         },
