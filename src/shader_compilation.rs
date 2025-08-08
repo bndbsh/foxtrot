@@ -61,29 +61,25 @@ impl LoadedPipelineCount {
     }
 
     /// These numbers have to be tuned by hand, unfortunately.
-    /// When in doubt, better stay a bit too low, or the player won't advance past the loading screen.
+    /// Find them out with `bevy run` and `bevy run web`.
     pub(crate) const TOTAL_PIPELINES: usize = {
-        #[cfg(feature = "native")]
+        let count = {
+            #[cfg(feature = "native")]
+            {
+                76
+            }
+            #[cfg(not(feature = "native"))]
+            {
+                57
+            }
+        };
+        #[cfg(feature = "dev")]
         {
-            #[cfg(feature = "dev")]
-            {
-                63
-            }
-            #[cfg(not(feature = "dev"))]
-            {
-                62
-            }
+            count
         }
-        #[cfg(not(feature = "native"))]
+        #[cfg(not(feature = "dev"))]
         {
-            #[cfg(feature = "dev")]
-            {
-                24
-            }
-            #[cfg(not(feature = "dev"))]
-            {
-                23
-            }
+            count - 1
         }
     };
 }
