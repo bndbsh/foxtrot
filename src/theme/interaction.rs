@@ -1,9 +1,9 @@
 use bevy::prelude::*;
-use bevy_seedling::sample::Sample;
+use bevy_seedling::sample::{Sample, SamplePlayer};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
-use crate::{PostPhysicsAppSystems, asset_tracking::LoadResource, audio::sound_effect};
+use crate::{PostPhysicsAppSystems, asset_tracking::LoadResource, audio::GlobalSfx};
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<InteractionPalette>();
@@ -100,6 +100,6 @@ fn trigger_interaction_sound_effect(
             Interaction::Pressed => interaction_assets.press.clone(),
             _ => continue,
         };
-        commands.spawn(sound_effect(source));
+        commands.spawn((SamplePlayer::new(source), GlobalSfx));
     }
 }

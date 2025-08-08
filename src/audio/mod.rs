@@ -16,17 +16,11 @@ pub(crate) struct Sfx;
 
 #[derive(PoolLabel, Reflect, PartialEq, Eq, Debug, Hash, Clone)]
 #[reflect(Component)]
+pub(crate) struct GlobalSfx;
+
+#[derive(PoolLabel, Reflect, PartialEq, Eq, Debug, Hash, Clone)]
+#[reflect(Component)]
 pub(crate) struct Music;
-
-/// A music audio instance.
-pub(crate) fn music(handle: Handle<Sample>) -> impl Bundle {
-    (SamplePlayer::new(handle).looping(), Music)
-}
-
-/// A sound effect audio instance.
-pub(crate) fn sound_effect(handle: Handle<Sample>) -> impl Bundle {
-    (SamplePlayer::new(handle), Sfx)
-}
 
 /// Set somewhere below 0 dB so that the user can turn the volume up if they want to.
 pub(crate) const DEFAULT_MAIN_VOLUME: Volume = Volume::Linear(0.5);
@@ -54,6 +48,13 @@ fn initialize_audio(mut master: Single<&mut VolumeNode, With<MainBus>>, mut comm
             },
             SpatialScale(Vec3::splat(2.0))
         )],
+        VolumeNode {
+            volume: DEFAULT_POOL_VOLUME,
+        },
+    ));
+    commands.spawn((
+        Name::new("Global SFX audio sampler pool"),
+        SamplerPool(GlobalSfx),
         VolumeNode {
             volume: DEFAULT_POOL_VOLUME,
         },

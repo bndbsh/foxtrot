@@ -1,14 +1,14 @@
 use std::time::Duration;
 
+use super::{Player, assets::PlayerAssets};
+use crate::audio::Sfx;
+use crate::{PostPhysicsAppSystems, screens::Screen};
 use avian3d::prelude::LinearVelocity;
 use bevy::prelude::*;
+use bevy_seedling::prelude::*;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 use bevy_tnua::{builtins::TnuaBuiltinJumpState, prelude::*};
-
-use crate::{PostPhysicsAppSystems, audio::sound_effect, screens::Screen};
-
-use super::{Player, assets::PlayerAssets};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(
@@ -22,7 +22,7 @@ pub(super) fn plugin(app: &mut App) {
 #[cfg_attr(feature = "hot_patch", hot)]
 fn play_jump_grunt(
     mut commands: Commands,
-    player: Single<&TnuaController, With<Player>>,
+    player: Single<(Entity, &TnuaController), With<Player>>,
     mut player_assets: ResMut<PlayerAssets>,
     mut is_jumping: Local<bool>,
     mut sound_cooldown: Local<Option<Timer>>,
@@ -32,7 +32,8 @@ fn play_jump_grunt(
         .get_or_insert_with(|| Timer::new(Duration::from_millis(1000), TimerMode::Once));
     sound_cooldown.tick(time.delta());
 
-    if player
+    let (entity, controller) = player.into_inner();
+    if controller
         .concrete_action::<TnuaBuiltinJump>()
         .is_none_or(|x| matches!(x, (_, TnuaBuiltinJumpState::FallSection)))
     {
@@ -49,8 +50,14 @@ fn play_jump_grunt(
         let grunt = player_assets.jump_grunts.pick(rng).clone();
         let jump_start = player_assets.jump_start_sounds.pick(rng).clone();
 
-        commands.spawn(sound_effect(grunt));
-        commands.spawn(sound_effect(jump_start));
+        commands
+            .entity(entity)
+            .with_child((SamplePlayer::new(grunt), Sfx, Transform::default()));
+        commands.entity(entity).with_child((
+            SamplePlayer::new(jump_start),
+            Sfx,
+            Transform::default(),
+        ));
         sound_cooldown.reset();
     }
 }
@@ -58,7 +65,7 @@ fn play_jump_grunt(
 #[cfg_attr(feature = "hot_patch", hot)]
 fn play_step_sound(
     mut commands: Commands,
-    player: Single<(&TnuaController, &LinearVelocity), With<Player>>,
+    player: Single<(Entity, &TnuaController, &LinearVelocity), With<Player>>,
     mut player_assets: ResMut<PlayerAssets>,
     time: Res<Time>,
     mut timer: Local<Option<Timer>>,
@@ -70,7 +77,7 @@ fn play_step_sound(
         return;
     }
 
-    let (controller, linear_velocity) = player.into_inner();
+    let (entity, controller, linear_velocity) = player.into_inner();
     if controller.is_airborne().unwrap_or(true) {
         return;
     }
@@ -79,17 +86,20 @@ fn play_step_sound(
     }
     let rng = &mut rand::thread_rng();
     let sound = player_assets.steps.pick(rng).clone();
-    commands.spawn(sound_effect(sound));
+    commands
+        .entity(entity)
+        .with_child((SamplePlayer::new(sound), Sfx, Transform::default()));
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
 fn play_land_sound(
     mut commands: Commands,
-    player: Single<&TnuaController, With<Player>>,
+    player: Single<(Entity, &TnuaController), With<Player>>,
     mut player_assets: ResMut<PlayerAssets>,
     mut was_airborne: Local<bool>,
 ) {
-    let is_airborne = player.is_airborne().unwrap_or(true);
+    let (entity, controller) = player.into_inner();
+    let is_airborne = controller.is_airborne().unwrap_or(true);
     if is_airborne {
         *was_airborne = true;
         return;
@@ -101,5 +111,7 @@ fn play_land_sound(
 
     let rng = &mut rand::thread_rng();
     let sound = player_assets.land_sounds.pick(rng).clone();
-    commands.spawn(sound_effect(sound));
+    commands
+        .entity(entity)
+        .with_child((SamplePlayer::new(sound), Sfx, Transform::default()));
 }

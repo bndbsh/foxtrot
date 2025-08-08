@@ -1,5 +1,6 @@
 //! Player pickup sound effects.
 
+use crate::gameplay::player::Player;
 use avian_pickup::output::PropThrown;
 use bevy::prelude::*;
 use bevy_seedling::prelude::*;
@@ -20,10 +21,15 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
-fn play_throw_sound(mut commands: Commands, player_assets: Res<PlayerAssets>) {
+fn play_throw_sound(
+    mut commands: Commands,
+    player_assets: Res<PlayerAssets>,
+    player_transform: Single<&Transform, With<Player>>,
+) {
     let sound = player_assets.throw_sound.clone();
 
     commands.spawn((
+        **player_transform,
         SamplePlayer::new(sound).with_volume(Volume::Linear(3.0)),
         Sfx,
     ));
