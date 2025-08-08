@@ -9,7 +9,7 @@ use bevy_simple_subsecond_system::hot;
 
 use crate::{
     Pause,
-    audio::perceptual::PerceptualVolumeConverter,
+    audio::{DEFAULT_MAIN_VOLUME, perceptual::PerceptualVolumeConverter},
     gameplay::player::camera::{CameraSensitivity, WorldModelFov},
     menus::Menu,
     screens::Screen,
@@ -118,7 +118,11 @@ impl VolumeSliderSettings {
 
 impl Default for VolumeSliderSettings {
     fn default() -> Self {
-        Self(Self::MAX_TICK_COUNT / 2)
+        Self(
+            (PerceptualVolumeConverter::default().to_perceptual(DEFAULT_MAIN_VOLUME)
+                * Self::MAX_TICK_COUNT as f32)
+                .round() as usize,
+        )
     }
 }
 
