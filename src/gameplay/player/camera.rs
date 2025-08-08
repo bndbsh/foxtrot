@@ -7,6 +7,8 @@ use std::{f32::consts::FRAC_PI_2, iter};
 
 use avian_pickup::prelude::*;
 use avian3d::prelude::*;
+#[cfg(feature = "native")]
+use bevy::pbr::ScreenSpaceAmbientOcclusion;
 use bevy::{
     core_pipeline::experimental::taa::TemporalAntiAliasing,
     core_pipeline::{Skybox, bloom::Bloom, tonemapping::Tonemapping},
@@ -20,8 +22,6 @@ use bevy::{
     scene::SceneInstanceReady,
     window::CursorGrabMode,
 };
-#[cfg(feature = "native")]
-use bevy::{core_pipeline::prepass::NormalPrepass, pbr::ScreenSpaceAmbientOcclusion};
 use bevy_enhanced_input::prelude::*;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
@@ -153,7 +153,7 @@ fn spawn_view_model(
                 ),
                 #[cfg(feature = "native")]
                 // See https://github.com/bevyengine/bevy/issues/20459
-                (ScreenSpaceAmbientOcclusion::default(), NormalPrepass),
+                ScreenSpaceAmbientOcclusion::default(),
             ));
 
             // Spawn view model camera.
