@@ -28,7 +28,8 @@ pub(crate) fn sound_effect(handle: Handle<Sample>) -> impl Bundle {
     (SamplePlayer::new(handle), Sfx)
 }
 
-pub(crate) const DEFAULT_VOLUME: Volume = Volume::Linear(0.3);
+/// Tuned by ear
+pub(crate) const DEFAULT_VOLUME: Volume = Volume::Linear(0.6);
 
 fn initialize_audio(mut master: Single<&mut VolumeNode, With<MainBus>>, mut commands: Commands) {
     // Since the main bus already exists, we can just set the desired volume.
@@ -45,6 +46,7 @@ fn initialize_audio(mut master: Single<&mut VolumeNode, With<MainBus>>, mut comm
     commands.spawn((
         Name::new("SFX audio sampler pool"),
         SamplerPool(Sfx),
+        sample_effects![SpatialBasicNode::default()],
         VolumeNode {
             volume: DEFAULT_VOLUME,
         },
