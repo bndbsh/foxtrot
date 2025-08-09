@@ -10,7 +10,7 @@ use std::f32::consts::TAU;
 
 use crate::{
     PostPhysicsAppSystems,
-    audio::Sfx,
+    audio::SpatialPool,
     props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle},
     screens::Screen,
 };
@@ -88,7 +88,7 @@ fn setup_burning_logs(
             SamplePlayer::new(sound_effect)
                 .looping()
                 .with_volume(Volume::Linear(0.25)),
-            Sfx,
+            SpatialPool,
         ))
         .observe(disable_shadow_casting_on_instance_ready)
         .with_child((
