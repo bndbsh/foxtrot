@@ -62,7 +62,7 @@ bevy-tnua-avian3d = "0.5"
 
 # navigation
 bevy_landmass = "0.9.0"
-bevy_rerecast = "0.1.0"
+bevy_rerecast = { version = "0.1.0", default-features = false }
 avian_rerecast = "0.1.0"
 
 # Level editor
@@ -117,6 +117,7 @@ dev = [
     "bevy/track_location",
     "dep:bevy-inspector-egui",
     "avian3d/diagnostic_ui",
+    "bevy_rerecast/debug_plugin",
 ]
 dev_native = [
     "dev",
@@ -188,7 +189,5 @@ debug-assertions = false
 [patch.crates-io]
 # Required for detail mesh support
 bevy_landmass = { git = "https://github.com/andriyDev/landmass", branch = "detail" }
-# Needed on current nightly
-ord_subset = { version = "3.1.1", git = "https://github.com/virtualritz/ord_subset" }
 # Needed for https://github.com/CorvusPrudens/bevy_seedling/pull/41
 bevy_seedling = { git = "https://github.com/CorvusPrudens/bevy_seedling", branch = "spatial-fixes" }

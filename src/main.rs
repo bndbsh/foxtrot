@@ -23,7 +23,6 @@ use bitflags::bitflags;
 
 use bevy::core_pipeline::experimental::taa::TemporalAntiAliasPlugin;
 use bevy::{asset::AssetMetaCheck, prelude::*, render::view::RenderLayers};
-use oxidized_navigation::OxidizedNavigation;
 
 #[cfg(all(feature = "native", feature = "web"))]
 compile_error!(
@@ -102,8 +101,6 @@ fn main() -> AppExit {
         (
             PrePhysicsAppSystems::UpdateNavmeshPositions,
             PrePhysicsAppSystems::UpdateNavmeshTargets,
-            OxidizedNavigation::RemovedComponent,
-            OxidizedNavigation::Main,
             LandmassSystemSet::SyncExistence,
         )
             .chain()

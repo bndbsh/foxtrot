@@ -16,6 +16,7 @@ mod bevy_tnua;
 pub(crate) mod bevy_trenchbroom;
 pub(crate) mod bevy_yarnspinner;
 mod fixes;
+mod rerecast;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
@@ -29,5 +30,6 @@ pub(super) fn plugin(app: &mut App) {
         avian_pickup::plugin,
         bevy_hanabi::plugin,
         bevy_framepace::plugin,
+        rerecast::plugin,
     ));
 }

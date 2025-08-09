@@ -1,20 +1,15 @@
 //! [Landmass](https://github.com/andriyDev/landmass) powers out agent navigation.
 //! The underlying navmesh is generated using [Oxidized Navigation](https://github.com/TheGrimsey/oxidized_navigation).
 
-use crate::gameplay::npc::{NPC_HEIGHT, NPC_RADIUS, ai::NPC_MAX_SLOPE};
-use avian3d::prelude::*;
-use bevy::ecs::relationship::Relationship as _;
+use crate::gameplay::npc::NPC_RADIUS;
 use bevy::prelude::*;
 use bevy_landmass::{PointSampleDistance3d, prelude::*};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
-use bevy_trenchbroom::class::builtin::Worldspawn;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_plugins(Landmass3dPlugin::default()));
+    app.add_plugins(Landmass3dPlugin::default());
     app.add_systems(Startup, setup_archipelago);
-    app.add_observer(add_nav_mesh_affector_to_trenchbroom_worldspawn);
-    app.add_observer(add_nav_mesh_affector_to_colliders_under_nav_mesh_affector_parent);
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
@@ -34,29 +29,4 @@ fn setup_archipelago(mut commands: Commands) {
             ..AgentOptions::from_agent_radius(NPC_RADIUS)
         }),
     ));
-}
-
-#[derive(Component)]
-pub(crate) struct NavMeshAffectorParent;
-
-#[cfg_attr(feature = "hot_patch", hot)]
-fn add_nav_mesh_affector_to_trenchbroom_worldspawn(
-    trigger: Trigger<OnAdd, Worldspawn>,
-    mut commands: Commands,
-) {
-    commands.entity(trigger.target()).insert(NavMeshAffector);
-}
-
-#[cfg_attr(feature = "hot_patch", hot)]
-fn add_nav_mesh_affector_to_colliders_under_nav_mesh_affector_parent(
-    trigger: Trigger<OnAdd, ColliderOf>,
-    collider_parent: Query<&ColliderOf>,
-    nav_mesh_affector_parent: Query<(), With<NavMeshAffectorParent>>,
-    mut commands: Commands,
-) {
-    let collider = trigger.target();
-    let rigid_body = collider_parent.get(collider).unwrap().get();
-    if nav_mesh_affector_parent.contains(rigid_body) {
-        commands.entity(collider).insert(NavMeshAffector);
-    }
 }

@@ -8325,8 +8325,3 @@ checksum = "fc1f7e205ce79eb2da3cd71c5f55f3589785cb7c79f6a03d1c8d1491bda5d089"
 dependencies = [
  "zune-core",
 ]
-
-[[patch.unused]]
-name = "ord_subset"
-version = "3.1.2"
-source = "git+https://github.com/virtualritz/ord_subset#c6432c67d3dcf684f37db68d711a7fca2813c29b"
