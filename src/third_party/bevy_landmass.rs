@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::gameplay::npc::NPC_RADIUS;
 use bevy::prelude::*;
 use bevy_landmass::{HeightPolygon, PointSampleDistance3d, prelude::*};
-use bevy_rerecast::rerecast::{DetailNavmesh, PolygonNavmesh};
+use bevy_rerecast::rerecast::PolygonNavmesh;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
@@ -62,17 +62,19 @@ fn update_landmass_navmesh(
                 .polygon
                 .vertices
                 .iter()
-                .map(|v| (orig + v.as_vec3() * to_local).landmass())
+                .map(|v| orig + v.as_vec3() * to_local)
                 .collect(),
             polygons: (0..rerecast_navmesh.polygon.polygon_count()).fold(
                 Vec::new(),
                 |mut acc, i| {
                     let poly = &rerecast_navmesh.polygon.polygons[i * nvp..];
-                    let verts = poly[..nvp]
+                    let mut verts = poly[..nvp]
                         .iter()
                         .filter(|i| **i != PolygonNavmesh::NO_INDEX)
                         .map(|i| *i as usize)
                         .collect::<Vec<_>>();
+                    // CW -> CCW
+                    verts.reverse();
                     acc.push(verts);
                     acc
                 },
@@ -100,32 +102,21 @@ fn update_landmass_navmesh(
                     .meshes
                     .iter()
                     .flat_map(|submesh| {
-                        let tris = &rerecast_navmesh.detail.triangles
-                            [submesh.base_triangle_index as usize..]
-                            [..submesh.triangle_count as usize];
-
-                        let verts = &rerecast_navmesh.detail.vertices
-                            [submesh.base_vertex_index as usize..]
-                            [..submesh.vertex_count as usize];
-                        tris.iter().map(|[a, b, c]| {
-                            let av = verts[*a as usize].landmass().xy();
-                            let bv = verts[*b as usize].landmass().xy();
-                            let cv = verts[*c as usize].landmass().xy();
-
-                            // Ensure CCW
-                            if (bv - av).perp_dot(cv - av) < 0.0 {
-                                [*b as usize, *a as usize, *c as usize]
-                            } else {
-                                [*a as usize, *b as usize, *c as usize]
-                            }
-                        })
+                        rerecast_navmesh
+                            .detail
+                            .triangles
+                            .iter()
+                            .skip(submesh.base_triangle_index as usize)
+                            .take(submesh.triangle_count as usize)
+                            // CW -> CCW
+                            .map(|[a, b, c]| [*b as usize, *a as usize, *c as usize])
                     })
                     .collect(),
                 vertices: rerecast_navmesh
                     .polygon
                     .vertices
                     .iter()
-                    .map(|v| (orig + v.as_vec3() * to_local).landmass())
+                    .map(|v| orig + v.as_vec3() * to_local)
                     .collect(),
             }
             .into(),
@@ -149,14 +140,4 @@ fn update_landmass_navmesh(
             ));
     }
     Ok(())
-}
-
-trait LandmassVec3: Copy {
-    fn landmass(self) -> Vec3;
-}
-
-impl LandmassVec3 for Vec3 {
-    fn landmass(self) -> Vec3 {
-        Vec3::new(self.x, -self.z, self.y)
-    }
 }
