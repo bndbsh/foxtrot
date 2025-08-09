@@ -9,27 +9,9 @@ use bevy_landmass::{PointSampleDistance3d, prelude::*};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 use bevy_trenchbroom::class::builtin::Worldspawn;
-use landmass_oxidized_navigation::{LandmassOxidizedNavigationPlugin, OxidizedArchipelago};
-use oxidized_navigation::{
-    NavMeshAffector, NavMeshSettings, OxidizedNavigationPlugin, colliders::avian::AvianCollider,
-};
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_plugins((
-        Landmass3dPlugin::default(),
-        LandmassOxidizedNavigationPlugin::default(),
-        OxidizedNavigationPlugin::<AvianCollider>::new(NavMeshSettings {
-            step_height: 3,
-            max_contour_simplification_error: 0.7,
-            max_traversable_slope_radians: NPC_MAX_SLOPE,
-            ..NavMeshSettings::from_agent_and_bounds(
-                NPC_RADIUS * 0.5,
-                NPC_HEIGHT * 0.25,
-                150.0,
-                -20.0,
-            )
-        }),
-    ));
+    app.add_plugins(Landmass3dPlugin::default()));
     app.add_systems(Startup, setup_archipelago);
     app.add_observer(add_nav_mesh_affector_to_trenchbroom_worldspawn);
     app.add_observer(add_nav_mesh_affector_to_colliders_under_nav_mesh_affector_parent);
@@ -51,7 +33,6 @@ fn setup_archipelago(mut commands: Commands) {
             },
             ..AgentOptions::from_agent_radius(NPC_RADIUS)
         }),
-        OxidizedArchipelago,
     ));
 }
 

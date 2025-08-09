@@ -62,8 +62,8 @@ bevy-tnua-avian3d = "0.5"
 
 # navigation
 bevy_landmass = "0.9.0"
-oxidized_navigation = { version = "0.12.0", features = ["avian"] }
-landmass_oxidized_navigation = { version = "0.3.0-dev" }
+bevy_rerecast = "0.1.0"
+avian_rerecast = "0.1.0"
 
 # Level editor
 bevy_trenchbroom = { version = "0.9.2", features = ["avian"] }
@@ -127,7 +127,6 @@ dev_native = [
     "bevy/file_watcher",
     # Enable embedded asset hot reloading for native dev builds.
     "bevy/embedded_watcher",
-    "oxidized_navigation/debug_draw",
 ]
 web = ["bevy/webgpu", "dep:firewheel-web-audio"]
 release = []
@@ -187,9 +186,8 @@ opt-level = 3
 debug-assertions = false
 
 [patch.crates-io]
-# oxidized_navigation and landmass_oxidized_navigation have no 0.16 releases yet
-oxidized_navigation = { git = "https://github.com/janhohenheim/oxidized_navigation", branch = "bevy-0.16" }
-landmass_oxidized_navigation = { git = "https://github.com/janhohenheim/landmass", branch = "bevy-0.16-oxidized" }
+# Required for detail mesh support
+bevy_landmass = { git = "https://github.com/andriyDev/landmass", branch = "detail" }
 # Needed on current nightly
 ord_subset = { version = "3.1.1", git = "https://github.com/virtualritz/ord_subset" }
 # Needed for https://github.com/CorvusPrudens/bevy_seedling/pull/41
