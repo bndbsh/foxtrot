@@ -16,6 +16,7 @@ use bevy::{
 use bevy_enhanced_input::prelude::*;
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 use bevy_landmass::debug::{EnableLandmassDebug, Landmass3dDebugPlugin, LandmassGizmoConfigGroup};
+use bevy_rerecast::debug::NavmeshGizmoConfig;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
@@ -159,8 +160,12 @@ fn toggle_lighting_debug_ui(mut config_store: ResMut<GizmoConfigStore>) {
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
-fn toggle_landmass_debug_ui(mut debug: ResMut<EnableLandmassDebug>) {
+fn toggle_landmass_debug_ui(
+    mut debug: ResMut<EnableLandmassDebug>,
+    mut navmesh: ResMut<NavmeshGizmoConfig>,
+) {
     **debug = !**debug;
+    navmesh.detail_navmesh.enabled = !navmesh.detail_navmesh.enabled;
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]

@@ -18,6 +18,7 @@ mod third_party;
 mod ui_camera;
 
 use asset_processing::default_image_sampler_descriptor;
+use bevy::ecs::error::{GLOBAL_ERROR_HANDLER, error};
 use bevy_landmass::LandmassSystemSet;
 use bitflags::bitflags;
 
@@ -42,6 +43,11 @@ compile_error!(
 );
 
 fn main() -> AppExit {
+    // Don't panic on Bevy system errors, just log them.
+    GLOBAL_ERROR_HANDLER
+        .set(error)
+        .expect("Error handler already set");
+
     let mut app = App::new();
 
     // Add Bevy plugins.
@@ -68,9 +74,9 @@ fn main() -> AppExit {
             }),
     );
 
+    // Add next-gen audio backend
     #[cfg(feature = "native")]
     app.add_plugins(bevy_seedling::SeedlingPlugin::default());
-
     // right now, `Default` isn't implemented for any non-cpal backend
     #[cfg(feature = "web")]
     app.add_plugins(
