@@ -1196,7 +1196,7 @@ dependencies = [
 [[package]]
 name = "bevy_landmass"
 version = "0.9.0"
-source = "git+https://github.com/andriyDev/landmass?branch=detail#bb78bc3af5e687c2a6ee94b9b2206a005560b217"
+source = "git+https://github.com/janhohenheim/landmass?branch=detail#bb78bc3af5e687c2a6ee94b9b2206a005560b217"
 dependencies = [
  "bevy_app",
  "bevy_asset",
@@ -4298,7 +4298,7 @@ dependencies = [
 [[package]]
 name = "landmass"
 version = "0.8.0"
-source = "git+https://github.com/andriyDev/landmass?branch=detail#bb78bc3af5e687c2a6ee94b9b2206a005560b217"
+source = "git+https://github.com/janhohenheim/landmass?branch=detail#bb78bc3af5e687c2a6ee94b9b2206a005560b217"
 dependencies = [
  "disjoint",
  "dodgy_2d",

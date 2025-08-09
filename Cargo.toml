@@ -188,6 +188,6 @@ debug-assertions = false
 
 [patch.crates-io]
 # Required for detail mesh support
-bevy_landmass = { git = "https://github.com/andriyDev/landmass", branch = "detail" }
+bevy_landmass = { git = "https://github.com/janhohenheim/landmass", branch = "detail" }
 # Needed for https://github.com/CorvusPrudens/bevy_seedling/pull/41
 bevy_seedling = { git = "https://github.com/CorvusPrudens/bevy_seedling", branch = "spatial-fixes" }
