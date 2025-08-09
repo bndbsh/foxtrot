@@ -225,6 +225,7 @@ jobs:
         uses: dtolnay/rust-toolchain@nightly
         with:
           targets: ${{ matrix.targets }}
+          components: rust-src
 
       - name: Populate cargo cache
         if: ${{ env.is_platform_enabled == 'true' && env.use_github_cache == 'true' }}
