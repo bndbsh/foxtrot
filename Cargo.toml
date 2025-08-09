@@ -13,7 +13,34 @@ categories = ["game-development"]
 homepage = "https://janhohenheim.itch.io/foxtrot"
 
 [dependencies]
-bevy = { version = "0.16", features = [
+bevy = { version = "0.16", default-features = false, features = [
+    "animation",
+    "bevy_asset",
+    "bevy_color",
+    "bevy_core_pipeline",
+    "bevy_gilrs",
+    "bevy_gizmos",
+    "bevy_gltf",
+    "bevy_mesh_picking_backend",
+    "bevy_pbr",
+    "bevy_picking",
+    "bevy_render",
+    "bevy_scene",
+    "bevy_sprite",
+    "bevy_sprite_picking_backend",
+    "bevy_state",
+    "bevy_text",
+    "bevy_ui",
+    "bevy_ui_picking_backend",
+    "bevy_window",
+    "bevy_winit",
+    "custom_cursor",
+    "default_font",
+    "hdr",
+    "multi_threaded",
+    "smaa_luts",
+    "sysinfo_plugin",
+    "tonemapping_luts",
     "jpeg",
     "tga",
     "ktx2",
@@ -72,6 +99,8 @@ bevy-inspector-egui = { version = "0.32.0", optional = true }
 bevy_fix_cursor_unlock_web = "0.1.2"
 regex = "1.11.1"
 bevy_framepace = "0.19.1"
+bevy_seedling = "0.4.4"
+firewheel-web-audio = { version = "0.1.0", optional = true }
 
 [features]
 default = [
@@ -100,7 +129,8 @@ dev_native = [
     "bevy/embedded_watcher",
     "oxidized_navigation/debug_draw",
 ]
-web = ["bevy/webgpu"]
+web = ["bevy/webgpu", "dep:firewheel-web-audio"]
+release = []
 hot_patch = ["dep:bevy_simple_subsecond_system"]
 bevy_remote = ["bevy/bevy_remote"]
 
@@ -112,15 +142,17 @@ features = ["native"]
 
 [package.metadata.bevy_cli.native.dev]
 features = ["dev_native"]
+[package.metadata.bevy_cli.native.release]
+features = ["release"]
 
 [package.metadata.bevy_cli.web]
-rustflags = ["--cfg", "getrandom_backend=\"wasm_js\""]
 features = ["web"]
 
 [package.metadata.bevy_cli.web.dev]
 features = ["dev"]
 
 [package.metadata.bevy_cli.web.release]
+features = ["release"]
 # Optimize with size in mind (also try "z", sometimes it is better).
 # Slightly slows compile times, great improvements to file size and runtime performance.
 opt-level = "s"
@@ -160,3 +192,5 @@ oxidized_navigation = { git = "https://github.com/janhohenheim/oxidized_navigati
 landmass_oxidized_navigation = { git = "https://github.com/janhohenheim/landmass", branch = "bevy-0.16-oxidized" }
 # Needed on current nightly
 ord_subset = { version = "3.1.1", git = "https://github.com/virtualritz/ord_subset" }
+# Needed for https://github.com/CorvusPrudens/bevy_seedling/pull/41
+bevy_seedling = { git = "https://github.com/CorvusPrudens/bevy_seedling", branch = "spatial-fixes" }

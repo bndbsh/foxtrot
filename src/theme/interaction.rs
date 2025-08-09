@@ -1,8 +1,9 @@
 use bevy::prelude::*;
+use bevy_seedling::sample::{Sample, SamplePlayer};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
-use crate::{PostPhysicsAppSystems, asset_tracking::LoadResource, audio::sound_effect};
+use crate::{PostPhysicsAppSystems, asset_tracking::LoadResource, audio::UiSfx};
 
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<InteractionPalette>();
@@ -67,9 +68,9 @@ fn apply_interaction_palette(
 #[derive(Resource, Asset, Reflect, Clone)]
 pub(crate) struct InteractionAssets {
     #[dependency]
-    hover: Handle<AudioSource>,
+    hover: Handle<Sample>,
     #[dependency]
-    press: Handle<AudioSource>,
+    press: Handle<Sample>,
 }
 
 impl InteractionAssets {
@@ -99,6 +100,6 @@ fn trigger_interaction_sound_effect(
             Interaction::Pressed => interaction_assets.press.clone(),
             _ => continue,
         };
-        commands.spawn(sound_effect(source));
+        commands.spawn((SamplePlayer::new(source), UiSfx));
     }
 }

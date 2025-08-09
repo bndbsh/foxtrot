@@ -85,6 +85,8 @@ fn spawn_view_model(
     level_assets: Res<LevelAssets>,
     fov: Res<WorldModelFov>,
 ) {
+    use bevy_seedling::spatial::SpatialListener3D;
+
     let player_transform = player_transform.get(trigger.target()).unwrap();
     let env_map = EnvironmentMapLight {
         diffuse_map: level_assets.env_map_diffuse.clone(),
@@ -117,7 +119,7 @@ fn spawn_view_model(
                 ..default()
             },
             AnimationPlayerAncestor,
-            SpatialListener::new(0.4),
+            SpatialListener3D,
         ))
         .with_children(|parent| {
             parent.spawn((

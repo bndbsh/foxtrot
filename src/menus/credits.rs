@@ -1,18 +1,19 @@
 //! A credits menu.
 
-use bevy::{
-    ecs::spawn::SpawnIter, input::common_conditions::input_just_pressed, prelude::*, ui::Val::*,
-};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
-
+use crate::audio::Music;
 use crate::{
     Pause,
     asset_tracking::LoadResource,
-    audio::music,
     menus::Menu,
     theme::{palette::SCREEN_BACKGROUND, prelude::*},
 };
+use bevy::{
+    ecs::spawn::SpawnIter, input::common_conditions::input_just_pressed, prelude::*, ui::Val::*,
+};
+use bevy_seedling::sample::Sample;
+use bevy_seedling::sample::SamplePlayer;
+#[cfg(feature = "hot_patch")]
+use bevy_simple_subsecond_system::hot;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Credits), spawn_credits_menu);
@@ -122,7 +123,7 @@ fn go_back(mut next_menu: ResMut<NextState<Menu>>) {
 #[reflect(Resource)]
 struct CreditsAssets {
     #[dependency]
-    music: Handle<AudioSource>,
+    music: Handle<Sample>,
 }
 
 impl FromWorld for CreditsAssets {
@@ -139,6 +140,7 @@ fn start_credits_music(mut commands: Commands, credits_music: Res<CreditsAssets>
     commands.spawn((
         Name::new("Credits Music"),
         StateScoped(Menu::Credits),
-        music(credits_music.music.clone()),
+        SamplePlayer::new(credits_music.music.clone()).looping(),
+        Music,
     ));
 }

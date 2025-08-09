@@ -1,10 +1,11 @@
 //! Spawn the main level.
 
 use bevy::prelude::*;
+use bevy_seedling::sample::{Sample, SamplePlayer};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
-use crate::{asset_tracking::LoadResource, audio::music, screens::Screen};
+use crate::{asset_tracking::LoadResource, audio::Music, screens::Screen};
 
 pub(super) fn plugin(app: &mut App) {
     app.load_resource::<LevelAssets>();
@@ -19,7 +20,11 @@ pub(crate) fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>
         SceneRoot(level_assets.level.clone()),
         StateScoped(Screen::Gameplay),
         Level,
-        children![(Name::new("Level Music"), music(level_assets.music.clone()))],
+        children![(
+            Name::new("Level Music"),
+            SamplePlayer::new(level_assets.music.clone()).looping(),
+            Music
+        )],
     ));
     commands.insert_resource(AmbientLight::NONE);
 }
@@ -35,7 +40,7 @@ pub(crate) struct LevelAssets {
     #[dependency]
     pub(crate) level: Handle<Scene>,
     #[dependency]
-    pub(crate) music: Handle<AudioSource>,
+    pub(crate) music: Handle<Sample>,
     #[dependency]
     pub(crate) env_map_specular: Handle<Image>,
     #[dependency]

@@ -1,6 +1,7 @@
 //! Validates that all assets are preloaded before the game starts.
 
 use bevy::prelude::*;
+use bevy_seedling::sample::SamplePlayer;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
@@ -53,10 +54,10 @@ fn validate_asset<T: Asset>(handle: &Handle<T>, assets: &AssetServer, type_name:
 
 #[cfg_attr(feature = "hot_patch", hot)]
 fn validate_audio(
-    trigger: Trigger<OnAdd, AudioPlayer>,
-    q_audio: Query<&AudioPlayer>,
+    trigger: Trigger<OnAdd, SamplePlayer>,
+    q_audio: Query<&SamplePlayer>,
     assets: Res<AssetServer>,
 ) {
-    let handle = &q_audio.get(trigger.target()).unwrap().0;
+    let handle = &q_audio.get(trigger.target()).unwrap().sample;
     validate_asset(handle, &assets, "Audio");
 }
