@@ -116,6 +116,13 @@ fn main() -> AppExit {
     app.init_state::<Pause>();
     app.configure_sets(Update, PausableSystems.run_if(in_state(Pause(false))));
 
+    #[cfg(feature = "dev_native")]
+    // Adding these here so that third party plugins can register their BRP methods.
+    app.add_plugins((
+        bevy::remote::RemotePlugin::default(),
+        bevy::remote::http::RemoteHttpPlugin::default(),
+    ));
+
     // Add third-party plugins.
     app.add_plugins(third_party::plugin);
 
