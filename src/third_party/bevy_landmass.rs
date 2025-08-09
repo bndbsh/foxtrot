@@ -68,13 +68,11 @@ fn update_landmass_navmesh(
                 Vec::new(),
                 |mut acc, i| {
                     let poly = &rerecast_navmesh.polygon.polygons[i * nvp..];
-                    let mut verts = poly[..nvp]
+                    let verts = poly[..nvp]
                         .iter()
                         .filter(|i| **i != PolygonNavmesh::NO_INDEX)
                         .map(|i| *i as usize)
                         .collect::<Vec<_>>();
-                    // CW -> CCW
-                    verts.reverse();
                     acc.push(verts);
                     acc
                 },
@@ -108,8 +106,7 @@ fn update_landmass_navmesh(
                             .iter()
                             .skip(submesh.base_triangle_index as usize)
                             .take(submesh.triangle_count as usize)
-                            // CW -> CCW
-                            .map(|[a, b, c]| [*b as usize, *a as usize, *c as usize])
+                            .map(|[a, b, c]| [*a as usize, *b as usize, *c as usize])
                     })
                     .collect(),
                 vertices: rerecast_navmesh
