@@ -1528,9 +1528,8 @@ dependencies = [
 
 [[package]]
 name = "bevy_seedling"
-version = "0.4.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5730b50710ff2bfafd81f6a063979d058ea3395789538d81bb9481f78cb2a879"
+version = "0.4.4"
+source = "git+https://github.com/CorvusPrudens/bevy_seedling?branch=spatial-fixes#5fd5e4e7c29d5ab4bdf6e419ea7d37f56310c2a3"
 dependencies = [
  "bevy",
  "bevy_math",
@@ -1546,8 +1545,7 @@ dependencies = [
 [[package]]
 name = "bevy_seedling_macros"
 version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87c04e423bcbd17ccd8555585fe5cce7aa255270eec431ef9fd6a418212452ab"
+source = "git+https://github.com/CorvusPrudens/bevy_seedling?branch=spatial-fixes#5fd5e4e7c29d5ab4bdf6e419ea7d37f56310c2a3"
 dependencies = [
  "bevy_macro_utils",
  "proc-macro2",
