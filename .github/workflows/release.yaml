@@ -237,7 +237,7 @@ jobs:
         run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
 
       - name: Active release cargo config
-        run: mv .cargo/config_ci.toml .cargo/config.toml
+        run: mv .cargo/config_web.toml .cargo/config.toml
 
       - name: Install Bevy CLI
         run: cargo install --git=https://github.com/TheBevyFlock/bevy_cli --locked bevy_cli --all-features
