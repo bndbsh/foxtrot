@@ -4,7 +4,6 @@
 use crate::gameplay::npc::NPC_RADIUS;
 use bevy::prelude::*;
 use bevy_landmass::{PointSampleDistance3d, prelude::*};
-use bevy_rerecast::prelude::*;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
