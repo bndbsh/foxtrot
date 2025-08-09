@@ -120,6 +120,7 @@ dev = [
     "dep:bevy-inspector-egui",
     "avian3d/diagnostic_ui",
     "bevy_rerecast/debug_plugin",
+    "bevy_rerecast/editor_integration",
 ]
 dev_native = [
     "dev",

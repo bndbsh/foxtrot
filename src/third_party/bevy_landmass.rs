@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::gameplay::npc::NPC_RADIUS;
 use bevy::prelude::*;
 use bevy_landmass::{HeightPolygon, PointSampleDistance3d, prelude::*};
-use bevy_rerecast::rerecast::PolygonNavmesh;
+use bevy_rerecast::rerecast::{DetailNavmesh, PolygonNavmesh};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
@@ -55,69 +55,80 @@ fn update_landmass_navmesh(
         let cs = rerecast_navmesh.polygon.cell_size;
         let ch = rerecast_navmesh.polygon.cell_height;
         let to_local = Vec3::new(cs, ch, cs);
-
-        let vertices = rerecast_navmesh
-            .polygon
-            .vertices
-            .iter()
-            .map(|v| orig + v.as_vec3() * to_local)
-            .collect();
-
-        let mut polygons = Vec::new();
         let nvp = rerecast_navmesh.polygon.max_vertices_per_polygon as usize;
-        for i in 0..rerecast_navmesh.polygon.polygon_count() {
-            let poly = &rerecast_navmesh.polygon.polygons[i * nvp..];
-            let mut verts = poly[..nvp]
-                .iter()
-                .filter(|i| **i != PolygonNavmesh::NO_INDEX)
-                .map(|i| *i as usize)
-                .collect::<Vec<_>>();
-            // Connect back to first vertex to finish the polygon
-            verts.push(verts[0]);
-            // CW -> CCW
-            verts.reverse();
-            polygons.push(verts);
-        }
-        let polygon_type_indices = rerecast_navmesh
-            .polygon
-            .areas
-            .iter()
-            .map(|a| a.0 as usize)
-            .collect();
 
-        let to_local = Vec3::new(cs, ch, cs);
-        let height_mesh = HeightNavigationMesh3d {
-            polygons: rerecast_navmesh
-                .detail
-                .meshes
-                .iter()
-                .map(|submesh| HeightPolygon {
-                    base_vertex_index: submesh.base_vertex_index as usize,
-                    vertex_count: submesh.vertex_count as usize,
-                    base_triangle_index: submesh.base_triangle_index as usize,
-                    triangle_count: submesh.triangle_count as usize,
-                })
-                .collect(),
-            triangles: rerecast_navmesh
-                .detail
-                .triangles
-                .iter()
-                // CW -> CCW
-                .map(|[a, b, c]| [*b as u16, *a as u16, *c as u16])
-                .collect(),
+        let landmass_navmesh = NavigationMesh3d {
             vertices: rerecast_navmesh
                 .polygon
                 .vertices
                 .iter()
-                .map(|v| orig + v.as_vec3() * to_local)
+                .map(|v| (orig + v.as_vec3() * to_local).landmass())
                 .collect(),
-        };
+            polygons: (0..rerecast_navmesh.polygon.polygon_count()).fold(
+                Vec::new(),
+                |mut acc, i| {
+                    let poly = &rerecast_navmesh.polygon.polygons[i * nvp..];
+                    let verts = poly[..nvp]
+                        .iter()
+                        .filter(|i| **i != PolygonNavmesh::NO_INDEX)
+                        .map(|i| *i as usize)
+                        .collect::<Vec<_>>();
+                    acc.push(verts);
+                    acc
+                },
+            ),
+            polygon_type_indices: rerecast_navmesh
+                .polygon
+                .areas
+                .iter()
+                .map(|a| a.0 as usize)
+                .collect(),
+            height_mesh: HeightNavigationMesh3d {
+                polygons: rerecast_navmesh
+                    .detail
+                    .meshes
+                    .iter()
+                    .map(|submesh| HeightPolygon {
+                        base_vertex_index: submesh.base_vertex_index as usize,
+                        vertex_count: submesh.vertex_count as usize,
+                        base_triangle_index: submesh.base_triangle_index as usize,
+                        triangle_count: submesh.triangle_count as usize,
+                    })
+                    .collect(),
+                triangles: rerecast_navmesh
+                    .detail
+                    .meshes
+                    .iter()
+                    .flat_map(|submesh| {
+                        let tris = &rerecast_navmesh.detail.triangles
+                            [submesh.base_triangle_index as usize..]
+                            [..submesh.triangle_count as usize];
 
-        let landmass_navmesh = NavigationMesh3d {
-            vertices,
-            polygons,
-            polygon_type_indices,
-            height_mesh: Some(height_mesh),
+                        let verts = &rerecast_navmesh.detail.vertices
+                            [submesh.base_vertex_index as usize..]
+                            [..submesh.vertex_count as usize];
+                        tris.iter().map(|[a, b, c]| {
+                            let av = verts[*a as usize].landmass().xy();
+                            let bv = verts[*b as usize].landmass().xy();
+                            let cv = verts[*c as usize].landmass().xy();
+
+                            // Ensure CCW
+                            if (bv - av).perp_dot(cv - av) < 0.0 {
+                                [*b as usize, *a as usize, *c as usize]
+                            } else {
+                                [*a as usize, *b as usize, *c as usize]
+                            }
+                        })
+                    })
+                    .collect(),
+                vertices: rerecast_navmesh
+                    .polygon
+                    .vertices
+                    .iter()
+                    .map(|v| (orig + v.as_vec3() * to_local).landmass())
+                    .collect(),
+            }
+            .into(),
         };
         let landmass_navmesh = match landmass_navmesh.validate() {
             Ok(landmass_navmesh) => landmass_navmesh,
@@ -138,4 +149,14 @@ fn update_landmass_navmesh(
             ));
     }
     Ok(())
+}
+
+trait LandmassVec3: Copy {
+    fn landmass(self) -> Vec3;
+}
+
+impl LandmassVec3 for Vec3 {
+    fn landmass(self) -> Vec3 {
+        Vec3::new(self.x, -self.z, self.y)
+    }
 }
