@@ -154,20 +154,17 @@ jobs:
 
           - platform: linux
             targets: x86_64-unknown-linux-gnu
-            features: bevy/wayland,native
             package_ext: .zip
             runner: ubuntu-latest
 
           - platform: windows
             targets: x86_64-pc-windows-msvc
-            features: native
             binary_ext: .exe
             package_ext: .zip
             runner: windows-latest
 
           - platform: macos
             targets: x86_64-apple-darwin aarch64-apple-darwin
-            features: native
             app_suffix: .app/Contents/MacOS
             package_ext: .dmg
             runner: macos-latest
@@ -242,15 +239,16 @@ jobs:
       - name: Active release cargo config
         run: mv .cargo/config_ci.toml .cargo/config.toml
 
+      - name: Install Bevy CLI
+        run: cargo install --git=https://github.com/TheBevyFlock/bevy_cli --locked bevy_cli --all-features
+
       - name: Prepare output directories
         if: ${{ env.is_platform_enabled == 'true' }}
         run: rm -rf tmp; mkdir -p tmp/binary '${{ env.app }}'
 
-      - name: Install and run Bevy CLI (Web)
+      - name: Build (Web)
         if: ${{ env.is_platform_enabled == 'true' && matrix.platform == 'web' }}
-        run: |
-          cargo install --git=https://github.com/TheBevyFlock/bevy_cli --locked bevy_cli --all-features
-          bevy build --locked --release --features='${{ matrix.features }}' --yes web --bundle
+        run: bevy build --locked --release --yes web --bundle --verbose
 
       - name: Add web bundle to app (Web)
         if: ${{ env.is_platform_enabled == 'true' && matrix.platform == 'web' }}
@@ -260,7 +258,7 @@ jobs:
         if: ${{ env.is_platform_enabled == 'true' && matrix.platform != 'web' }}
         run: |
           for target in ${{ matrix.targets }}; do
-            cargo build --locked --release --target="${target}" --no-default-features --features='${{ matrix.features }}'
+            bevy build --locked --release --target="${target}" --verbose
             mv target/"${target}"/'release/${{ env.cargo_build_binary_name }}${{ matrix.binary_ext }}' tmp/binary/"${target}"'${{ matrix.binary_ext }}'
           done
 
