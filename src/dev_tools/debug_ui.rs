@@ -16,7 +16,7 @@ use bevy::{
 };
 use bevy_enhanced_input::prelude::*;
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
-use bevy_landmass::debug::{EnableLandmassDebug, Landmass3dDebugPlugin, LandmassGizmoConfigGroup};
+use bevy_landmass::debug::{EnableLandmassDebug, Landmass3dDebugPlugin, LandmassGizmos};
 use bevy_rerecast::debug::{DetailNavmeshGizmo, NavmeshGizmoConfig};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
@@ -68,7 +68,11 @@ pub(super) fn plugin(app: &mut App) {
         },
     );
     app.insert_gizmo_config(
-        LandmassGizmoConfigGroup,
+        LandmassGizmos {
+            boundary_edge: None,
+            connectivity_edge: None,
+            ..default()
+        },
         GizmoConfig {
             enabled: true,
             depth_bias: -0.03,
