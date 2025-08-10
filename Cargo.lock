@@ -252,7 +252,7 @@ dependencies = [
  "objc2-foundation 0.3.1",
  "parking_lot 0.12.4",
  "percent-encoding",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
  "x11rb",
 ]
 
@@ -452,6 +452,8 @@ dependencies = [
 [[package]]
 name = "avian_rerecast"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c102afedce6daf452edce2e790a48cc2c7f751053ad64b20b19e5c0a131b47f"
 dependencies = [
  "avian3d",
  "bevy_app",
@@ -1194,6 +1196,7 @@ dependencies = [
 [[package]]
 name = "bevy_landmass"
 version = "0.9.0"
+source = "git+https://github.com/janhohenheim/landmass?branch=detail#6f84711753376a881f4f56cb6b53dc5b665d0e1c"
 dependencies = [
  "bevy_app",
  "bevy_asset",
@@ -1518,6 +1521,8 @@ dependencies = [
 [[package]]
 name = "bevy_rerecast"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "184bcc894bf9635d671fb170cd304919ef8aa341adf34d79bbd6198020180c08"
 dependencies = [
  "bevy_app",
  "bevy_math",
@@ -1528,6 +1533,8 @@ dependencies = [
 [[package]]
 name = "bevy_rerecast_core"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bb5200de96eed696a9509587a54673c9b4236733bef636ac3ed2a754d32f87ad"
 dependencies = [
  "anyhow",
  "bevy_app",
@@ -1555,6 +1562,8 @@ dependencies = [
 [[package]]
 name = "bevy_rerecast_editor_integration"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "154a0ae042319ba2f46f5112c1dd0921c88ba1d5842bdaff95cf48693cd17c59"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -1607,7 +1616,8 @@ dependencies = [
 [[package]]
 name = "bevy_seedling"
 version = "0.4.4"
-source = "git+https://github.com/CorvusPrudens/bevy_seedling?branch=spatial-fixes#5fd5e4e7c29d5ab4bdf6e419ea7d37f56310c2a3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d20e87bad900643cc81f8152a318ca7df13caf04d40eec9e027e8a453a7f7147"
 dependencies = [
  "bevy",
  "bevy_math",
@@ -1623,7 +1633,8 @@ dependencies = [
 [[package]]
 name = "bevy_seedling_macros"
 version = "0.4.0"
-source = "git+https://github.com/CorvusPrudens/bevy_seedling?branch=spatial-fixes#5fd5e4e7c29d5ab4bdf6e419ea7d37f56310c2a3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "87c04e423bcbd17ccd8555585fe5cce7aa255270eec431ef9fd6a418212452ab"
 dependencies = [
  "bevy_macro_utils",
  "proc-macro2",
@@ -2029,7 +2040,7 @@ dependencies = [
  "bitflags 2.9.1",
  "cexpr",
  "clang-sys",
- "itertools 0.12.1",
+ "itertools 0.13.0",
  "log",
  "prettyplease",
  "proc-macro2",
@@ -3073,7 +3084,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "778e2ac28f6c47af28e4907f13ffd1e1ddbd400980a9abd7c8df189bf578a5ad"
 dependencies = [
  "libc",
- "windows-sys 0.52.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -4300,6 +4311,7 @@ dependencies = [
 [[package]]
 name = "landmass"
 version = "0.8.0"
+source = "git+https://github.com/janhohenheim/landmass?branch=detail#6f84711753376a881f4f56cb6b53dc5b665d0e1c"
 dependencies = [
  "disjoint",
  "dodgy_2d",
@@ -4329,7 +4341,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "07033963ba89ebaf1584d767badaa2e8fcec21aedea6b8c0346d487d49c28667"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.53.3",
 ]
 
 [[package]]
@@ -5804,7 +5816,9 @@ checksum = "19b30a45b0cd0bcca8037f3d0dc3421eaf95327a17cad11964fb8179b4fc4832"
 
 [[package]]
 name = "rerecast"
-version = "0.1.0"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "42122d785f673f47bfff4bc3b70a2899b40da1bf24af5b68f4b9d399a1f7fe63"
 dependencies = [
  "anyhow",
  "bevy_reflect",
@@ -5916,7 +5930,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.4.15",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -5929,7 +5943,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.9.4",
- "windows-sys 0.52.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -7462,7 +7476,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
