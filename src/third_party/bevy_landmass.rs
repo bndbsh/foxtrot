@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::gameplay::npc::NPC_RADIUS;
 use bevy::prelude::*;
-use bevy_landmass::{HeightPolygon, PointSampleDistance3d, prelude::*};
+use bevy_landmass::{ArchipelagoRef, HeightPolygon, PointSampleDistance3d, prelude::*};
 use bevy_rerecast::rerecast::PolygonNavmesh;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
@@ -21,17 +21,26 @@ fn setup_archipelago(mut commands: Commands) {
     // This *should* be scoped to the `Screen::Gameplay` state, but doing so
     // seems to never regenerate the nav mesh when the level is loaded the second
     // time.
+
+    let archipelago = commands
+        .spawn((
+            Name::new("Main Level Archipelago"),
+            Archipelago3d::new(AgentOptions {
+                point_sample_distance: PointSampleDistance3d {
+                    horizontal_distance: 0.6,
+                    distance_above: 1.0,
+                    distance_below: 1.0,
+                    vertical_preference_ratio: 2.0,
+                },
+                ..AgentOptions::from_agent_radius(NPC_RADIUS)
+            }),
+        ))
+        .id();
+
     commands.spawn((
-        Name::new("Main Level Archipelago"),
-        Archipelago3d::new(AgentOptions {
-            point_sample_distance: PointSampleDistance3d {
-                horizontal_distance: 0.6,
-                distance_above: 1.0,
-                distance_below: 1.0,
-                vertical_preference_ratio: 2.0,
-            },
-            ..AgentOptions::from_agent_radius(NPC_RADIUS)
-        }),
+        Name::new("Main Level Island"),
+        Island,
+        ArchipelagoRef::<ThreeD>::new(archipelago),
     ));
 }
 
@@ -39,10 +48,10 @@ fn update_landmass_navmesh(
     mut events: EventReader<AssetEvent<bevy_rerecast::Navmesh>>,
     rerecast_navmeshes: Res<Assets<bevy_rerecast::Navmesh>>,
     mut landmass_navmeshes: ResMut<Assets<bevy_landmass::NavMesh3d>>,
-    archipelago: Single<Entity, With<Archipelago3d>>,
+    island: Single<Entity, With<Island>>,
     mut commands: Commands,
 ) -> Result {
-    let archipelago = archipelago.into_inner();
+    let island = island.into_inner();
     for event in events.read() {
         let AssetEvent::LoadedWithDependencies { id } = event else {
             continue;
@@ -66,7 +75,7 @@ fn update_landmass_navmesh(
         };
         let landmass_navmesh_handle = landmass_navmeshes.add(landmass_navmesh);
         commands
-            .entity(archipelago)
+            .entity(island)
             .insert(bevy_landmass::NavMeshHandle::<ThreeD>(
                 landmass_navmesh_handle,
             ));
