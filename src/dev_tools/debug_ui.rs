@@ -5,6 +5,7 @@ use std::any::Any as _;
 use super::input::{ForceFreeCursor, ToggleDebugUi};
 use crate::RenderLayer;
 use crate::gameplay::crosshair::CrosshairState;
+use crate::gameplay::level::LevelAssets;
 use crate::{PostPhysicsAppSystems, theme::widget};
 use avian3d::prelude::*;
 use bevy::render::view::RenderLayers;
@@ -16,6 +17,7 @@ use bevy::{
 use bevy_enhanced_input::prelude::*;
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 use bevy_landmass::debug::{EnableLandmassDebug, Landmass3dDebugPlugin, LandmassGizmoConfigGroup};
+use bevy_rerecast::debug::{DetailNavmeshGizmo, NavmeshGizmoConfig};
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
@@ -83,6 +85,10 @@ pub(super) fn plugin(app: &mut App) {
     );
     app.add_systems(
         Update,
+        add_navmesh_gizmo.run_if(resource_exists_and_changed::<LevelAssets>),
+    );
+    app.add_systems(
+        Update,
         (
             toggle_fps_overlay.run_if(toggled_state(DebugState::None)),
             toggle_debug_ui.run_if(toggled_state(DebugState::Ui)),
@@ -93,6 +99,16 @@ pub(super) fn plugin(app: &mut App) {
             .chain()
             .in_set(PostPhysicsAppSystems::ChangeUi),
     );
+}
+
+fn add_navmesh_gizmo(
+    level: Res<LevelAssets>,
+    mut commands: Commands,
+    mut gizmo_config: ResMut<NavmeshGizmoConfig>,
+) {
+    commands.spawn(DetailNavmeshGizmo::new(&level.navmesh));
+    gizmo_config.detail_navmesh.enabled = false;
+    gizmo_config.detail_navmesh.render_layers = RenderLayers::from(RenderLayer::GIZMO3);
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
@@ -159,8 +175,12 @@ fn toggle_lighting_debug_ui(mut config_store: ResMut<GizmoConfigStore>) {
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
-fn toggle_landmass_debug_ui(mut debug: ResMut<EnableLandmassDebug>) {
+fn toggle_landmass_debug_ui(
+    mut debug: ResMut<EnableLandmassDebug>,
+    mut navmesh: ResMut<NavmeshGizmoConfig>,
+) {
     **debug = !**debug;
+    navmesh.detail_navmesh.enabled = !navmesh.detail_navmesh.enabled;
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]

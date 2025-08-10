@@ -1,11 +1,13 @@
 //! Spawn the main level.
 
 use bevy::prelude::*;
-use bevy_seedling::sample::{Sample, SamplePlayer};
+use bevy_rerecast::prelude::*;
+use bevy_seedling::prelude::*;
+use bevy_seedling::sample::Sample;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
 
-use crate::{asset_tracking::LoadResource, audio::Music, screens::Screen};
+use crate::{asset_tracking::LoadResource, audio::MusicPool, screens::Screen};
 
 pub(super) fn plugin(app: &mut App) {
     app.load_resource::<LevelAssets>();
@@ -23,7 +25,7 @@ pub(crate) fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>
         children![(
             Name::new("Level Music"),
             SamplePlayer::new(level_assets.music.clone()).looping(),
-            Music
+            MusicPool
         )],
     ));
     commands.insert_resource(AmbientLight::NONE);
@@ -40,6 +42,8 @@ pub(crate) struct LevelAssets {
     #[dependency]
     pub(crate) level: Handle<Scene>,
     #[dependency]
+    pub(crate) navmesh: Handle<Navmesh>,
+    #[dependency]
     pub(crate) music: Handle<Sample>,
     #[dependency]
     pub(crate) env_map_specular: Handle<Image>,
@@ -54,6 +58,8 @@ impl FromWorld for LevelAssets {
         Self {
             // Our main level is inspired by the TheDarkMod fan mission [Volta I: The Stone](https://www.thedarkmod.com/missiondetails/?internalName=volta1_3)
             level: assets.load("maps/volta_i/volta_i.map#Scene"),
+            // You can regenerate the navmesh by using `bevy_rerecast_editor`
+            navmesh: assets.load("maps/volta_i/volta_i.nav"),
             music: assets.load("audio/music/Ambiance_Rain_Calm_Loop_Stereo.ogg"),
             env_map_specular: assets.load("cubemaps/NightSkyHDRI001_4K-HDR_specular.ktx2"),
             env_map_diffuse: assets.load("cubemaps/NightSkyHDRI001_4K-HDR_diffuse.ktx2"),

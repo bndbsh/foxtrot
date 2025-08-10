@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use super::{Player, assets::PlayerAssets};
-use crate::audio::Sfx;
+use crate::audio::SpatialPool;
 use crate::{PostPhysicsAppSystems, screens::Screen};
 use avian3d::prelude::LinearVelocity;
 use bevy::prelude::*;
@@ -50,12 +50,14 @@ fn play_jump_grunt(
         let grunt = player_assets.jump_grunts.pick(rng).clone();
         let jump_start = player_assets.jump_start_sounds.pick(rng).clone();
 
-        commands
-            .entity(entity)
-            .with_child((SamplePlayer::new(grunt), Sfx, Transform::default()));
+        commands.entity(entity).with_child((
+            SamplePlayer::new(grunt),
+            SpatialPool,
+            Transform::default(),
+        ));
         commands.entity(entity).with_child((
             SamplePlayer::new(jump_start),
-            Sfx,
+            SpatialPool,
             Transform::default(),
         ));
         sound_cooldown.reset();
@@ -86,9 +88,11 @@ fn play_step_sound(
     }
     let rng = &mut rand::thread_rng();
     let sound = player_assets.steps.pick(rng).clone();
-    commands
-        .entity(entity)
-        .with_child((SamplePlayer::new(sound), Sfx, Transform::default()));
+    commands.entity(entity).with_child((
+        SamplePlayer::new(sound),
+        SpatialPool,
+        Transform::default(),
+    ));
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
@@ -111,7 +115,9 @@ fn play_land_sound(
 
     let rng = &mut rand::thread_rng();
     let sound = player_assets.land_sounds.pick(rng).clone();
-    commands
-        .entity(entity)
-        .with_child((SamplePlayer::new(sound), Sfx, Transform::default()));
+    commands.entity(entity).with_child((
+        SamplePlayer::new(sound),
+        SpatialPool,
+        Transform::default(),
+    ));
 }

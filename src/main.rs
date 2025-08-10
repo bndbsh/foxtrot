@@ -18,12 +18,12 @@ mod third_party;
 mod ui_camera;
 
 use asset_processing::default_image_sampler_descriptor;
+use bevy::ecs::error::{GLOBAL_ERROR_HANDLER, error};
 use bevy_landmass::LandmassSystemSet;
 use bitflags::bitflags;
 
 use bevy::core_pipeline::experimental::taa::TemporalAntiAliasPlugin;
 use bevy::{asset::AssetMetaCheck, prelude::*, render::view::RenderLayers};
-use oxidized_navigation::OxidizedNavigation;
 
 #[cfg(all(feature = "native", feature = "web"))]
 compile_error!(
@@ -43,6 +43,11 @@ compile_error!(
 );
 
 fn main() -> AppExit {
+    // Don't panic on Bevy system errors, just log them.
+    GLOBAL_ERROR_HANDLER
+        .set(error)
+        .expect("Error handler already set");
+
     let mut app = App::new();
 
     // Add Bevy plugins.
@@ -69,9 +74,9 @@ fn main() -> AppExit {
             }),
     );
 
+    // Add next-gen audio backend
     #[cfg(feature = "native")]
     app.add_plugins(bevy_seedling::SeedlingPlugin::default());
-
     // right now, `Default` isn't implemented for any non-cpal backend
     #[cfg(feature = "web")]
     app.add_plugins(
@@ -102,8 +107,6 @@ fn main() -> AppExit {
         (
             PrePhysicsAppSystems::UpdateNavmeshPositions,
             PrePhysicsAppSystems::UpdateNavmeshTargets,
-            OxidizedNavigation::RemovedComponent,
-            OxidizedNavigation::Main,
             LandmassSystemSet::SyncExistence,
         )
             .chain()
@@ -112,6 +115,13 @@ fn main() -> AppExit {
     // Set up the `Pause` state.
     app.init_state::<Pause>();
     app.configure_sets(Update, PausableSystems.run_if(in_state(Pause(false))));
+
+    #[cfg(feature = "dev_native")]
+    // Adding these here so that third party plugins can register their BRP methods.
+    app.add_plugins((
+        bevy::remote::RemotePlugin::default(),
+        bevy::remote::http::RemoteHttpPlugin::default(),
+    ));
 
     // Add third-party plugins.
     app.add_plugins(third_party::plugin);

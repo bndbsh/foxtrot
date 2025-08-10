@@ -12,7 +12,7 @@ concurrency:
 
 env:
   # Use the same Rust toolchain across jobs so they can share a cache.
-  toolchain: nightly-2025-06-26
+  toolchain: nightly-2025-08-07
 
 jobs:
   # Run tests.
@@ -216,7 +216,7 @@ jobs:
           shared-key: lints
 
       - name: Install Bevy linter
-        run: cargo install --git https://github.com/TheBevyFlock/bevy_cli --rev 9a24ac4a555f028f9d32017e95fcd1efcee1d3d3 --branch main --locked bevy_lint
+        run: cargo install --git https://github.com/TheBevyFlock/bevy_cli --rev 2128cd828202b47dcfcabc4a98aae3790c7687f4 --locked bevy_lint
 
       - name: Add cranelift to rustc
         run: rustup component add rustc-codegen-cranelift-preview --toolchain ${{ env.toolchain }}

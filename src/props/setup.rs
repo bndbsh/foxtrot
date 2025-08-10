@@ -3,7 +3,6 @@
 //! while a *static* prop is unmovable terrain.
 
 use crate::third_party::avian3d::CollisionLayer;
-use crate::third_party::bevy_landmass::NavMeshAffectorParent;
 use crate::third_party::bevy_trenchbroom::LoadTrenchbroomModel as _;
 use avian3d::prelude::*;
 use bevy::prelude::*;
@@ -87,6 +86,5 @@ pub(crate) fn static_bundle<T: QuakeClass>(
         )),
         RigidBody::Static,
         SceneRoot(model),
-        NavMeshAffectorParent,
     )
 }

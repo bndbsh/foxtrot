@@ -1,6 +1,6 @@
 //! A credits menu.
 
-use crate::audio::Music;
+use crate::audio::MusicPool;
 use crate::{
     Pause,
     asset_tracking::LoadResource,
@@ -141,6 +141,6 @@ fn start_credits_music(mut commands: Commands, credits_music: Res<CreditsAssets>
         Name::new("Credits Music"),
         StateScoped(Menu::Credits),
         SamplePlayer::new(credits_music.music.clone()).looping(),
-        Music,
+        MusicPool,
     ));
 }

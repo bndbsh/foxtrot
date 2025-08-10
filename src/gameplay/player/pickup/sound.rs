@@ -8,7 +8,8 @@ use bevy_seedling::prelude::*;
 use bevy_simple_subsecond_system::hot;
 
 use crate::{
-    PostPhysicsAppSystems, audio::Sfx, gameplay::player::assets::PlayerAssets, screens::Screen,
+    PostPhysicsAppSystems, audio::SpatialPool, gameplay::player::assets::PlayerAssets,
+    screens::Screen,
 };
 
 pub(super) fn plugin(app: &mut App) {
@@ -31,6 +32,6 @@ fn play_throw_sound(
     commands.spawn((
         **player_transform,
         SamplePlayer::new(sound).with_volume(Volume::Linear(3.0)),
-        Sfx,
+        SpatialPool,
     ));
 }
