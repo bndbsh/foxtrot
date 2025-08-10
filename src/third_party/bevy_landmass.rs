@@ -99,16 +99,15 @@ fn rerecast_to_landsmass(
             .iter()
             .map(|v| orig + v.as_vec3() * to_local)
             .collect(),
-        polygons: (0..rerecast_navmesh.polygon.polygon_count()).fold(Vec::new(), |mut acc, i| {
-            let poly = &rerecast_navmesh.polygon.polygons[i * nvp..];
-            let verts = poly[..nvp]
-                .iter()
-                .filter(|i| **i != PolygonNavmesh::NO_INDEX)
-                .map(|i| *i as usize)
-                .collect::<Vec<_>>();
-            acc.push(verts);
-            acc
-        }),
+        polygons: (0..rerecast_navmesh.polygon.polygon_count())
+            .map(|i| {
+                rerecast_navmesh.polygon.polygons[i * nvp..][..nvp]
+                    .iter()
+                    .filter(|i| **i != PolygonNavmesh::NO_INDEX)
+                    .map(|i| *i as usize)
+                    .collect::<Vec<_>>()
+            })
+            .collect(),
         polygon_type_indices: rerecast_navmesh
             .polygon
             .areas
