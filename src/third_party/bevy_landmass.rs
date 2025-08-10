@@ -105,6 +105,8 @@ fn rerecast_to_landsmass(
                     .iter()
                     .filter(|i| **i != PolygonNavmesh::NO_INDEX)
                     .map(|i| *i as usize)
+                    // CW -> CCW
+                    .rev()
                     .collect::<Vec<_>>()
             })
             .collect(),
@@ -126,7 +128,13 @@ fn rerecast_to_landsmass(
                     triangle_count: submesh.triangle_count,
                 })
                 .collect(),
-            triangles: rerecast_navmesh.detail.triangles.clone(),
+            triangles: rerecast_navmesh
+                .detail
+                .triangles
+                .iter()
+                // CW -> CCW
+                .map(|[a, b, c]| [*c, *b, *a])
+                .collect(),
             vertices: rerecast_navmesh.detail.vertices.clone(),
         }
         .into(),
