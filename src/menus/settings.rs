@@ -2,8 +2,8 @@
 //! We can add all manner of settings and accessibility options here.
 //! For 3D, we'd also place the camera sensitivity and FOV here.
 
-use bevy::{input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
 use bevy::window::PresentMode;
+use bevy::{input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
 use bevy_framepace::{FramepaceSettings, Limiter};
 use bevy_seedling::prelude::*;
 #[cfg(feature = "hot_patch")]
@@ -324,8 +324,7 @@ fn enable_fps_limiter(
     _trigger: Trigger<Pointer<Click>>,
     mut settings: ResMut<FpsLimiterSettings>,
     mut framepace: ResMut<FramepaceSettings>,
-)
-{
+) {
     settings.enabled = true;
     framepace.limiter = Limiter::from_framerate(settings.target_fps as f64);
 }
@@ -351,10 +350,7 @@ fn raise_fps_target(_trigger: Trigger<Pointer<Click>>, mut settings: ResMut<FpsL
     settings.target_fps = (settings.target_fps + step).min(max_fps);
 }
 
-fn update_fps_limiter(
-    mut framepace: ResMut<FramepaceSettings>,
-    settings: Res<FpsLimiterSettings>,
-) {
+fn update_fps_limiter(mut framepace: ResMut<FramepaceSettings>, settings: Res<FpsLimiterSettings>) {
     framepace.limiter = if settings.enabled {
         Limiter::from_framerate(settings.target_fps as f64)
     } else {
@@ -366,7 +362,11 @@ fn update_fps_limiter_enabled_label(
     mut label: Single<&mut Text, With<FpsLimiterEnabledLabel>>,
     settings: Res<FpsLimiterSettings>,
 ) {
-    label.0 = if settings.enabled { "On".into() } else { "Off".into() };
+    label.0 = if settings.enabled {
+        "On".into()
+    } else {
+        "Off".into()
+    };
 }
 
 fn update_fps_limiter_target_label(
