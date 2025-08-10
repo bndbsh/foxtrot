@@ -72,6 +72,9 @@ env:
   # See: https://github.com/orgs/community/discussions/27059
   use_github_cache: false
 
+  # Need to use nightly for stutterless audio on Wasm. For simplicity, use the same toolchain across all build targets
+  toolchain: nightly-2025-08-01
+
 jobs:
   # Forward some environment variables as outputs of this job.
   # This is needed because the `env` context can't be used in the `if:` condition of a job:
@@ -103,7 +106,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.toolchain }}
 
       - name: Create tools directory
         run: mkdir baking_tools
@@ -222,9 +227,11 @@ jobs:
 
       - name: Install Rust toolchain
         if: ${{ env.is_platform_enabled == 'true' }}
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@master
         with:
           targets: ${{ matrix.targets }}
+          components: rust-src
+          toolchain: ${{ env.toolchain }}
 
       - name: Populate cargo cache
         if: ${{ env.is_platform_enabled == 'true' && env.use_github_cache == 'true' }}
