@@ -16,14 +16,13 @@ use super::{Player, camera::PlayerCamera};
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(
         FixedUpdate,
-        apply_movement.in_set(TnuaUserControlsSystemSet),
+        (apply_movement, apply_jump).in_set(TnuaUserControlsSystemSet),
     );
     app.add_systems(
         Update,
         clear_accumulated_input.run_if(did_fixed_update_happen),
     );
-    app.add_observer(jump);
-    app.add_observer(accumulate_movement);
+    app.add_systems(PreUpdate, accumulate_input.after(EnhancedInputSet::Apply));
     app.add_observer(init_accumulated_input);
 
     app.register_type::<AccumulatedInput>();
@@ -32,7 +31,26 @@ pub(super) fn plugin(app: &mut App) {
 #[derive(Component, Reflect, Default)]
 #[reflect(Component)]
 struct AccumulatedInput {
+    // The last non-zero move that was inputed since the last fixed update
     last_move: Option<Vec3>,
+    // Whether any frame since the fixed update input contained a jump
+    jumped: bool,
+}
+
+#[cfg_attr(feature = "hot_patch", hot)]
+fn accumulate_input(
+    mut input: Single<&mut AccumulatedInput>,
+    move_: Single<(&Action<Move>, &ActionState)>,
+    jump: Single<&ActionState, With<Action<Jump>>>,
+) {
+    let (action, state) = move_.into_inner();
+    if matches!(state, ActionState::Fired) {
+        input.last_move.replace(**action);
+    }
+    let state = jump.into_inner();
+    if matches!(state, ActionState::Fired) {
+        input.jumped = true;
+    }
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
@@ -43,26 +61,18 @@ fn init_accumulated_input(trigger: Trigger<OnAdd, Player>, mut commands: Command
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
-fn accumulate_movement(
-    trigger: Trigger<Fired<Move>>,
-    mut accumulated_inputs: Single<&mut AccumulatedInput>,
-) {
-    accumulated_inputs.last_move.replace(trigger.value);
-}
-
-#[cfg_attr(feature = "hot_patch", hot)]
 fn clear_accumulated_input(mut accumulated_inputs: Query<&mut AccumulatedInput>) {
     for mut accumulated_input in &mut accumulated_inputs {
-        accumulated_input.last_move = None;
+        *accumulated_input = default();
     }
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
 fn apply_movement(
-    player_controller: Single<(&mut TnuaController, &AccumulatedInput)>,
+    controller: Single<(&mut TnuaController, &AccumulatedInput)>,
     transform: Single<&Transform, With<PlayerCamera>>,
 ) {
-    let (mut controller, accumulated_input) = player_controller.into_inner();
+    let (mut controller, accumulated_input) = controller.into_inner();
     let last_move = accumulated_input.last_move.unwrap_or_default();
     // Feed the basis every frame. Even if the player doesn't move - just use `desired_velocity:
     // Vec3::ZERO`. `TnuaController` starts without a basis, which will make the character collider
@@ -82,12 +92,12 @@ fn apply_movement(
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
-fn jump(trigger: Trigger<Fired<Jump>>, mut controllers: Query<&mut TnuaController>) {
-    let mut controller = controllers.get_mut(trigger.target()).unwrap();
-    controller.action(TnuaBuiltinJump {
-        // The height is the only mandatory field of the jump button.
-        height: 1.5,
-        // `TnuaBuiltinJump` also has customization fields with sensible defaults.
-        ..default()
-    });
+fn apply_jump(controller: Single<(&mut TnuaController, &AccumulatedInput)>) {
+    let (mut controller, input) = controller.into_inner();
+    if input.jumped {
+        controller.action(TnuaBuiltinJump {
+            height: 1.5,
+            ..default()
+        });
+    }
 }
