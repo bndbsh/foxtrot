@@ -89,26 +89,13 @@ fn update_landmass_navmesh(
                     .meshes
                     .iter()
                     .map(|submesh| HeightPolygon {
-                        base_vertex_index: submesh.base_vertex_index as usize,
-                        vertex_count: submesh.vertex_count as usize,
-                        base_triangle_index: submesh.base_triangle_index as usize,
-                        triangle_count: submesh.triangle_count as usize,
+                        base_vertex_index: submesh.base_vertex_index,
+                        vertex_count: submesh.vertex_count,
+                        base_triangle_index: submesh.base_triangle_index,
+                        triangle_count: submesh.triangle_count,
                     })
                     .collect(),
-                triangles: rerecast_navmesh
-                    .detail
-                    .meshes
-                    .iter()
-                    .flat_map(|submesh| {
-                        rerecast_navmesh
-                            .detail
-                            .triangles
-                            .iter()
-                            .skip(submesh.base_triangle_index as usize)
-                            .take(submesh.triangle_count as usize)
-                            .map(|[a, b, c]| [*a as usize, *b as usize, *c as usize])
-                    })
-                    .collect(),
+                triangles: rerecast_navmesh.detail.triangles.clone(),
                 vertices: rerecast_navmesh
                     .polygon
                     .vertices
