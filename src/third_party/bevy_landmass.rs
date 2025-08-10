@@ -119,12 +119,7 @@ fn rerecast_to_landsmass(
                 })
                 .collect(),
             triangles: rerecast_navmesh.detail.triangles.clone(),
-            vertices: rerecast_navmesh
-                .polygon
-                .vertices
-                .iter()
-                .map(|v| orig + v.as_vec3() * to_local)
-                .collect(),
+            vertices: rerecast_navmesh.detail.vertices.clone(),
         }
         .into(),
     }
