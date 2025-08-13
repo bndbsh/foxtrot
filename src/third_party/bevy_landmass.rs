@@ -71,7 +71,6 @@ fn update_landmass_navmesh(
         };
         let landmass_navmesh = bevy_landmass::NavMesh {
             nav_mesh: Arc::new(landmass_navmesh),
-            type_index_to_node_type: default(),
         };
         let landmass_navmesh_handle = landmass_navmeshes.add(landmass_navmesh);
         commands
