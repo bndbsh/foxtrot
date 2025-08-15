@@ -150,19 +150,16 @@ features = ["release"]
 
 [package.metadata.bevy_cli.web]
 features = ["web"]
+rustflags = ["--cfg", "getrandom_backend=\"wasm_js\""]
 
 [package.metadata.bevy_cli.web.dev]
 features = ["dev"]
 
 [package.metadata.bevy_cli.web.release]
 features = ["release"]
-# Optimize with size in mind (also try "z", sometimes it is better).
-# Slightly slows compile times, great improvements to file size and runtime performance.
-opt-level = "s"
-# Strip all debugging information from the binary to slightly reduce file size.
-strip = "debuginfo"
-panic = "abort"
-lto = true
+
+[package.metadata.bevy_cli.unstable]
+web-multi-threading = true
 
 [lints.clippy]
 # Bevy supplies arguments to systems via dependency injection, so it's natural for systems to

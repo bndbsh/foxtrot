@@ -22,14 +22,20 @@ bevy run
 ```
 
 Web builds use experimental features to make audio run in a separate thread,
-allowing stutterless audio playback in the web browser. As such, you'll need to use a nightly compiler and
-set it as shown in `.cargo/config_web.toml`. The easiest way to do this is to simply rename that file to `.cargo/config.toml`.
-
-Then, to run the web build, use
+allowing stutterless audio playback in the web browser. As such, you'll need to use a nightly compiler:
 ```sh
-bevy run web --headers="Cross-Origin-Opener-Policy:same-origin" --headers="Cross-Origin-Embedder-Policy:require-corp"
+rustup default nightly
 ```
 
+And the Bevy CLI alpha from the current `main`:
+```sh
+cargo install bevy_cli --git https://github.com/TheBevyFlock/bevy_cli
+```
+
+Then finally, you can simply run:
+```sh
+bevy run web
+```
 
 ### (Optional) Hotpatching
 
