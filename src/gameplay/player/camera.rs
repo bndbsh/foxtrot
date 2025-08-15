@@ -10,10 +10,15 @@ use avian3d::prelude::*;
 #[cfg(feature = "native")]
 use bevy::pbr::ScreenSpaceAmbientOcclusion;
 use bevy::{
-    core_pipeline::experimental::taa::TemporalAntiAliasing,
-    core_pipeline::{Skybox, bloom::Bloom, tonemapping::Tonemapping},
-    pbr::NotShadowCaster,
-    pbr::ShadowFilteringMethod,
+    core_pipeline::{
+        Skybox,
+        bloom::Bloom,
+        experimental::taa::TemporalAntiAliasing,
+        fxaa::Fxaa,
+        prepass::{DeferredPrepass, DepthPrepass},
+        tonemapping::Tonemapping,
+    },
+    pbr::{NotShadowCaster, ShadowFilteringMethod},
     prelude::*,
     render::{
         camera::Exposure,
@@ -152,6 +157,7 @@ fn spawn_view_model(
                     Msaa::Off,
                     TemporalAntiAliasing::default(),
                     ShadowFilteringMethod::Temporal,
+                    DeferredPrepass,
                 ),
                 #[cfg(feature = "native")]
                 // See https://github.com/bevyengine/bevy/issues/20459
@@ -179,6 +185,7 @@ fn spawn_view_model(
                 RenderLayers::from(RenderLayer::VIEW_MODEL),
                 Exposure::INDOOR,
                 Tonemapping::TonyMcMapface,
+                (DepthPrepass, Msaa::Off, DeferredPrepass, Fxaa::default()),
                 env_map,
             ));
 
