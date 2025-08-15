@@ -22,8 +22,17 @@ bevy run
 ```
 
 Web builds use experimental features to make audio run in a separate thread,
-allowing stutterless audio playback in the web browser. As such, you'll need to use a nightly compiler and the bevy_cli off their `main` branch.
-Then:
+allowing stutterless audio playback in the web browser. As such, you'll need to use a nightly compiler:
+```sh
+rustup default nightly
+```
+
+And the Bevy CLI alpha from the current `main`:
+```sh
+cargo install bevy_cli --git https://github.com/TheBevyFlock/bevy_cli
+```
+
+Then finally, you can simply run:
 ```sh
 bevy run web
 ```
