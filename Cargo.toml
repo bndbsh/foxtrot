@@ -145,6 +145,7 @@ features = ["native"]
 
 [package.metadata.bevy_cli.native.dev]
 features = ["dev_native"]
+
 [package.metadata.bevy_cli.native.release]
 features = ["release"]
 

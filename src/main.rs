@@ -19,6 +19,7 @@ mod ui_camera;
 
 use asset_processing::default_image_sampler_descriptor;
 use bevy::ecs::error::{GLOBAL_ERROR_HANDLER, error};
+use bevy::pbr::DefaultOpaqueRendererMethod;
 use bevy_landmass::LandmassSystemSet;
 use bitflags::bitflags;
 
@@ -51,6 +52,7 @@ fn main() -> AppExit {
     let mut app = App::new();
 
     // Add Bevy plugins.
+    app.insert_resource(DefaultOpaqueRendererMethod::deferred());
     app.add_plugins(
         DefaultPlugins
             .set(AssetPlugin {
