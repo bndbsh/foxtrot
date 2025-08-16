@@ -96,6 +96,9 @@ fn spawn_view_model(
         intensity: 300.0,
         ..default()
     };
+
+    // Optimized for a dark outdoor scene at night
+    let exposure = Exposure { ev100: 4.5 };
     commands
         .spawn((
             Name::new("Player Camera Parent"),
@@ -141,7 +144,7 @@ fn spawn_view_model(
                 RenderLayers::from(
                     RenderLayer::DEFAULT | RenderLayer::PARTICLES | RenderLayer::GIZMO3,
                 ),
-                Exposure::INDOOR,
+                exposure,
                 Tonemapping::TonyMcMapface,
                 Bloom::NATURAL,
                 Skybox {
@@ -180,7 +183,7 @@ fn spawn_view_model(
                 }),
                 // Only render objects belonging to the view model.
                 RenderLayers::from(RenderLayer::VIEW_MODEL),
-                Exposure::INDOOR,
+                exposure,
                 Tonemapping::TonyMcMapface,
                 (DepthPrepass, Msaa::Off, DeferredPrepass, Fxaa::default()),
                 env_map,
