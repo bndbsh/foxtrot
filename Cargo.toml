@@ -93,6 +93,7 @@ getrandom = { version = "0.3", default-features = false, features = [
 ] }
 
 bevy_simple_subsecond_system = { version = "0.2.0", optional = true }
+bevy_mod_skinned_aabb = "0.2.0"
 
 bitflags = "2.9.1"
 anyhow = "1.0.99"

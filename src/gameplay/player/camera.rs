@@ -20,10 +20,7 @@ use bevy::{
     },
     pbr::{NotShadowCaster, ShadowFilteringMethod},
     prelude::*,
-    render::{
-        camera::Exposure,
-        view::{NoFrustumCulling, RenderLayers},
-    },
+    render::{camera::Exposure, view::RenderLayers},
     scene::SceneInstanceReady,
     window::CursorGrabMode,
 };
@@ -99,6 +96,9 @@ fn spawn_view_model(
         intensity: 300.0,
         ..default()
     };
+
+    // Optimized for a dark outdoor scene at night
+    let exposure = Exposure { ev100: 4.5 };
     commands
         .spawn((
             Name::new("Player Camera Parent"),
@@ -144,7 +144,7 @@ fn spawn_view_model(
                 RenderLayers::from(
                     RenderLayer::DEFAULT | RenderLayer::PARTICLES | RenderLayer::GIZMO3,
                 ),
-                Exposure::INDOOR,
+                exposure,
                 Tonemapping::TonyMcMapface,
                 Bloom::NATURAL,
                 Skybox {
@@ -183,7 +183,7 @@ fn spawn_view_model(
                 }),
                 // Only render objects belonging to the view model.
                 RenderLayers::from(RenderLayer::VIEW_MODEL),
-                Exposure::INDOOR,
+                exposure,
                 Tonemapping::TonyMcMapface,
                 (DepthPrepass, Msaa::Off, DeferredPrepass, Fxaa::default()),
                 env_map,
@@ -235,10 +235,6 @@ fn configure_player_view_model(
             RenderLayers::from(RenderLayer::VIEW_MODEL),
             // The arm is free-floating, so shadows would look weird.
             NotShadowCaster,
-            // The arm's origin is at the origin of the camera, so there is a high risk
-            // of it being culled. We want the view model to be visible at all times,
-            // so we disable frustum culling.
-            NoFrustumCulling,
         ));
     }
 }
