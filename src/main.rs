@@ -21,6 +21,7 @@ use asset_processing::default_image_sampler_descriptor;
 use bevy::ecs::error::{GLOBAL_ERROR_HANDLER, error};
 use bevy::pbr::DefaultOpaqueRendererMethod;
 use bevy_landmass::LandmassSystemSet;
+use bevy_mod_skinned_aabb::SkinnedAabbPlugin;
 use bitflags::bitflags;
 
 use bevy::core_pipeline::experimental::taa::TemporalAntiAliasPlugin;
@@ -90,7 +91,7 @@ fn main() -> AppExit {
         },
     );
     app.insert_resource(AmbientLight::NONE);
-    app.add_plugins(TemporalAntiAliasPlugin);
+    app.add_plugins((TemporalAntiAliasPlugin, SkinnedAabbPlugin));
 
     // Order new `AppSet` variants by adding them here:
     app.configure_sets(
