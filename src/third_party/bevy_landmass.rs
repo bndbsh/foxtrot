@@ -3,7 +3,7 @@
 
 use crate::{
     gameplay::{level::LevelAssets, npc::NPC_RADIUS},
-    screens::Screen,
+    screens::{Screen, loading::LoadingScreen},
 };
 use bevy::prelude::*;
 use bevy_landmass::{PointSampleDistance3d, prelude::*};
@@ -16,7 +16,7 @@ pub(super) fn plugin(app: &mut App) {
         Landmass3dPlugin::default(),
         LandmassRerecastPlugin::default(),
     ));
-    app.add_systems(OnEnter(Screen::Loading), setup_archipelago);
+    app.add_systems(OnEnter(LoadingScreen::Level), setup_archipelago);
 }
 
 #[cfg_attr(feature = "hot_patch", hot)]
