@@ -63,6 +63,7 @@ bevy-tnua-avian3d = "0.5"
 
 # navigation
 bevy_landmass = "0.10.0"
+landmass_rerecast = "0.1.0"
 bevy_rerecast = { version = "0.2.0", default-features = false }
 avian_rerecast = "0.2.0"
 
@@ -190,4 +191,5 @@ debug-assertions = false
 
 [patch.crates-io]
 # 0.10.0 is not released yet.
-bevy_landmass = { git = "https://github.com/andriyDev/landmass" }
+bevy_landmass = { git = "https://github.com/andriyDev/landmass", branch = "rerecast2" }
+landmass_rerecast = { git = "https://github.com/andriyDev/landmass", branch = "rerecast2" }

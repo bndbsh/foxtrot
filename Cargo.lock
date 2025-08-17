@@ -1197,7 +1197,7 @@ dependencies = [
 [[package]]
 name = "bevy_landmass"
 version = "0.10.0"
-source = "git+https://github.com/andriyDev/landmass#c0000f0dff502bac8fb6a31e30dcff757b93d399"
+source = "git+https://github.com/andriyDev/landmass?branch=rerecast2#8212351e511ed4095768b3b9395f607d799ebafc"
 dependencies = [
  "bevy_app",
  "bevy_asset",
@@ -3443,6 +3443,7 @@ dependencies = [
  "bitflags 2.9.1",
  "firewheel-web-audio",
  "getrandom 0.3.3",
+ "landmass_rerecast",
  "rand 0.8.5",
  "regex",
  "tracing",
@@ -4338,7 +4339,7 @@ dependencies = [
 [[package]]
 name = "landmass"
 version = "0.9.0"
-source = "git+https://github.com/andriyDev/landmass#c0000f0dff502bac8fb6a31e30dcff757b93d399"
+source = "git+https://github.com/andriyDev/landmass?branch=rerecast2#8212351e511ed4095768b3b9395f607d799ebafc"
 dependencies = [
  "disjoint",
  "dodgy_2d",
@@ -4347,6 +4348,21 @@ dependencies = [
  "kdtree",
  "slotmap",
  "thiserror 2.0.14",
+]
+
+[[package]]
+name = "landmass_rerecast"
+version = "0.1.0"
+source = "git+https://github.com/andriyDev/landmass?branch=rerecast2#8212351e511ed4095768b3b9395f607d799ebafc"
+dependencies = [
+ "bevy_app",
+ "bevy_asset",
+ "bevy_ecs",
+ "bevy_landmass",
+ "bevy_log",
+ "bevy_math",
+ "bevy_platform",
+ "bevy_rerecast_core",
 ]
 
 [[package]]
