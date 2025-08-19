@@ -191,5 +191,5 @@ debug-assertions = false
 
 [patch.crates-io]
 # 0.10.0 is not released yet.
-bevy_landmass = { git = "https://github.com/andriyDev/landmass", branch = "rerecast2" }
-landmass_rerecast = { git = "https://github.com/andriyDev/landmass", branch = "rerecast2" }
+bevy_landmass = { git = "https://github.com/andriyDev/landmass" }
+landmass_rerecast = { git = "https://github.com/andriyDev/landmass" }
