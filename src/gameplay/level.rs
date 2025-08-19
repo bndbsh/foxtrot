@@ -1,13 +1,16 @@
 //! Spawn the main level.
 
+use crate::{
+    asset_tracking::LoadResource, audio::MusicPool, gameplay::npc::NPC_RADIUS, screens::Screen,
+};
 use bevy::prelude::*;
+use bevy_landmass::{PointSampleDistance3d, prelude::*};
 use bevy_rerecast::prelude::*;
 use bevy_seedling::prelude::*;
 use bevy_seedling::sample::Sample;
 #[cfg(feature = "hot_patch")]
 use bevy_simple_subsecond_system::hot;
-
-use crate::{asset_tracking::LoadResource, audio::MusicPool, screens::Screen};
+use landmass_rerecast::{Island3dBundle, NavMeshHandle3d};
 
 pub(super) fn plugin(app: &mut App) {
     app.load_resource::<LevelAssets>();
@@ -29,6 +32,32 @@ pub(crate) fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>
         )],
     ));
     commands.insert_resource(AmbientLight::NONE);
+
+    let archipelago = commands
+        .spawn((
+            Name::new("Main Level Archipelago"),
+            StateScoped(Screen::Gameplay),
+            Archipelago3d::new(AgentOptions {
+                point_sample_distance: PointSampleDistance3d {
+                    horizontal_distance: 0.6,
+                    distance_above: 1.0,
+                    distance_below: 1.0,
+                    vertical_preference_ratio: 2.0,
+                },
+                ..AgentOptions::from_agent_radius(NPC_RADIUS)
+            }),
+        ))
+        .id();
+
+    commands.spawn((
+        Name::new("Main Level Island"),
+        StateScoped(Screen::Gameplay),
+        Island3dBundle {
+            island: Island,
+            archipelago_ref: ArchipelagoRef3d::new(archipelago),
+            nav_mesh: NavMeshHandle3d(level_assets.navmesh.clone()),
+        },
+    ));
 }
 
 #[derive(Component, Debug, Reflect)]
