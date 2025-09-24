@@ -9,6 +9,7 @@ use crate::gameplay::level::LevelAssets;
 use crate::{PostPhysicsAppSystems, theme::widget};
 use avian3d::prelude::*;
 use bevy::camera::visibility::RenderLayers;
+use bevy::dev_tools::fps_overlay::FrameTimeGraphConfig;
 use bevy::ui::Val::*;
 use bevy::{
     dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin},
@@ -25,6 +26,10 @@ pub(super) fn plugin(app: &mut App) {
     app.add_plugins(FpsOverlayPlugin {
         config: FpsOverlayConfig {
             enabled: false,
+            frame_time_graph_config: FrameTimeGraphConfig {
+                enabled: false,
+                ..default()
+            },
             ..default()
         },
     });
@@ -177,6 +182,7 @@ fn toggle_landmass_debug_ui(
 
 fn toggle_fps_overlay(mut config: ResMut<FpsOverlayConfig>) {
     config.enabled = !config.enabled;
+    config.frame_time_graph_config.enabled = config.enabled;
 }
 
 fn toggle_egui_inspector(

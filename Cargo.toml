@@ -194,9 +194,8 @@ landmass = { git = "https://github.com/andriyDev/landmass", branch = "bevy-0.17"
 landmass_rerecast = { git = "https://github.com/andriyDev/landmass", branch = "bevy-0.17" }
 bevy_trenchbroom = { git = "https://github.com/Noxmore/bevy_trenchbroom", branch = "bevy-0.17" }
 avian3d = { git = "https://github.com/Jondolf/avian", branch = "bevy-0.17" }
-bevy-tnua = {  git = "https://github.com/janhohenheim/bevy-tnua", branch = "bevy-0.17.0-dev"}
-bevy-tnua-avian3d = { git = "https://github.com/janhohenheim/bevy-tnua", branch = "bevy-0.17.0-dev"}
+bevy-tnua = { git = "https://github.com/janhohenheim/bevy-tnua", branch = "bevy-0.17.0-dev" }
+bevy-tnua-avian3d = { git = "https://github.com/janhohenheim/bevy-tnua", branch = "bevy-0.17.0-dev" }
 avian_rerecast = { git = "https://github.com/janhohenheim/rerecast" }
-bevy_framepace = { git = "https://github.com/aevyrie/bevy_framepace"}
-avian_pickup = { git = "https://github.com/janhohenheim/avian_pickup"}
-bevy_enhanced_input = { git = "https://github.com/janhohenheim/bevy_enhanced_input"}
+bevy_framepace = { git = "https://github.com/aevyrie/bevy_framepace" }
+avian_pickup = { git = "https://github.com/janhohenheim/avian_pickup" }
