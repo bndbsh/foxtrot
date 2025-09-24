@@ -97,8 +97,9 @@ bevy_fix_cursor_unlock_web = "0.2.0-rc"
 regex = "1.11.1"
 bevy_framepace = "0.20.0-rc"
 bevy_seedling = "0.6.0-rc"
-firewheel-web-audio = { version = "0.3.0-rc", optional = true }
 bincode = "2"
+# Latest version that works with bevy_seedling
+wasm-bindgen = { version = "=0.2.101", optional = true }
 
 # Not on 0.17 yet
 #bevy_hanabi = { version = "0.16.0", default-features = false, features = [
@@ -134,7 +135,7 @@ dev_native = [
     "bevy/embedded_watcher",
     "bevy_rerecast/editor_integration",
 ]
-web = ["bevy/webgpu", "dep:firewheel-web-audio"]
+web = ["bevy/webgpu", "bevy_seedling/web_audio", "dep:wasm-bindgen"]
 release = []
 
 [package.metadata.bevy_cli]
