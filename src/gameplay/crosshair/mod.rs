@@ -65,7 +65,7 @@ fn update_crosshair(
         Single<(&mut CrosshairState, &mut ImageNode, &mut Visibility), Changed<CrosshairState>>,
     >,
     assets: Res<AssetServer>,
-    mut cursor_options: Single<&mut CursorOptions, Changed<CursorOptions>>,
+    mut cursor_options: Single<&mut CursorOptions>,
 ) {
     let Some((mut crosshair_state, mut image_node, mut visibility)) =
         crosshair.map(|c| c.into_inner())

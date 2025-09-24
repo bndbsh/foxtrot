@@ -18,6 +18,7 @@ mod third_party;
 mod ui_camera;
 
 use asset_processing::default_image_sampler_descriptor;
+use bevy::gltf::GltfPlugin;
 use bevy::pbr::DefaultOpaqueRendererMethod;
 use bevy::{camera::visibility::RenderLayers, ecs::error::error};
 use bevy_landmass::LandmassSystemSet;
@@ -70,6 +71,10 @@ fn main() -> AppExit {
             })
             .set(ImagePlugin {
                 default_sampler: default_image_sampler_descriptor(),
+            })
+            .set(GltfPlugin {
+                use_model_forward_direction: true,
+                ..default()
             }),
     );
 
