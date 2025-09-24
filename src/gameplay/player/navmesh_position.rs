@@ -27,7 +27,7 @@ fn update_last_valid_player_navmesh_position(
 ) {
     let timer = timer.get_or_insert(Timer::new(Duration::from_millis(500), TimerMode::Once));
     timer.tick(time.delta());
-    if !timer.finished() {
+    if !timer.is_finished() {
         return;
     }
     timer.reset();

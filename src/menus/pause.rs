@@ -35,12 +35,12 @@ fn spawn_pause_menu(
     time.pause();
 }
 
-fn open_settings_menu(_trigger: Trigger<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {
+fn open_settings_menu(_on: On<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {
     next_menu.set(Menu::Settings);
 }
 
 fn close_menu(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut next_menu: ResMut<NextState<Menu>>,
     mut crosshair: Single<&mut CrosshairState>,
     mut time: ResMut<Time<Virtual>>,
@@ -53,7 +53,7 @@ fn close_menu(
 }
 
 fn quit_to_title(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut next_screen: ResMut<NextState<Screen>>,
     mut crosshair: Single<&mut CrosshairState>,
     mut time: ResMut<Time<Virtual>>,

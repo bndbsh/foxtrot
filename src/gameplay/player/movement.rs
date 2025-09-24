@@ -21,7 +21,10 @@ pub(super) fn plugin(app: &mut App) {
         Update,
         clear_accumulated_input.run_if(did_fixed_update_happen),
     );
-    app.add_systems(PreUpdate, accumulate_input.after(EnhancedInputSet::Apply));
+    app.add_systems(
+        PreUpdate,
+        accumulate_input.after(EnhancedInputSystems::Apply),
+    );
     app.add_observer(init_accumulated_input);
 
     app.register_type::<AccumulatedInput>();
@@ -51,9 +54,9 @@ fn accumulate_input(
     }
 }
 
-fn init_accumulated_input(trigger: Trigger<OnAdd, Player>, mut commands: Commands) {
+fn init_accumulated_input(add: On<Add, Player>, mut commands: Commands) {
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert(AccumulatedInput::default());
 }
 

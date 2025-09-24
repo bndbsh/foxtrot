@@ -32,18 +32,18 @@ pub(crate) struct CrateBig;
 pub(crate) struct CrateSmall;
 
 fn setup_crate_small(
-    trigger: Trigger<OnAdd, CrateSmall>,
+    add: On<Add, CrateSmall>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     archipelago: Single<Entity, With<Archipelago3d>>,
 ) {
     let model = asset_server.load_trenchbroom_model::<CrateSmall>();
-    commands.entity(trigger.target()).insert(Character3dBundle {
+    commands.entity(add.entity).insert(Character3dBundle {
         character: Character::default(),
         settings: CharacterSettings { radius: 0.5 },
         archipelago_ref: ArchipelagoRef3d::new(*archipelago),
     });
-    commands.entity(trigger.target()).insert((
+    commands.entity(add.entity).insert((
         ColliderConstructorHierarchy::new(ColliderConstructor::ConvexHullFromMesh)
             .with_default_layers(CollisionLayers::new(CollisionLayer::Prop, LayerMask::ALL))
             .with_default_density(1_000.0),

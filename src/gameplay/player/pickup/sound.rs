@@ -14,7 +14,7 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(
         Update,
         play_throw_sound
-            .run_if(in_state(Screen::Gameplay).and(on_event::<PropThrown>))
+            .run_if(in_state(Screen::Gameplay).and(on_message::<PropThrown>))
             .in_set(PostPhysicsAppSystems::PlaySounds),
     );
 }

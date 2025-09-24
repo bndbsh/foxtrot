@@ -23,8 +23,8 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(
         Update,
         (
-            hide_crosshair_on_dialogue_start.run_if(on_event::<DialogueStartEvent>),
-            show_crosshair_on_dialogue_end.run_if(on_event::<DialogueCompleteEvent>),
+            hide_crosshair_on_dialogue_start.run_if(on_message::<DialogueStartEvent>),
+            show_crosshair_on_dialogue_end.run_if(on_message::<DialogueCompleteEvent>),
         )
             .run_if(in_state(Screen::Gameplay))
             .in_set(PostPhysicsAppSystems::ChangeUi),

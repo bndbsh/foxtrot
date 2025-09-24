@@ -29,13 +29,13 @@ struct NpcAnimations {
 }
 
 pub(crate) fn setup_npc_animations(
-    trigger: Trigger<OnAdd, AnimationPlayers>,
+    add: On<Add, AnimationPlayers>,
     q_anim_players: Query<&AnimationPlayers>,
     mut commands: Commands,
     assets: Res<NpcAssets>,
     mut graphs: ResMut<Assets<AnimationGraph>>,
 ) {
-    let anim_players = q_anim_players.get(trigger.target()).unwrap();
+    let anim_players = q_anim_players.get(add.entity).unwrap();
     for anim_player in anim_players.iter() {
         let (graph, indices) = AnimationGraph::from_clips([
             assets.run_animation.clone(),

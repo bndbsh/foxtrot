@@ -18,11 +18,11 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 fn disable_collision_with_held_prop(
-    trigger: Trigger<OnAdd, HeldProp>,
+    add: On<Add, HeldProp>,
     q_children: Query<&Children>,
     mut q_collision_layers: Query<&mut CollisionLayers>,
 ) {
-    let rigid_body = trigger.target();
+    let rigid_body = add.entity;
     for child in iter::once(rigid_body).chain(q_children.iter_descendants(rigid_body)) {
         let Ok(mut collision_layers) = q_collision_layers.get_mut(child) else {
             continue;
@@ -32,11 +32,11 @@ fn disable_collision_with_held_prop(
 }
 
 fn enable_collision_with_no_longer_held_prop(
-    trigger: Trigger<OnRemove, HeldProp>,
+    remove: On<Remove, HeldProp>,
     q_children: Query<&Children>,
     mut q_collision_layers: Query<&mut CollisionLayers>,
 ) {
-    let rigid_body = trigger.target();
+    let rigid_body = remove.entity;
     for child in iter::once(rigid_body).chain(q_children.iter_descendants(rigid_body)) {
         let Ok(mut collision_layers) = q_collision_layers.get_mut(child) else {
             continue;

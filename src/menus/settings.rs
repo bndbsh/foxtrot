@@ -177,11 +177,11 @@ fn update_global_volume(
     master.volume = PerceptualVolumeConverter::default().to_volume(volume_step.fraction());
 }
 
-fn lower_volume(_trigger: Trigger<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
+fn lower_volume(_on: On<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
     volume_step.decrement();
 }
 
-fn raise_volume(_trigger: Trigger<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
+fn raise_volume(_on: On<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
     volume_step.increment();
 }
 
@@ -205,7 +205,7 @@ fn update_volume_label(
 struct CameraSensitivityLabel;
 
 fn lower_camera_sensitivity(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut camera_sensitivity: ResMut<CameraSensitivity>,
 ) {
     camera_sensitivity.0 -= 0.1;
@@ -215,7 +215,7 @@ fn lower_camera_sensitivity(
 }
 
 fn raise_camera_sensitivity(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut camera_sensitivity: ResMut<CameraSensitivity>,
 ) {
     camera_sensitivity.0 += 0.1;
@@ -235,12 +235,12 @@ fn update_camera_sensitivity_label(
 #[reflect(Component)]
 struct CameraFovLabel;
 
-fn lower_camera_fov(_trigger: Trigger<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
+fn lower_camera_fov(_on: On<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
     camera_fov.0 -= 1.0;
     camera_fov.0 = camera_fov.0.max(45.0);
 }
 
-fn raise_camera_fov(_trigger: Trigger<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
+fn raise_camera_fov(_on: On<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
     camera_fov.0 += 1.0;
     camera_fov.0 = camera_fov.0.min(130.0);
 }
@@ -265,11 +265,11 @@ impl Default for VsyncSetting {
 #[reflect(Component)]
 struct VsyncLabel;
 
-fn enable_vsync(_trigger: Trigger<Pointer<Click>>, mut setting: ResMut<VsyncSetting>) {
+fn enable_vsync(_on: On<Pointer<Click>>, mut setting: ResMut<VsyncSetting>) {
     setting.0 = true;
 }
 
-fn disable_vsync(_trigger: Trigger<Pointer<Click>>, mut setting: ResMut<VsyncSetting>) {
+fn disable_vsync(_on: On<Pointer<Click>>, mut setting: ResMut<VsyncSetting>) {
     setting.0 = false;
 }
 
@@ -309,7 +309,7 @@ struct FpsLimiterEnabledLabel;
 struct FpsLimiterTargetLabel;
 
 fn enable_fps_limiter(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut settings: ResMut<FpsLimiterSettings>,
     mut framepace: ResMut<FramepaceSettings>,
 ) {
@@ -318,7 +318,7 @@ fn enable_fps_limiter(
 }
 
 fn disable_fps_limiter(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut settings: ResMut<FpsLimiterSettings>,
     mut framepace: ResMut<FramepaceSettings>,
 ) {
@@ -326,13 +326,13 @@ fn disable_fps_limiter(
     framepace.limiter = Limiter::Off;
 }
 
-fn lower_fps_target(_trigger: Trigger<Pointer<Click>>, mut settings: ResMut<FpsLimiterSettings>) {
+fn lower_fps_target(_on: On<Pointer<Click>>, mut settings: ResMut<FpsLimiterSettings>) {
     let min_fps = 30;
     let step = 5;
     settings.target_fps = settings.target_fps.saturating_sub(step).max(min_fps);
 }
 
-fn raise_fps_target(_trigger: Trigger<Pointer<Click>>, mut settings: ResMut<FpsLimiterSettings>) {
+fn raise_fps_target(_on: On<Pointer<Click>>, mut settings: ResMut<FpsLimiterSettings>) {
     let max_fps = 360;
     let step = 5;
     settings.target_fps = (settings.target_fps + step).min(max_fps);
@@ -365,7 +365,7 @@ fn update_fps_limiter_target_label(
 }
 
 fn go_back_on_click(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     screen: Res<State<Screen>>,
     mut next_menu: ResMut<NextState<Menu>>,
 ) {

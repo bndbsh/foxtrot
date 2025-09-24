@@ -21,14 +21,14 @@ pub(super) fn plugin(app: &mut App) {
 pub(crate) struct LampShaded;
 
 fn setup_lamp_shaded(
-    trigger: Trigger<OnAdd, LampShaded>,
+    add: On<Add, LampShaded>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
     let bundle =
         static_bundle::<LampShaded>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert((
             bundle,
             children![(

@@ -21,14 +21,14 @@ pub(super) fn plugin(app: &mut App) {
 pub(crate) struct LampWallElectric;
 
 fn setup_lamp_wall_electric(
-    trigger: Trigger<OnAdd, LampWallElectric>,
+    add: On<Add, LampWallElectric>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
     let bundle =
         static_bundle::<LampWallElectric>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert(bundle)
         .with_child((
             Transform::from_xyz(0.0, -0.08, -0.35),

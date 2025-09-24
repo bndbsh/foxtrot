@@ -131,10 +131,7 @@ fn setup_debug_ui_text(mut commands: Commands) {
 #[derive(Component)]
 struct DebugUiText;
 
-fn advance_debug_state(
-    _trigger: Trigger<Started<ToggleDebugUi>>,
-    mut debug_state: ResMut<DebugState>,
-) {
+fn advance_debug_state(_on: On<Start<ToggleDebugUi>>, mut debug_state: ResMut<DebugState>) {
     *debug_state = debug_state.next();
 }
 
@@ -183,7 +180,7 @@ fn toggle_fps_overlay(mut config: ResMut<FpsOverlayConfig>) {
 }
 
 fn toggle_egui_inspector(
-    _trigger: Trigger<Started<ForceFreeCursor>>,
+    _on: On<Start<ForceFreeCursor>>,
     mut crosshair_state: Single<&mut CrosshairState>,
     mut inspector_active: ResMut<InspectorActive>,
 ) {

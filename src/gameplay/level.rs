@@ -4,7 +4,7 @@ use crate::{
     asset_tracking::LoadResource, audio::MusicPool, gameplay::npc::NPC_RADIUS, screens::Screen,
 };
 use bevy::prelude::*;
-use bevy_landmass::{PointSampleDistance3d, prelude::*};
+use bevy_landmass::prelude::*;
 use bevy_rerecast::prelude::*;
 use bevy_seedling::prelude::*;
 use bevy_seedling::sample::AudioSample;
@@ -17,7 +17,6 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 /// A system that spawns the main level.
-
 pub(crate) fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
     commands.spawn((
         Name::new("Level"),

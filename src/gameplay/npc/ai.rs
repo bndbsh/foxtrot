@@ -43,13 +43,12 @@ pub(super) fn plugin(app: &mut App) {
 
 /// Setup the NPC agent. An "agent" is what `bevy_landmass` can move around.
 /// Since we use a floating character controller, we need to offset the agent's position by the character's float height.
-
 fn setup_npc_agent(
-    trigger: Trigger<OnAdd, Npc>,
+    add: On<Add, Npc>,
     mut commands: Commands,
     archipelago: Single<Entity, With<Archipelago3d>>,
 ) {
-    let npc = trigger.target();
+    let npc = add.entity;
     commands.spawn((
         Name::new("NPC Agent"),
         Transform::from_translation(Vec3::new(0.0, -NPC_FLOAT_HEIGHT, 0.0)),
@@ -97,7 +96,6 @@ struct AgentOf(Entity);
 struct Agent(Entity);
 
 /// Use the desired velocity as the agent's velocity.
-
 fn set_controller_velocity(
     mut agent_query: Query<(&mut TnuaController, &Agent)>,
     desired_velocity_query: Query<&LandmassAgentDesiredVelocity>,

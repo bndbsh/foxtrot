@@ -21,7 +21,7 @@ pub(super) fn plugin(app: &mut App) {
 pub(crate) struct LampSitting;
 
 fn setup_lamp_sitting(
-    trigger: Trigger<OnAdd, LampSitting>,
+    add: On<Add, LampSitting>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
@@ -30,7 +30,7 @@ fn setup_lamp_sitting(
         ColliderConstructor::ConvexDecompositionFromMesh,
     );
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         // The prop should be held upright.
         .insert((bundle, PreferredPickupRotation(Quat::IDENTITY)))
         // The lamp's origin is at the bottom of the lamp, so we need to offset the light a bit.

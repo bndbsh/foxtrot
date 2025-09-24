@@ -37,7 +37,7 @@ fn spawn_main_menu(mut commands: Commands) {
 }
 
 fn enter_loading_screen(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut next_screen: ResMut<NextState<Screen>>,
     mut cursor_options: Single<&mut CursorOptions>,
 ) {
@@ -45,15 +45,15 @@ fn enter_loading_screen(
     cursor_options.grab_mode = CursorGrabMode::Locked;
 }
 
-fn open_settings_menu(_: Trigger<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {
+fn open_settings_menu(_: On<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {
     next_menu.set(Menu::Settings);
 }
 
-fn open_credits_menu(_: Trigger<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {
+fn open_credits_menu(_: On<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {
     next_menu.set(Menu::Credits);
 }
 
 #[cfg(not(target_family = "wasm"))]
-fn exit_app(_: Trigger<Pointer<Click>>, mut app_exit: EventWriter<AppExit>) {
+fn exit_app(_: On<Pointer<Click>>, mut app_exit: MessageWriter<AppExit>) {
     app_exit.write(AppExit::Success);
 }

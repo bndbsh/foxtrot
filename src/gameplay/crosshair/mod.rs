@@ -29,7 +29,6 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 /// Show a crosshair for better aiming
-
 fn spawn_crosshair(mut commands: Commands, assets: Res<AssetServer>) {
     commands
         .spawn((

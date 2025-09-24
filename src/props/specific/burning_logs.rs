@@ -69,7 +69,7 @@ const SOUND_PATH: &str = "audio/music/loop_flames_03.ogg";
 const BASE_INTENSITY: f32 = 150_000.0;
 
 fn setup_burning_logs(
-    trigger: Trigger<OnAdd, BurningLogs>,
+    add: On<Add, BurningLogs>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
@@ -78,7 +78,7 @@ fn setup_burning_logs(
     let sound_effect: Handle<AudioSample> = asset_server.load(SOUND_PATH);
 
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert((
             static_bundle,
             SamplePlayer::new(sound_effect)
@@ -114,13 +114,13 @@ fn flicker_light(time: Res<Time>, mut query: Query<&mut PointLight, With<Flicker
 }
 /*
 pub(super) fn add_particle_effects(
-    trigger: Trigger<OnAdd, BurningLogs>,
+    add: On<Add, BurningLogs>,
     asset_server: Res<AssetServer>,
     mut effects: ResMut<Assets<EffectAsset>>,
     mut commands: Commands,
 ) {
     let particle_bundle = particle_bundle(&asset_server, &mut effects);
-    commands.entity(trigger.target()).insert(particle_bundle);
+    commands.entity(trigger.entity).insert(particle_bundle);
 }
 
 fn particle_bundle(asset_server: &AssetServer, effects: &mut Assets<EffectAsset>) -> impl Bundle {

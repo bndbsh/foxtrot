@@ -39,7 +39,7 @@ pub(crate) struct PlayerAssets {
 impl FromWorld for PlayerAssets {
     fn from_world(world: &mut World) -> Self {
         let assets = world.resource::<AssetServer>();
-        let rng = &mut rand::thread_rng();
+        let rng = &mut rand::rng();
         Self {
             _model: assets.load_with_settings(
                 Player::scene_path(),

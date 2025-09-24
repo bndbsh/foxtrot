@@ -27,16 +27,15 @@ pub(crate) struct AnimationPlayerOf(pub(crate) Entity);
 /// Bevy likes to hide the [`AnimationPlayer`] component deep in the hierarchy of a model.
 /// This system ensures that we can find the animation player easily by inserting an [`AnimationPlayers`] relationship
 /// into the same entity that contains the [`AnimationPlayerAncestor`] component.
-
 fn link_animation_player(
-    trigger: Trigger<SceneInstanceReady>,
+    ready: On<SceneInstanceReady>,
     mut commands: Commands,
     q_parent: Query<&ChildOf>,
     q_children: Query<&Children>,
     q_animation_player: Query<Entity, With<AnimationPlayer>>,
     q_ancestor: Query<Entity, With<AnimationPlayerAncestor>>,
 ) {
-    let scene_root = trigger.target();
+    let scene_root = ready.entity;
     let animation_player = q_children
         .iter_descendants(scene_root)
         .find(|child| q_animation_player.get(*child).is_ok());

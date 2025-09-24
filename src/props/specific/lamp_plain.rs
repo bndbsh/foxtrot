@@ -31,15 +31,15 @@ impl Default for LampPlain {
 }
 
 fn setup_lamp_wall_electric(
-    trigger: Trigger<OnAdd, LampPlain>,
+    add: On<Add, LampPlain>,
     lamp: Query<&LampPlain>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
-    let lamp = lamp.get(trigger.target()).unwrap();
+    let lamp = lamp.get(add.entity).unwrap();
     let bundle = static_bundle::<LampPlain>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert(bundle)
         .with_child((
             Transform::from_xyz(0.0, -0.08, -0.35),

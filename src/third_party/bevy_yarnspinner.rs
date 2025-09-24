@@ -34,7 +34,7 @@ fn setup_dialogue_runner(mut commands: Commands, yarn_project: Res<YarnProject>)
 
 fn abort_all_dialogues_when_leaving_gameplay(
     q_dialogue_runner: Query<Entity, With<DialogueRunner>>,
-    mut dialogue_complete_events: EventWriter<DialogueCompleteEvent>,
+    mut dialogue_complete_events: MessageWriter<DialogueCompleteEvent>,
 ) {
     for dialogue_runner in q_dialogue_runner.iter() {
         dialogue_complete_events.write(DialogueCompleteEvent {

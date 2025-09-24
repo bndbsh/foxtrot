@@ -50,11 +50,11 @@ pub(crate) struct DefaultInputContext;
 #[reflect(Resource)]
 pub(crate) struct BlocksInput(HashSet<TypeId>);
 
-fn bind_default_inputs(trigger: Trigger<OnAdd, DefaultInputContext>, mut commands: Commands) {
+fn bind_default_inputs(add: On<Add, DefaultInputContext>, mut commands: Commands) {
     const DEFAULT_SENSITIVITY: f32 = 0.002;
     const DEFAULT_SPEED: f32 = 8.0;
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert(actions!(DefaultInputContext[
             (
                 Action::<Move>::new(), DeadZone::default(),

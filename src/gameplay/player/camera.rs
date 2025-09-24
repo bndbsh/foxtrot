@@ -77,7 +77,7 @@ pub(crate) struct PlayerCamera;
 struct WorldModelCamera;
 
 fn spawn_view_model(
-    trigger: Trigger<OnAdd, Player>,
+    add: On<Add, Player>,
     player_transform: Query<&Transform>,
     mut commands: Commands,
     assets: Res<AssetServer>,
@@ -86,7 +86,7 @@ fn spawn_view_model(
 ) {
     use bevy_seedling::spatial::SpatialListener3D;
 
-    let player_transform = player_transform.get(trigger.target()).unwrap();
+    let player_transform = player_transform.get(add.entity).unwrap();
     let env_map = EnvironmentMapLight {
         diffuse_map: level_assets.env_map_diffuse.clone(),
         specular_map: level_assets.env_map_specular.clone(),
@@ -199,14 +199,13 @@ fn spawn_view_model(
 
 /// It makes more sense for the animation players to be related to the [`Player`] entity
 /// than to the [`PlayerCamera`] entity, so let's move the relationship there.
-
 fn move_anim_players_relationship_to_player(
-    trigger: Trigger<OnAdd, AnimationPlayers>,
+    add: On<Add, AnimationPlayers>,
     q_anim_player: Query<&AnimationPlayers>,
     player: Single<Entity, With<Player>>,
     mut commands: Commands,
 ) {
-    let anim_players = q_anim_player.get(trigger.target()).unwrap();
+    let anim_players = q_anim_player.get(add.entity).unwrap();
     for anim_player in anim_players.iter() {
         commands
             .entity(anim_player)
@@ -215,12 +214,12 @@ fn move_anim_players_relationship_to_player(
 }
 
 fn configure_player_view_model(
-    trigger: Trigger<SceneInstanceReady>,
+    ready: On<SceneInstanceReady>,
     mut commands: Commands,
     q_children: Query<&Children>,
     q_mesh: Query<(), With<Mesh3d>>,
 ) {
-    let view_model = trigger.target();
+    let view_model = ready.entity;
 
     for child in iter::once(view_model)
         .chain(q_children.iter_descendants(view_model))
@@ -236,7 +235,7 @@ fn configure_player_view_model(
 }
 
 fn rotate_camera_yaw_and_pitch(
-    trigger: Trigger<Fired<Rotate>>,
+    rotate: On<Fire<Rotate>>,
     mut transform: Single<&mut Transform, With<PlayerCamera>>,
     sensitivity: Res<CameraSensitivity>,
     cursor_options: Single<&CursorOptions>,
@@ -245,7 +244,7 @@ fn rotate_camera_yaw_and_pitch(
         return;
     }
 
-    let delta = trigger.value;
+    let delta = rotate.value;
 
     if delta == Vec2::ZERO {
         return;
@@ -284,25 +283,22 @@ fn sync_camera_translation_with_player(
         player.translation + Vec3::Y * (camera_height - PLAYER_FLOAT_HEIGHT);
 }
 
-fn add_render_layers_to_point_light(trigger: Trigger<OnAdd, PointLight>, mut commands: Commands) {
-    let entity = trigger.target();
+fn add_render_layers_to_point_light(add: On<Add, PointLight>, mut commands: Commands) {
+    let entity = add.entity;
     commands.entity(entity).insert(RenderLayers::from(
         RenderLayer::DEFAULT | RenderLayer::VIEW_MODEL,
     ));
 }
 
-fn add_render_layers_to_spot_light(trigger: Trigger<OnAdd, SpotLight>, mut commands: Commands) {
-    let entity = trigger.target();
+fn add_render_layers_to_spot_light(add: On<Add, SpotLight>, mut commands: Commands) {
+    let entity = add.entity;
     commands.entity(entity).insert(RenderLayers::from(
         RenderLayer::DEFAULT | RenderLayer::VIEW_MODEL,
     ));
 }
 
-fn add_render_layers_to_directional_light(
-    trigger: Trigger<OnAdd, DirectionalLight>,
-    mut commands: Commands,
-) {
-    let entity = trigger.target();
+fn add_render_layers_to_directional_light(add: On<Add, DirectionalLight>, mut commands: Commands) {
+    let entity = add.entity;
     commands.entity(entity).insert(RenderLayers::from(
         RenderLayer::DEFAULT | RenderLayer::VIEW_MODEL,
     ));

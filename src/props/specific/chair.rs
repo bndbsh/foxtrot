@@ -19,19 +19,19 @@ pub(super) fn plugin(app: &mut App) {
 pub(crate) struct Chair;
 
 fn setup_chair(
-    trigger: Trigger<OnAdd, Chair>,
+    add: On<Add, Chair>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     archipelago: Single<Entity, With<Archipelago3d>>,
 ) {
     let model = asset_server.load_trenchbroom_model::<Chair>();
-    commands.entity(trigger.target()).insert(Character3dBundle {
+    commands.entity(add.entity).insert(Character3dBundle {
         character: Character::default(),
         settings: CharacterSettings { radius: 0.4 },
         archipelago_ref: ArchipelagoRef3d::new(*archipelago),
     });
 
-    commands.entity(trigger.target()).insert((
+    commands.entity(add.entity).insert((
         // The chair has a fairly complex shape, so let's use a convex decomposition.
         ColliderConstructorHierarchy::new(ColliderConstructor::ConvexDecompositionFromMesh)
             .with_default_layers(CollisionLayers::new(CollisionLayer::Prop, LayerMask::ALL))

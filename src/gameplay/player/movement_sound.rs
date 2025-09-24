@@ -43,8 +43,8 @@ fn play_jump_grunt(
     }
     *is_jumping = true;
 
-    if sound_cooldown.finished() {
-        let rng = &mut rand::thread_rng();
+    if sound_cooldown.is_finished() {
+        let rng = &mut rand::rng();
         let grunt = player_assets.jump_grunts.pick(rng).clone();
         let jump_start = player_assets.jump_start_sounds.pick(rng).clone();
 
@@ -72,7 +72,7 @@ fn play_step_sound(
     let timer =
         timer.get_or_insert_with(|| Timer::new(Duration::from_millis(300), TimerMode::Repeating));
     timer.tick(time.delta());
-    if !timer.finished() {
+    if !timer.is_finished() {
         return;
     }
 
@@ -83,7 +83,7 @@ fn play_step_sound(
     if linear_velocity.length_squared() < 5.0 {
         return;
     }
-    let rng = &mut rand::thread_rng();
+    let rng = &mut rand::rng();
     let sound = player_assets.steps.pick(rng).clone();
     commands.entity(entity).with_child((
         SamplePlayer::new(sound),
@@ -109,7 +109,7 @@ fn play_land_sound(
     }
     *was_airborne = false;
 
-    let rng = &mut rand::thread_rng();
+    let rng = &mut rand::rng();
     let sound = player_assets.land_sounds.pick(rng).clone();
     commands.entity(entity).with_child((
         SamplePlayer::new(sound),

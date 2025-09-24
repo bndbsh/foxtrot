@@ -10,30 +10,22 @@ pub(super) fn plugin(app: &mut App) {
     app.add_observer(validate_audio);
 }
 
-fn validate_mesh(
-    trigger: Trigger<OnAdd, Mesh3d>,
-    q_mesh: Query<&Mesh3d>,
-    assets: Res<AssetServer>,
-) {
-    let handle = &q_mesh.get(trigger.target()).unwrap().0;
+fn validate_mesh(add: On<Add, Mesh3d>, q_mesh: Query<&Mesh3d>, assets: Res<AssetServer>) {
+    let handle = &q_mesh.get(add.entity).unwrap().0;
     validate_asset(handle, &assets, "Mesh");
 }
 
 fn validate_material(
-    trigger: Trigger<OnAdd, MeshMaterial3d<StandardMaterial>>,
+    add: On<Add, MeshMaterial3d<StandardMaterial>>,
     q_material: Query<&MeshMaterial3d<StandardMaterial>>,
     assets: Res<AssetServer>,
 ) {
-    let handle = &q_material.get(trigger.target()).unwrap().0;
+    let handle = &q_material.get(add.entity).unwrap().0;
     validate_asset(handle, &assets, "Material");
 }
 
-fn validate_scene(
-    trigger: Trigger<OnAdd, SceneRoot>,
-    q_scene: Query<&SceneRoot>,
-    assets: Res<AssetServer>,
-) {
-    let handle = &q_scene.get(trigger.target()).unwrap().0;
+fn validate_scene(add: On<Add, SceneRoot>, q_scene: Query<&SceneRoot>, assets: Res<AssetServer>) {
+    let handle = &q_scene.get(add.entity).unwrap().0;
     validate_asset(handle, &assets, "Scene");
 }
 
@@ -47,10 +39,10 @@ fn validate_asset<T: Asset>(handle: &Handle<T>, assets: &AssetServer, type_name:
 }
 
 fn validate_audio(
-    trigger: Trigger<OnAdd, SamplePlayer>,
+    add: On<Add, SamplePlayer>,
     q_audio: Query<&SamplePlayer>,
     assets: Res<AssetServer>,
 ) {
-    let handle = &q_audio.get(trigger.target()).unwrap().sample;
+    let handle = &q_audio.get(add.entity).unwrap().sample;
     validate_asset(handle, &assets, "Audio");
 }

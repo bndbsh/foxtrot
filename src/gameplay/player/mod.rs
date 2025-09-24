@@ -69,12 +69,12 @@ const PLAYER_HALF_HEIGHT: f32 = PLAYER_HEIGHT / 2.0;
 const PLAYER_FLOAT_HEIGHT: f32 = PLAYER_HALF_HEIGHT + 0.01;
 
 fn setup_player(
-    trigger: Trigger<OnAdd, Player>,
+    add: On<Add, Player>,
     mut commands: Commands,
     archipelago: Single<Entity, With<Archipelago3d>>,
 ) {
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert((
             RigidBody::Dynamic,
             DefaultInputContext,

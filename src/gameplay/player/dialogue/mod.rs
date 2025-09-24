@@ -4,7 +4,7 @@ use std::any::Any;
 
 use avian3d::prelude::{SpatialQuery, SpatialQueryFilter};
 use bevy::prelude::*;
-use bevy_enhanced_input::prelude::Started;
+use bevy_enhanced_input::prelude::*;
 
 use bevy_yarnspinner::{events::DialogueCompleteEvent, prelude::*};
 
@@ -53,7 +53,7 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(
         Update,
         restore_input_context
-            .run_if(in_state(Screen::Gameplay).and(on_event::<DialogueCompleteEvent>))
+            .run_if(in_state(Screen::Gameplay).and(on_message::<DialogueCompleteEvent>))
             .in_set(PostPhysicsAppSystems::Update),
     );
 
@@ -98,7 +98,7 @@ fn check_for_dialogue_opportunity(
 struct InteractionPrompt(Option<YarnNode>);
 
 fn interact_with_dialogue(
-    _trigger: Trigger<Started<Interact>>,
+    _on: On<Start<Interact>>,
     mut interaction_prompt: Single<&mut InteractionPrompt>,
     mut dialogue_runner: Single<&mut DialogueRunner>,
     mut crosshair: Single<&mut CrosshairState>,

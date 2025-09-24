@@ -30,7 +30,7 @@ fn play_step_sound(
         Timer::new(Duration::from_millis(base_millis), TimerMode::Repeating)
     });
     timer.tick(time.delta());
-    if !timer.finished() {
+    if !timer.is_finished() {
         return;
     }
 
@@ -46,7 +46,7 @@ fn play_step_sound(
     let speed_to_half_duration = 5.0;
     let factor = 1.0 - (speed - speed_to_half_duration) / speed_to_half_duration;
     timer.set_duration(Duration::from_millis((base_millis as f32 * factor) as u64));
-    let rng = &mut rand::thread_rng();
+    let rng = &mut rand::rng();
     let sound_effect = npc_assets.steps.pick(rng).clone();
 
     commands.entity(entity).with_child((

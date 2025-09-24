@@ -12,8 +12,8 @@ pub(super) fn plugin(app: &mut App) {
 #[solid_class(base(Transform, Visibility))]
 pub(crate) struct LightWindow;
 
-fn setup_light_window_brush_entity(trigger: Trigger<OnAdd, LightWindow>, mut commands: Commands) {
-    let entity = trigger.target();
+fn setup_light_window_brush_entity(add: On<Add, LightWindow>, mut commands: Commands) {
+    let entity = add.entity;
     commands
         .entity(entity)
         // Using `children!` here would run into https://github.com/Noxmore/bevy_trenchbroom/issues/95

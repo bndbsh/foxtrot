@@ -19,7 +19,7 @@ pub(crate) fn default_image_sampler_descriptor() -> ImageSamplerDescriptor {
 }
 
 fn move_textures_to_render_world(
-    mut events: EventReader<AssetEvent<Image>>,
+    mut events: MessageReader<AssetEvent<Image>>,
     mut images: ResMut<Assets<Image>>,
     assets: Res<AssetServer>,
 ) {

@@ -17,16 +17,14 @@ pub(crate) enum CollisionLayer {
 }
 
 fn enable_interpolation(
-    trigger: Trigger<OnAdd, RigidBody>,
+    add: On<Add, RigidBody>,
     rigid_body: Query<&RigidBody>,
     mut commands: Commands,
 ) {
-    let Ok(rigid_body) = rigid_body.get(trigger.target()) else {
+    let Ok(rigid_body) = rigid_body.get(add.entity) else {
         return;
     };
     if rigid_body.is_dynamic() {
-        commands
-            .entity(trigger.target())
-            .insert(TransformInterpolation);
+        commands.entity(add.entity).insert(TransformInterpolation);
     }
 }

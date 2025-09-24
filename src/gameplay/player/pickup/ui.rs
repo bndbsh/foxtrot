@@ -48,7 +48,7 @@ fn check_for_pickup_opportunity(
 }
 
 fn hide_crosshair_when_picking_up(
-    _trigger: Trigger<OnAdd, HeldProp>,
+    _on: On<Add, HeldProp>,
     mut crosshair: Single<&mut CrosshairState>,
 ) {
     crosshair
@@ -57,7 +57,7 @@ fn hide_crosshair_when_picking_up(
 }
 
 fn show_crosshair_when_not_picking_up(
-    _trigger: Trigger<OnRemove, HeldProp>,
+    _on: On<Remove, HeldProp>,
     mut crosshair: Single<&mut CrosshairState>,
 ) {
     crosshair

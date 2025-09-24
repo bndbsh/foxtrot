@@ -14,9 +14,9 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 fn pull_prop(
-    _trigger: Trigger<Fired<PickupProp>>,
+    _on: On<Fire<PickupProp>>,
     actor: Single<Entity, With<AvianPickupActor>>,
-    mut avian_pickup_input_writer: EventWriter<AvianPickupInput>,
+    mut avian_pickup_input_writer: MessageWriter<AvianPickupInput>,
 ) {
     avian_pickup_input_writer.write(AvianPickupInput {
         action: AvianPickupAction::Pull,
@@ -25,9 +25,9 @@ fn pull_prop(
 }
 
 fn throw_prop(
-    _trigger: Trigger<Started<PickupProp>>,
+    _on: On<Start<PickupProp>>,
     actor: Single<Entity, With<AvianPickupActor>>,
-    mut avian_pickup_input_writer: EventWriter<AvianPickupInput>,
+    mut avian_pickup_input_writer: MessageWriter<AvianPickupInput>,
 ) {
     avian_pickup_input_writer.write(AvianPickupInput {
         action: AvianPickupAction::Throw,
@@ -36,9 +36,9 @@ fn throw_prop(
 }
 
 fn drop_prop(
-    _trigger: Trigger<Started<DropProp>>,
+    _on: On<Start<DropProp>>,
     actor: Single<Entity, With<AvianPickupActor>>,
-    mut avian_pickup_input_writer: EventWriter<AvianPickupInput>,
+    mut avian_pickup_input_writer: MessageWriter<AvianPickupInput>,
 ) {
     avian_pickup_input_writer.write(AvianPickupInput {
         action: AvianPickupAction::Drop,
