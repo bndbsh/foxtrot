@@ -1,8 +1,7 @@
 use avian3d::prelude::*;
 use bevy::prelude::*;
 use bevy_landmass::{Character, prelude::*};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_trenchbroom::prelude::*;
 
 use crate::third_party::{avian3d::CollisionLayer, bevy_trenchbroom::LoadTrenchbroomModel as _};
@@ -19,7 +18,6 @@ pub(super) fn plugin(app: &mut App) {
 )]
 pub(crate) struct Chair;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_chair(
     trigger: Trigger<OnAdd, Chair>,
     asset_server: Res<AssetServer>,

@@ -1,13 +1,11 @@
 //! Utility functions for adding special effects to props.
 
-use bevy::{pbr::NotShadowCaster, prelude::*, scene::SceneInstanceReady};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+use bevy::{light::NotShadowCaster, prelude::*, scene::SceneInstanceReady};
+
 use std::iter;
 
 pub(super) fn plugin(_app: &mut App) {}
 
-#[cfg_attr(feature = "hot_patch", hot)]
 pub(crate) fn disable_shadow_casting_on_instance_ready(
     trigger: Trigger<SceneInstanceReady>,
     mut commands: Commands,

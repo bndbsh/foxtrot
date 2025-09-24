@@ -2,8 +2,6 @@
 
 use bevy::prelude::*;
 use bevy_enhanced_input::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(Startup, setup_dev_tools_input);
@@ -21,7 +19,6 @@ pub(crate) struct ForceFreeCursor;
 #[derive(Debug, Component, Default)]
 struct DevToolsInputContext;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_dev_tools_input(mut commands: Commands) {
     commands.spawn((
         Name::new("DevToolsInput"),

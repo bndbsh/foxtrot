@@ -10,8 +10,7 @@ use bevy_landmass::{
         AgentDesiredVelocity3d as LandmassAgentDesiredVelocity, Velocity3d as LandmassVelocity, *,
     },
 };
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::prelude::*;
 
 use crate::{
@@ -31,7 +30,7 @@ pub(super) fn plugin(app: &mut App) {
         RunFixedMainLoop,
         (sync_agent_velocity, set_controller_velocity)
             .chain()
-            .in_set(RunFixedMainLoopSystem::BeforeFixedMainLoop)
+            .in_set(RunFixedMainLoopSystems::BeforeFixedMainLoop)
             .before(LandmassSystemSet::SyncExistence)
             .run_if(in_state(Screen::Gameplay)),
     );
@@ -44,7 +43,7 @@ pub(super) fn plugin(app: &mut App) {
 
 /// Setup the NPC agent. An "agent" is what `bevy_landmass` can move around.
 /// Since we use a floating character controller, we need to offset the agent's position by the character's float height.
-#[cfg_attr(feature = "hot_patch", hot)]
+
 fn setup_npc_agent(
     trigger: Trigger<OnAdd, Npc>,
     mut commands: Commands,
@@ -75,7 +74,6 @@ fn setup_npc_agent(
 #[reflect(Component)]
 struct WantsToFollowPlayer;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_agent_target(
     mut agents: Query<&mut AgentTarget3d, With<WantsToFollowPlayer>>,
     player_position: Single<&LastValidPlayerNavmeshPosition>,
@@ -99,7 +97,7 @@ struct AgentOf(Entity);
 struct Agent(Entity);
 
 /// Use the desired velocity as the agent's velocity.
-#[cfg_attr(feature = "hot_patch", hot)]
+
 fn set_controller_velocity(
     mut agent_query: Query<(&mut TnuaController, &Agent)>,
     desired_velocity_query: Query<&LandmassAgentDesiredVelocity>,
@@ -121,7 +119,6 @@ fn set_controller_velocity(
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn sync_agent_velocity(mut agent_query: Query<(&LinearVelocity, &mut LandmassVelocity)>) {
     for (avian_velocity, mut landmass_velocity) in &mut agent_query {
         landmass_velocity.velocity = avian_velocity.0;

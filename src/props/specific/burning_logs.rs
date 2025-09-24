@@ -1,20 +1,17 @@
 use avian3d::prelude::*;
-use bevy::render::view::RenderLayers;
-use bevy_hanabi::prelude::*;
+//use bevy_hanabi::prelude::*;
 use bevy_seedling::prelude::*;
-use bevy_seedling::sample::Sample;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
-use bevy_trenchbroom::prelude::*;
-use std::f32::consts::TAU;
+use bevy_seedling::sample::AudioSample;
 
+use bevy_trenchbroom::prelude::*;
+
+use crate::asset_tracking::LoadResource as _;
 use crate::{
     PostPhysicsAppSystems,
     audio::SpatialPool,
     props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle},
     screens::Screen,
 };
-use crate::{RenderLayer, asset_tracking::LoadResource as _};
 use bevy::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
@@ -28,7 +25,7 @@ pub(super) fn plugin(app: &mut App) {
             .in_set(PostPhysicsAppSystems::Update),
     );
     app.add_observer(setup_burning_logs);
-    app.add_observer(add_particle_effects);
+    //app.add_observer(add_particle_effects);
     app.register_type::<BurningLogs>();
 }
 
@@ -44,7 +41,7 @@ struct BurningLogsAssets {
     #[dependency]
     texture: Handle<Image>,
     #[dependency]
-    sound: Handle<Sample>,
+    sound: Handle<AudioSample>,
 }
 
 impl FromWorld for BurningLogsAssets {
@@ -71,7 +68,6 @@ const SOUND_PATH: &str = "audio/music/loop_flames_03.ogg";
 
 const BASE_INTENSITY: f32 = 150_000.0;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_burning_logs(
     trigger: Trigger<OnAdd, BurningLogs>,
     asset_server: Res<AssetServer>,
@@ -79,7 +75,7 @@ fn setup_burning_logs(
 ) {
     let static_bundle =
         static_bundle::<BurningLogs>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
-    let sound_effect: Handle<Sample> = asset_server.load(SOUND_PATH);
+    let sound_effect: Handle<AudioSample> = asset_server.load(SOUND_PATH);
 
     commands
         .entity(trigger.target())
@@ -108,7 +104,6 @@ fn setup_burning_logs(
 #[reflect(Component)]
 struct Flicker;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn flicker_light(time: Res<Time>, mut query: Query<&mut PointLight, With<Flicker>>) {
     for mut light in &mut query {
         let flickers_per_second = 20.0;
@@ -117,8 +112,7 @@ fn flicker_light(time: Res<Time>, mut query: Query<&mut PointLight, With<Flicker
         light.intensity = BASE_INTENSITY + flicker * BASE_INTENSITY * flicker_percentage;
     }
 }
-
-#[cfg_attr(feature = "hot_patch", hot)]
+/*
 pub(super) fn add_particle_effects(
     trigger: Trigger<OnAdd, BurningLogs>,
     asset_server: Res<AssetServer>,
@@ -222,3 +216,4 @@ fn setup_particles(effects: &mut Assets<EffectAsset>) -> Handle<EffectAsset> {
 
     effects.add(effect)
 }
+ */

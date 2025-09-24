@@ -61,7 +61,7 @@ fn label_base(text: impl Into<String>, font_size: f32) -> impl Bundle {
 /// A large rounded button with text and an action defined as an [`Observer`].
 pub(crate) fn button<E, B, M, I>(text: impl Into<String>, action: I) -> impl Bundle
 where
-    E: Event,
+    E: EntityEvent,
     B: Bundle,
     I: IntoObserverSystem<E, B, M>,
 {
@@ -84,7 +84,7 @@ where
 /// A small square button with text and an action defined as an [`Observer`].
 pub(crate) fn button_small<E, B, M, I>(text: impl Into<String>, action: I) -> impl Bundle
 where
-    E: Event,
+    E: EntityEvent,
     B: Bundle,
     I: IntoObserverSystem<E, B, M>,
 {
@@ -108,7 +108,7 @@ fn button_base<E, B, M, I>(
     button_bundle: impl Bundle,
 ) -> impl Bundle
 where
-    E: Event,
+    E: EntityEvent,
     B: Bundle,
     I: IntoObserverSystem<E, B, M>,
 {
@@ -149,7 +149,7 @@ pub(crate) fn plus_minus_bar<E, B, M, I1, I2>(
     raise: I2,
 ) -> impl Bundle
 where
-    E: Event,
+    E: EntityEvent,
     B: Bundle,
     I1: IntoObserverSystem<E, B, M>,
     I2: IntoObserverSystem<E, B, M>,

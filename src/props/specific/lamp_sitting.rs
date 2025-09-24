@@ -1,8 +1,7 @@
 use avian_pickup::prop::PreferredPickupRotation;
 use avian3d::prelude::*;
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_trenchbroom::prelude::*;
 
 use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::dynamic_bundle};
@@ -21,7 +20,6 @@ pub(super) fn plugin(app: &mut App) {
 )]
 pub(crate) struct LampSitting;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_lamp_sitting(
     trigger: Trigger<OnAdd, LampSitting>,
     asset_server: Res<AssetServer>,

@@ -1,7 +1,7 @@
 //! Preload NPC assets.
 
 use bevy::{asset::RenderAssetUsages, gltf::GltfLoaderSettings, prelude::*};
-use bevy_seedling::sample::Sample;
+use bevy_seedling::sample::AudioSample;
 use bevy_shuffle_bag::ShuffleBag;
 
 use crate::{
@@ -27,7 +27,7 @@ pub(crate) struct NpcAssets {
     #[dependency]
     pub(crate) run_animation: Handle<AnimationClip>,
     #[dependency]
-    pub(crate) steps: ShuffleBag<Handle<Sample>>,
+    pub(crate) steps: ShuffleBag<Handle<AudioSample>>,
 }
 
 impl FromWorld for NpcAssets {

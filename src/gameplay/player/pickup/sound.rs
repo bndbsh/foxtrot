@@ -4,8 +4,6 @@ use crate::gameplay::player::Player;
 use avian_pickup::output::PropThrown;
 use bevy::prelude::*;
 use bevy_seedling::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use crate::{
     PostPhysicsAppSystems, audio::SpatialPool, gameplay::player::assets::PlayerAssets,
@@ -21,7 +19,6 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_throw_sound(
     mut commands: Commands,
     player_assets: Res<PlayerAssets>,

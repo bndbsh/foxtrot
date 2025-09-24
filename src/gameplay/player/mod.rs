@@ -7,8 +7,7 @@ use animation::{PlayerAnimationState, setup_player_animations};
 use avian3d::prelude::*;
 use bevy::prelude::*;
 use bevy_landmass::{Character, prelude::*};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::{TnuaAnimatingState, prelude::*};
 use bevy_tnua_avian3d::TnuaAvian3dSensorShape;
 use bevy_trenchbroom::prelude::*;
@@ -69,7 +68,6 @@ const PLAYER_HALF_HEIGHT: f32 = PLAYER_HEIGHT / 2.0;
 /// In this case, we use 30 cm of padding to make the player float nicely up stairs.
 const PLAYER_FLOAT_HEIGHT: f32 = PLAYER_HALF_HEIGHT + 0.01;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_player(
     trigger: Trigger<OnAdd, Player>,
     mut commands: Commands,
@@ -115,7 +113,6 @@ fn setup_player(
         .observe(setup_player_animations);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn assert_only_one_player(player: Populated<(), With<Player>>) {
     assert_eq!(1, player.iter().count());
 }

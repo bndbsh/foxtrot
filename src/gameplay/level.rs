@@ -7,9 +7,8 @@ use bevy::prelude::*;
 use bevy_landmass::{PointSampleDistance3d, prelude::*};
 use bevy_rerecast::prelude::*;
 use bevy_seedling::prelude::*;
-use bevy_seedling::sample::Sample;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+use bevy_seedling::sample::AudioSample;
+
 use landmass_rerecast::{Island3dBundle, NavMeshHandle3d};
 
 pub(super) fn plugin(app: &mut App) {
@@ -18,12 +17,12 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 /// A system that spawns the main level.
-#[cfg_attr(feature = "hot_patch", hot)]
+
 pub(crate) fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
     commands.spawn((
         Name::new("Level"),
         SceneRoot(level_assets.level.clone()),
-        StateScoped(Screen::Gameplay),
+        DespawnOnExit(Screen::Gameplay),
         Level,
         children![(
             Name::new("Level Music"),
@@ -36,22 +35,14 @@ pub(crate) fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>
     let archipelago = commands
         .spawn((
             Name::new("Main Level Archipelago"),
-            StateScoped(Screen::Gameplay),
-            Archipelago3d::new(AgentOptions {
-                point_sample_distance: PointSampleDistance3d {
-                    horizontal_distance: 0.6,
-                    distance_above: 1.0,
-                    distance_below: 1.0,
-                    vertical_preference_ratio: 2.0,
-                },
-                ..AgentOptions::from_agent_radius(NPC_RADIUS)
-            }),
+            DespawnOnExit(Screen::Gameplay),
+            Archipelago3d::new(ArchipelagoOptions::from_agent_radius(NPC_RADIUS)),
         ))
         .id();
 
     commands.spawn((
         Name::new("Main Level Island"),
-        StateScoped(Screen::Gameplay),
+        DespawnOnExit(Screen::Gameplay),
         Island3dBundle {
             island: Island,
             archipelago_ref: ArchipelagoRef3d::new(archipelago),
@@ -73,7 +64,7 @@ pub(crate) struct LevelAssets {
     #[dependency]
     pub(crate) navmesh: Handle<Navmesh>,
     #[dependency]
-    pub(crate) music: Handle<Sample>,
+    pub(crate) music: Handle<AudioSample>,
     #[dependency]
     pub(crate) env_map_specular: Handle<Image>,
     #[dependency]

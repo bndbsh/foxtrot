@@ -10,10 +10,8 @@ use crate::{
 use bevy::{
     ecs::spawn::SpawnIter, input::common_conditions::input_just_pressed, prelude::*, ui::Val::*,
 };
-use bevy_seedling::sample::Sample;
+use bevy_seedling::sample::AudioSample;
 use bevy_seedling::sample::SamplePlayer;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Credits), spawn_credits_menu);
@@ -27,11 +25,10 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Credits), start_credits_music);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn spawn_credits_menu(mut commands: Commands, paused: Res<State<Pause>>) {
     let mut entity_commands = commands.spawn((
         widget::ui_root("Credits Screen"),
-        StateScoped(Menu::Credits),
+        DespawnOnExit(Menu::Credits),
         GlobalZIndex(2),
         children![
             widget::header("Created by"),
@@ -123,7 +120,7 @@ fn go_back(mut next_menu: ResMut<NextState<Menu>>) {
 #[reflect(Resource)]
 struct CreditsAssets {
     #[dependency]
-    music: Handle<Sample>,
+    music: Handle<AudioSample>,
 }
 
 impl FromWorld for CreditsAssets {
@@ -135,11 +132,10 @@ impl FromWorld for CreditsAssets {
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn start_credits_music(mut commands: Commands, credits_music: Res<CreditsAssets>) {
     commands.spawn((
         Name::new("Credits Music"),
-        StateScoped(Menu::Credits),
+        DespawnOnExit(Menu::Credits),
         SamplePlayer::new(credits_music.music.clone()).looping(),
         MusicPool,
     ));

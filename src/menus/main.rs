@@ -1,5 +1,8 @@
 //! The main menu (seen on the title screen).
-use bevy::{prelude::*, window::CursorGrabMode};
+use bevy::{
+    prelude::*,
+    window::{CursorGrabMode, CursorOptions},
+};
 
 use crate::{
     menus::Menu,
@@ -16,7 +19,7 @@ fn spawn_main_menu(mut commands: Commands) {
         widget::ui_root("Main Menu"),
         BackgroundColor(SCREEN_BACKGROUND),
         GlobalZIndex(2),
-        StateScoped(Menu::Main),
+        DespawnOnExit(Menu::Main),
         #[cfg(not(target_family = "wasm"))]
         children![
             widget::button("Play", enter_loading_screen),
@@ -36,10 +39,10 @@ fn spawn_main_menu(mut commands: Commands) {
 fn enter_loading_screen(
     _trigger: Trigger<Pointer<Click>>,
     mut next_screen: ResMut<NextState<Screen>>,
-    mut window: Single<&mut Window>,
+    mut cursor_options: Single<&mut CursorOptions>,
 ) {
     next_screen.set(Screen::Loading);
-    window.cursor_options.grab_mode = CursorGrabMode::Locked;
+    cursor_options.grab_mode = CursorGrabMode::Locked;
 }
 
 fn open_settings_menu(_: Trigger<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {

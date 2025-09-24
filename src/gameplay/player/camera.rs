@@ -10,23 +10,21 @@ use avian3d::prelude::*;
 #[cfg(feature = "native")]
 use bevy::pbr::ScreenSpaceAmbientOcclusion;
 use bevy::{
+    anti_alias::{fxaa::Fxaa, taa::TemporalAntiAliasing},
+    camera::{Exposure, visibility::RenderLayers},
     core_pipeline::{
         Skybox,
-        bloom::Bloom,
-        experimental::taa::TemporalAntiAliasing,
-        fxaa::Fxaa,
         prepass::{DeferredPrepass, DepthPrepass},
         tonemapping::Tonemapping,
     },
-    pbr::{NotShadowCaster, ShadowFilteringMethod},
+    light::{NotShadowCaster, ShadowFilteringMethod},
+    post_process::bloom::Bloom,
     prelude::*,
-    render::{camera::Exposure, view::RenderLayers},
+    render::view::Hdr,
     scene::SceneInstanceReady,
-    window::CursorGrabMode,
+    window::{CursorGrabMode, CursorOptions},
 };
 use bevy_enhanced_input::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use crate::{
     CameraOrder, PostPhysicsAppSystems, RenderLayer,
@@ -78,7 +76,6 @@ pub(crate) struct PlayerCamera;
 #[require(Transform, Visibility)]
 struct WorldModelCamera;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn spawn_view_model(
     trigger: Trigger<OnAdd, Player>,
     player_transform: Query<&Transform>,
@@ -104,8 +101,8 @@ fn spawn_view_model(
             Name::new("Player Camera Parent"),
             PlayerCamera,
             *player_transform,
-            StateScoped(Screen::Gameplay),
-            StateScoped(LoadingScreen::Shaders),
+            DespawnOnExit(Screen::Gameplay),
+            DespawnOnExit(LoadingScreen::Shaders),
             AvianPickupActor {
                 prop_filter: SpatialQueryFilter::from_mask(CollisionLayer::Prop),
                 obstacle_filter: SpatialQueryFilter::from_mask(CollisionLayer::Default),
@@ -137,10 +134,10 @@ fn spawn_view_model(
                 }),
                 Camera {
                     order: CameraOrder::World.into(),
-                    hdr: true,
                     clear_color: Color::srgb_u8(15, 9, 20).into(),
                     ..default()
                 },
+                Hdr,
                 RenderLayers::from(
                     RenderLayer::DEFAULT | RenderLayer::PARTICLES | RenderLayer::GIZMO3,
                 ),
@@ -171,9 +168,9 @@ fn spawn_view_model(
                 Camera {
                     // Bump the order to render on top of the world model.
                     order: CameraOrder::ViewModel.into(),
-                    hdr: true,
                     ..default()
                 },
+                Hdr,
                 Projection::from(PerspectiveProjection {
                     // We use whatever FOV we set in the animation software, e.g. Blender.
                     // Tip: if you want to set a camera in Blender to the same defaults as Bevy,
@@ -202,7 +199,7 @@ fn spawn_view_model(
 
 /// It makes more sense for the animation players to be related to the [`Player`] entity
 /// than to the [`PlayerCamera`] entity, so let's move the relationship there.
-#[cfg_attr(feature = "hot_patch", hot)]
+
 fn move_anim_players_relationship_to_player(
     trigger: Trigger<OnAdd, AnimationPlayers>,
     q_anim_player: Query<&AnimationPlayers>,
@@ -217,7 +214,6 @@ fn move_anim_players_relationship_to_player(
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn configure_player_view_model(
     trigger: Trigger<SceneInstanceReady>,
     mut commands: Commands,
@@ -239,14 +235,13 @@ fn configure_player_view_model(
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn rotate_camera_yaw_and_pitch(
     trigger: Trigger<Fired<Rotate>>,
     mut transform: Single<&mut Transform, With<PlayerCamera>>,
     sensitivity: Res<CameraSensitivity>,
-    window: Single<&Window>,
+    cursor_options: Single<&CursorOptions>,
 ) {
-    if window.cursor_options.grab_mode == CursorGrabMode::None {
+    if cursor_options.grab_mode == CursorGrabMode::None {
         return;
     }
 
@@ -280,7 +275,6 @@ fn rotate_camera_yaw_and_pitch(
     transform.rotation = Quat::from_euler(EulerRot::YXZ, yaw, pitch, roll);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn sync_camera_translation_with_player(
     mut player_camera_parent: Single<&mut Transform, With<PlayerCamera>>,
     player: Single<&Transform, (With<Player>, Without<PlayerCamera>)>,
@@ -290,7 +284,6 @@ fn sync_camera_translation_with_player(
         player.translation + Vec3::Y * (camera_height - PLAYER_FLOAT_HEIGHT);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn add_render_layers_to_point_light(trigger: Trigger<OnAdd, PointLight>, mut commands: Commands) {
     let entity = trigger.target();
     commands.entity(entity).insert(RenderLayers::from(
@@ -298,7 +291,6 @@ fn add_render_layers_to_point_light(trigger: Trigger<OnAdd, PointLight>, mut com
     ));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn add_render_layers_to_spot_light(trigger: Trigger<OnAdd, SpotLight>, mut commands: Commands) {
     let entity = trigger.target();
     commands.entity(entity).insert(RenderLayers::from(
@@ -306,7 +298,6 @@ fn add_render_layers_to_spot_light(trigger: Trigger<OnAdd, SpotLight>, mut comma
     ));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn add_render_layers_to_directional_light(
     trigger: Trigger<OnAdd, DirectionalLight>,
     mut commands: Commands,

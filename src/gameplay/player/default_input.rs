@@ -4,8 +4,6 @@ use std::any::TypeId;
 
 use bevy::{platform::collections::HashSet, prelude::*};
 use bevy_enhanced_input::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use super::Player;
 
@@ -78,7 +76,6 @@ fn bind_default_inputs(trigger: Trigger<OnAdd, DefaultInputContext>, mut command
         ]));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_player_input_binding(
     player: Single<Entity, With<Player>>,
     blocks_input: Res<BlocksInput>,

@@ -6,8 +6,6 @@ use bevy::window::PresentMode;
 use bevy::{input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
 use bevy_framepace::{FramepaceSettings, Limiter};
 use bevy_seedling::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use crate::{
     Pause,
@@ -49,11 +47,10 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn spawn_settings_menu(mut commands: Commands, paused: Res<State<Pause>>) {
     let mut entity_commands = commands.spawn((
         widget::ui_root("Settings Screen"),
-        StateScoped(Menu::Settings),
+        DespawnOnExit(Menu::Settings),
         GlobalZIndex(2),
         children![
             widget::header("Settings"),
@@ -173,7 +170,6 @@ impl Default for VolumeSliderSettings {
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_global_volume(
     mut master: Single<&mut VolumeNode, With<MainBus>>,
     volume_step: Res<VolumeSliderSettings>,
@@ -181,12 +177,10 @@ fn update_global_volume(
     master.volume = PerceptualVolumeConverter::default().to_volume(volume_step.fraction());
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn lower_volume(_trigger: Trigger<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
     volume_step.decrement();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn raise_volume(_trigger: Trigger<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
     volume_step.increment();
 }
@@ -195,7 +189,6 @@ fn raise_volume(_trigger: Trigger<Pointer<Click>>, mut volume_step: ResMut<Volum
 #[reflect(Component)]
 struct GlobalVolumeLabel;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_volume_label(
     mut label: Single<&mut Text, With<GlobalVolumeLabel>>,
     slider: Res<VolumeSliderSettings>,
@@ -211,7 +204,6 @@ fn update_volume_label(
 #[reflect(Component)]
 struct CameraSensitivityLabel;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn lower_camera_sensitivity(
     _trigger: Trigger<Pointer<Click>>,
     mut camera_sensitivity: ResMut<CameraSensitivity>,
@@ -222,7 +214,6 @@ fn lower_camera_sensitivity(
     camera_sensitivity.y = camera_sensitivity.y.max(MIN_SENSITIVITY);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn raise_camera_sensitivity(
     _trigger: Trigger<Pointer<Click>>,
     mut camera_sensitivity: ResMut<CameraSensitivity>,
@@ -233,7 +224,6 @@ fn raise_camera_sensitivity(
     camera_sensitivity.y = camera_sensitivity.y.min(MAX_SENSITIVITY);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_camera_sensitivity_label(
     mut label: Single<&mut Text, With<CameraSensitivityLabel>>,
     camera_sensitivity: Res<CameraSensitivity>,
@@ -250,13 +240,11 @@ fn lower_camera_fov(_trigger: Trigger<Pointer<Click>>, mut camera_fov: ResMut<Wo
     camera_fov.0 = camera_fov.0.max(45.0);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn raise_camera_fov(_trigger: Trigger<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
     camera_fov.0 += 1.0;
     camera_fov.0 = camera_fov.0.min(130.0);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_camera_fov_label(
     mut label: Single<&mut Text, With<CameraFovLabel>>,
     camera_fov: Res<WorldModelFov>,
@@ -376,7 +364,6 @@ fn update_fps_limiter_target_label(
     label.0 = format!("{}", settings.target_fps);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn go_back_on_click(
     _trigger: Trigger<Pointer<Click>>,
     screen: Res<State<Screen>>,
@@ -389,7 +376,6 @@ fn go_back_on_click(
     });
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn go_back(screen: Res<State<Screen>>, mut next_menu: ResMut<NextState<Menu>>) {
     next_menu.set(if screen.get() == &Screen::Title {
         Menu::Main

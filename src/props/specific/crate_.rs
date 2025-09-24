@@ -2,8 +2,7 @@ use avian_pickup::prop::PreferredPickupRotation;
 use avian3d::prelude::*;
 use bevy::prelude::*;
 use bevy_landmass::{Character, prelude::*};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_trenchbroom::prelude::*;
 
 use crate::{
@@ -32,7 +31,6 @@ pub(crate) struct CrateBig;
 )]
 pub(crate) struct CrateSmall;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_crate_small(
     trigger: Trigger<OnAdd, CrateSmall>,
     asset_server: Res<AssetServer>,

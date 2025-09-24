@@ -6,8 +6,7 @@ use crate::{PostPhysicsAppSystems, screens::Screen};
 use avian3d::prelude::LinearVelocity;
 use bevy::prelude::*;
 use bevy_seedling::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::{builtins::TnuaBuiltinJumpState, prelude::*};
 
 pub(super) fn plugin(app: &mut App) {
@@ -19,7 +18,6 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_jump_grunt(
     mut commands: Commands,
     player: Single<(Entity, &TnuaController), With<Player>>,
@@ -64,7 +62,6 @@ fn play_jump_grunt(
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_step_sound(
     mut commands: Commands,
     player: Single<(Entity, &TnuaController, &LinearVelocity), With<Player>>,
@@ -95,7 +92,6 @@ fn play_step_sound(
     ));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_land_sound(
     mut commands: Commands,
     player: Single<(Entity, &TnuaController), With<Player>>,

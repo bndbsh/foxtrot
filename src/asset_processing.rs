@@ -3,8 +3,6 @@ use bevy::{
     image::{ImageAddressMode, ImageSamplerDescriptor},
     prelude::*,
 };
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(Update, move_textures_to_render_world);
@@ -20,7 +18,6 @@ pub(crate) fn default_image_sampler_descriptor() -> ImageSamplerDescriptor {
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn move_textures_to_render_world(
     mut events: EventReader<AssetEvent<Image>>,
     mut images: ResMut<Assets<Image>>,

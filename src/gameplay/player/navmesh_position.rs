@@ -2,8 +2,6 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 use bevy_landmass::{Archipelago3d, FromAgentRadius, PointSampleDistance3d};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use crate::PrePhysicsAppSystems;
 
@@ -21,7 +19,6 @@ pub(super) fn plugin(app: &mut App) {
 #[reflect(Component, Default)]
 pub(crate) struct LastValidPlayerNavmeshPosition(pub(crate) Option<Vec3>);
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_last_valid_player_navmesh_position(
     player_character: Single<(&GlobalTransform, &mut LastValidPlayerNavmeshPosition)>,
     archipelago: Single<&Archipelago3d>,

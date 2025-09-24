@@ -4,8 +4,6 @@ use std::any::Any as _;
 
 use crate::{gameplay::crosshair::CrosshairState, menus::Menu, screens::Screen, theme::widget};
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Pause), spawn_pause_menu);
@@ -23,7 +21,7 @@ fn spawn_pause_menu(
     commands.spawn((
         widget::ui_root("Pause Menu"),
         GlobalZIndex(2),
-        StateScoped(Menu::Pause),
+        DespawnOnExit(Menu::Pause),
         children![
             widget::header("Game paused"),
             widget::button("Continue", close_menu),
@@ -37,12 +35,10 @@ fn spawn_pause_menu(
     time.pause();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn open_settings_menu(_trigger: Trigger<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {
     next_menu.set(Menu::Settings);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn close_menu(
     _trigger: Trigger<Pointer<Click>>,
     mut next_menu: ResMut<NextState<Menu>>,
@@ -56,7 +52,6 @@ fn close_menu(
     time.unpause();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn quit_to_title(
     _trigger: Trigger<Pointer<Click>>,
     mut next_screen: ResMut<NextState<Screen>>,
@@ -70,7 +65,6 @@ fn quit_to_title(
     time.unpause();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn go_back(
     mut next_menu: ResMut<NextState<Menu>>,
     mut crosshair: Single<&mut CrosshairState>,

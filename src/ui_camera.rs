@@ -3,8 +3,6 @@
 //! don't exist during non-gameplay screens such as the main menu.
 
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use crate::CameraOrder;
 
@@ -17,7 +15,6 @@ pub(super) fn plugin(app: &mut App) {
 #[reflect(Component)]
 pub(crate) struct UiCamera;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn spawn_ui_camera(mut commands: Commands) {
     commands.spawn((
         Name::new("UI Camera"),

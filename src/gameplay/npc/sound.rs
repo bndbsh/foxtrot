@@ -5,8 +5,7 @@ use crate::{PostPhysicsAppSystems, audio::SpatialPool, screens::Screen};
 use avian3d::prelude::LinearVelocity;
 use bevy::prelude::*;
 use bevy_seedling::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::prelude::*;
 use std::time::Duration;
 
@@ -19,7 +18,6 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_step_sound(
     mut commands: Commands,
     npc: Single<(Entity, &TnuaController, &LinearVelocity), With<Npc>>,

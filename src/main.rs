@@ -18,14 +18,13 @@ mod third_party;
 mod ui_camera;
 
 use asset_processing::default_image_sampler_descriptor;
-use bevy::ecs::error::{GLOBAL_ERROR_HANDLER, error};
 use bevy::pbr::DefaultOpaqueRendererMethod;
+use bevy::{camera::visibility::RenderLayers, ecs::error::error};
 use bevy_landmass::LandmassSystemSet;
 use bevy_mod_skinned_aabb::SkinnedAabbPlugin;
 use bitflags::bitflags;
 
-use bevy::core_pipeline::experimental::taa::TemporalAntiAliasPlugin;
-use bevy::{asset::AssetMetaCheck, prelude::*, render::view::RenderLayers};
+use bevy::{asset::AssetMetaCheck, prelude::*};
 
 #[cfg(all(feature = "native", feature = "web"))]
 compile_error!(
@@ -45,12 +44,9 @@ compile_error!(
 );
 
 fn main() -> AppExit {
-    // Don't panic on Bevy system errors, just log them.
-    GLOBAL_ERROR_HANDLER
-        .set(error)
-        .expect("Error handler already set");
-
     let mut app = App::new();
+    // Don't panic on Bevy system errors, just log them.
+    app.set_error_handler(error);
 
     // Add Bevy plugins.
     app.insert_resource(DefaultOpaqueRendererMethod::deferred());
@@ -91,7 +87,7 @@ fn main() -> AppExit {
         },
     );
     app.insert_resource(AmbientLight::NONE);
-    app.add_plugins((TemporalAntiAliasPlugin, SkinnedAabbPlugin));
+    app.add_plugins(SkinnedAabbPlugin);
 
     // Order new `AppSet` variants by adding them here:
     app.configure_sets(
@@ -113,7 +109,7 @@ fn main() -> AppExit {
             LandmassSystemSet::SyncExistence,
         )
             .chain()
-            .in_set(RunFixedMainLoopSystem::BeforeFixedMainLoop),
+            .in_set(RunFixedMainLoopSystems::BeforeFixedMainLoop),
     );
     // Set up the `Pause` state.
     app.init_state::<Pause>();

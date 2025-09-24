@@ -4,9 +4,12 @@
 
 use crate::{PostPhysicsAppSystems, screens::Screen};
 use assets::{CROSSHAIR_DOT_PATH, CROSSHAIR_SQUARE_PATH};
-use bevy::{platform::collections::HashSet, prelude::*, window::CursorGrabMode};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+use bevy::{
+    platform::collections::HashSet,
+    prelude::*,
+    window::{CursorGrabMode, CursorOptions},
+};
+
 use std::any::{Any as _, TypeId};
 
 pub(crate) mod assets;
@@ -26,7 +29,7 @@ pub(super) fn plugin(app: &mut App) {
 }
 
 /// Show a crosshair for better aiming
-#[cfg_attr(feature = "hot_patch", hot)]
+
 fn spawn_crosshair(mut commands: Commands, assets: Res<AssetServer>) {
     commands
         .spawn((
@@ -38,7 +41,7 @@ fn spawn_crosshair(mut commands: Commands, assets: Res<AssetServer>) {
                 align_items: AlignItems::Center,
                 ..default()
             },
-            StateScoped(Screen::Gameplay),
+            DespawnOnExit(Screen::Gameplay),
         ))
         .with_children(|parent| {
             parent.spawn((
@@ -57,13 +60,12 @@ pub(crate) struct CrosshairState {
     pub(crate) wants_free_cursor: HashSet<TypeId>,
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_crosshair(
     crosshair: Option<
         Single<(&mut CrosshairState, &mut ImageNode, &mut Visibility), Changed<CrosshairState>>,
     >,
     assets: Res<AssetServer>,
-    mut window: Single<&mut Window, Changed<Window>>,
+    mut cursor_options: Single<&mut CursorOptions, Changed<CursorOptions>>,
 ) {
     let Some((mut crosshair_state, mut image_node, mut visibility)) =
         crosshair.map(|c| c.into_inner())
@@ -77,22 +79,22 @@ fn update_crosshair(
     }
 
     if crosshair_state.wants_free_cursor.is_empty() {
-        window.cursor_options.grab_mode = CursorGrabMode::Locked;
+        cursor_options.grab_mode = CursorGrabMode::Locked;
         crosshair_state
             .wants_invisible
             .remove(&update_crosshair.type_id());
         #[cfg(feature = "native")]
         {
-            window.cursor_options.visible = false;
+            cursor_options.visible = false;
         }
     } else {
-        window.cursor_options.grab_mode = CursorGrabMode::None;
+        cursor_options.grab_mode = CursorGrabMode::None;
         crosshair_state
             .wants_invisible
             .insert(update_crosshair.type_id());
         #[cfg(feature = "native")]
         {
-            window.cursor_options.visible = true;
+            cursor_options.visible = true;
         }
     }
 

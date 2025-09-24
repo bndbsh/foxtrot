@@ -16,6 +16,7 @@ homepage = "https://janhohenheim.itch.io/foxtrot"
 bevy = { version = "0.17.0-rc", default-features = false, features = [
     "animation",
     "bevy_asset",
+    "bevy_anti_alias",
     "bevy_color",
     "bevy_core_pipeline",
     "bevy_gilrs",
@@ -24,6 +25,7 @@ bevy = { version = "0.17.0-rc", default-features = false, features = [
     "bevy_mesh_picking_backend",
     "bevy_pbr",
     "bevy_picking",
+    "bevy_post_process",
     "bevy_render",
     "bevy_scene",
     "bevy_sprite",

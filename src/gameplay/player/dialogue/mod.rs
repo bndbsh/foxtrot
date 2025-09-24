@@ -5,8 +5,7 @@ use std::any::Any;
 use avian3d::prelude::{SpatialQuery, SpatialQueryFilter};
 use bevy::prelude::*;
 use bevy_enhanced_input::prelude::Started;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_yarnspinner::{events::DialogueCompleteEvent, prelude::*};
 
 use crate::{
@@ -69,7 +68,6 @@ pub(super) enum DialogueSystems {
     UpdateUi,
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn check_for_dialogue_opportunity(
     player: Single<&GlobalTransform, With<PlayerCamera>>,
     player_collider: Single<Entity, With<Player>>,
@@ -99,7 +97,6 @@ fn check_for_dialogue_opportunity(
 #[reflect(Component, Default)]
 struct InteractionPrompt(Option<YarnNode>);
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn interact_with_dialogue(
     _trigger: Trigger<Started<Interact>>,
     mut interaction_prompt: Single<&mut InteractionPrompt>,
@@ -117,7 +114,6 @@ fn interact_with_dialogue(
         .insert(interact_with_dialogue.type_id());
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn restore_input_context(
     mut crosshair: Single<&mut CrosshairState>,
     mut blocks_input: ResMut<BlocksInput>,
