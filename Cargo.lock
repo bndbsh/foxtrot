@@ -1001,11 +1001,13 @@ dependencies = [
 
 [[package]]
 name = "bevy_fix_cursor_unlock_web"
-version = "0.2.0-rc.0"
+version = "0.2.0-rc.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64236c3ce841687008f4d24576b334776bdc4e2c34f41eea41ab8a51401fe55a"
+checksum = "0f256898010f92d4e04cb058a2ba072d95498aadf8b0b61575984a9969d46f5a"
 dependencies = [
- "bevy",
+ "bevy_app",
+ "bevy_ecs",
+ "bevy_window",
  "web-sys",
 ]
 
@@ -1337,7 +1339,7 @@ dependencies = [
  "approx",
  "bevy_reflect",
  "derive_more 2.0.1",
- "glam 0.30.7",
+ "glam 0.30.8",
  "itertools 0.14.0",
  "libm",
  "rand",
@@ -1533,7 +1535,7 @@ dependencies = [
  "downcast-rs 2.0.2",
  "erased-serde",
  "foldhash 0.2.0",
- "glam 0.30.7",
+ "glam 0.30.8",
  "inventory",
  "petgraph",
  "serde",
@@ -1682,7 +1684,7 @@ dependencies = [
  "bevy_transform",
  "bevy_utils",
  "bincode",
- "glam 0.30.7",
+ "glam 0.30.8",
  "rerecast 0.2.0-rc (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "thiserror 2.0.16",
@@ -1708,7 +1710,7 @@ dependencies = [
  "bevy_transform",
  "bevy_utils",
  "bincode",
- "glam 0.30.7",
+ "glam 0.30.8",
  "rerecast 0.2.0-rc (git+https://github.com/janhohenheim/rerecast)",
  "serde",
  "thiserror 2.0.16",
@@ -3085,7 +3087,7 @@ checksum = "02ba239319a4f60905966390f5e52799d868103a533bb7e27822792332504ddd"
 dependencies = [
  "const_panic",
  "encase_derive",
- "glam 0.30.7",
+ "glam 0.30.8",
  "thiserror 2.0.16",
 ]
 
@@ -3325,7 +3327,7 @@ dependencies = [
  "firewheel-macros",
  "fixed-resample",
  "glam 0.29.3",
- "glam 0.30.7",
+ "glam 0.30.8",
  "log",
  "num-traits",
  "portable-atomic",
@@ -3380,7 +3382,7 @@ dependencies = [
  "bevy_ecs",
  "bevy_reflect",
  "firewheel",
- "glam 0.30.7",
+ "glam 0.30.8",
  "hrtf",
 ]
 
@@ -3428,9 +3430,8 @@ dependencies = [
 
 [[package]]
 name = "firewheel-web-audio"
-version = "0.3.0-rc.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc6c0c3e13eef7f9b44ac3b26ba6ccfba79ce75f317ef049491a60374c130f2b"
+version = "0.3.0-rc.2"
+source = "git+https://github.com/CorvusPrudens/firewheel-web-audio?rev=65888f3#65888f3d47c1460d2fd6dba3f57ab49838e01b9e"
 dependencies = [
  "firewheel",
  "js-sys",
@@ -3860,15 +3861,15 @@ checksum = "8babf46d4c1c9d92deac9f7be466f76dfc4482b6452fc5024b5e8daf6ffeb3ee"
 
 [[package]]
 name = "glam"
-version = "0.30.7"
+version = "0.30.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34e4649b62c21fb8c737abe6449192ce96ecd16b5c0d606759fe43831b31bd95"
+checksum = "e12d847aeb25f41be4c0ec9587d624e9cd631bc007a8fd7ce3f5851e064c6460"
 dependencies = [
  "approx",
  "bytemuck",
  "libm",
  "rand",
- "serde",
+ "serde_core",
 ]
 
 [[package]]
@@ -3877,7 +3878,7 @@ version = "0.1.0"
 source = "git+https://github.com/Jondolf/glam_matrix_extensions#c57bc2eb58a8e23f249e3194ebdb7a7bdabf9a91"
 dependencies = [
  "bevy_reflect",
- "glam 0.30.7",
+ "glam 0.30.8",
 ]
 
 [[package]]
@@ -4068,7 +4069,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "29a164ceff4500f2a72b1d21beaa8aa8ad83aec2b641844c659b190cb3ea2e0b"
 dependencies = [
  "constgebra",
- "glam 0.30.7",
+ "glam 0.30.8",
  "tinyvec",
 ]
 
@@ -4526,7 +4527,7 @@ dependencies = [
  "disjoint",
  "dodgy_2d",
  "geo",
- "glam 0.30.7",
+ "glam 0.30.8",
  "kdtree",
  "slotmap",
  "thiserror 2.0.16",
@@ -4810,7 +4811,7 @@ dependencies = [
  "glam 0.27.0",
  "glam 0.28.0",
  "glam 0.29.3",
- "glam 0.30.7",
+ "glam 0.30.8",
  "matrixmultiply",
  "nalgebra-macros",
  "num-complex",
@@ -5947,9 +5948,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.11.2"
+version = "1.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23d7fd106d8c02486a8d64e778353d1cffe08ce79ac2e82f540c86d0facf6912"
+checksum = "8b5288124840bee7b386bc413c487869b360b2b4ec421ea56425128692f2a82c"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -5959,9 +5960,9 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.4.10"
+version = "0.4.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b9458fa0bfeeac22b5ca447c63aaf45f28439a709ccd244698632f9aa6394d6"
+checksum = "833eb9ce86d40ef33cb1306d8accf7bc8ec2bfea4355cbdebb3df68b40925cad"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -5989,7 +5990,7 @@ dependencies = [
  "anyhow",
  "bevy_reflect",
  "bitflags 2.9.4",
- "glam 0.30.7",
+ "glam 0.30.8",
  "serde",
  "slotmap",
  "thiserror 2.0.16",
@@ -6004,7 +6005,7 @@ dependencies = [
  "anyhow",
  "bevy_reflect",
  "bitflags 2.9.4",
- "glam 0.30.7",
+ "glam 0.30.8",
  "serde",
  "slotmap",
  "thiserror 2.0.16",

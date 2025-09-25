@@ -1,6 +1,7 @@
 //! The screen state for the main gameplay.
 
 use bevy::{input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
+use bevy_fix_cursor_unlock_web::ForceUnlockCursor;
 
 use crate::{Pause, menus::Menu, screens::Screen};
 
@@ -26,6 +27,7 @@ pub(super) fn plugin(app: &mut App) {
         OnEnter(Menu::None),
         unpause.run_if(in_state(Screen::Gameplay)),
     );
+    app.add_observer(open_pause_menu_on_cursor_force_unlock);
 }
 
 fn unpause(mut next_pause: ResMut<NextState<Pause>>) {
@@ -51,6 +53,13 @@ fn spawn_pause_overlay(mut commands: Commands) {
 }
 
 fn open_pause_menu(mut next_menu: ResMut<NextState<Menu>>) {
+    next_menu.set(Menu::Pause);
+}
+
+fn open_pause_menu_on_cursor_force_unlock(
+    _unlock: On<ForceUnlockCursor>,
+    mut next_menu: ResMut<NextState<Menu>>,
+) {
     next_menu.set(Menu::Pause);
 }
 
