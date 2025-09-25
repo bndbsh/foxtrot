@@ -152,7 +152,6 @@ features = ["release"]
 
 [package.metadata.bevy_cli.web]
 features = ["web"]
-rustflags = ["--cfg", "getrandom_backend=\"wasm_js\""]
 
 [package.metadata.bevy_cli.web.dev]
 features = ["dev"]
