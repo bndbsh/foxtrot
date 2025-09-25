@@ -197,6 +197,7 @@ avian3d = { git = "https://github.com/Jondolf/avian", branch = "bevy-0.17" }
 bevy-tnua = { git = "https://github.com/janhohenheim/bevy-tnua", branch = "bevy-0.17.0-dev" }
 bevy-tnua-avian3d = { git = "https://github.com/janhohenheim/bevy-tnua", branch = "bevy-0.17.0-dev" }
 avian_rerecast = { git = "https://github.com/janhohenheim/rerecast" }
+bevy_rerecast = { git = "https://github.com/janhohenheim/rerecast" }
 bevy_framepace = { git = "https://github.com/aevyrie/bevy_framepace" }
 avian_pickup = { git = "https://github.com/janhohenheim/avian_pickup" }
 # Fix [crash on Chromium](https://github.com/CorvusPrudens/bevy_seedling/issues/60)
