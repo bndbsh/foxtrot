@@ -467,7 +467,7 @@ dependencies = [
  "bevy_app",
  "bevy_ecs",
  "bevy_math",
- "bevy_rerecast_core 0.3.0-rc.1 (git+https://github.com/janhohenheim/rerecast)",
+ "bevy_rerecast_core",
  "bevy_transform",
 ]
 
@@ -1650,20 +1650,18 @@ dependencies = [
 [[package]]
 name = "bevy_rerecast"
 version = "0.3.0-rc.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb7e05c542ec00b26089494017534aea457fc047a9a07442ea40b7d23795f6c9"
+source = "git+https://github.com/janhohenheim/rerecast#8c5464ba7f4573af0cbbd00f254e0868af218a02"
 dependencies = [
  "bevy_app",
  "bevy_math",
- "bevy_rerecast_core 0.3.0-rc.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "bevy_rerecast_core",
  "bevy_rerecast_editor_integration",
 ]
 
 [[package]]
 name = "bevy_rerecast_core"
 version = "0.3.0-rc.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2678ea4ecc0226c20364289176fd011fc0e1d74cd9c57bc26b3b8ba822f803e2"
+source = "git+https://github.com/janhohenheim/rerecast#8c5464ba7f4573af0cbbd00f254e0868af218a02"
 dependencies = [
  "anyhow",
  "bevy_app",
@@ -1685,33 +1683,7 @@ dependencies = [
  "bevy_utils",
  "bincode",
  "glam 0.30.8",
- "rerecast 0.2.0-rc (registry+https://github.com/rust-lang/crates.io-index)",
- "serde",
- "thiserror 2.0.16",
- "tracing",
-]
-
-[[package]]
-name = "bevy_rerecast_core"
-version = "0.3.0-rc.1"
-source = "git+https://github.com/janhohenheim/rerecast#8c5464ba7f4573af0cbbd00f254e0868af218a02"
-dependencies = [
- "anyhow",
- "bevy_app",
- "bevy_camera",
- "bevy_color",
- "bevy_derive",
- "bevy_ecs",
- "bevy_light",
- "bevy_math",
- "bevy_platform",
- "bevy_reflect",
- "bevy_tasks",
- "bevy_transform",
- "bevy_utils",
- "bincode",
- "glam 0.30.8",
- "rerecast 0.2.0-rc (git+https://github.com/janhohenheim/rerecast)",
+ "rerecast",
  "serde",
  "thiserror 2.0.16",
  "tracing",
@@ -1720,8 +1692,7 @@ dependencies = [
 [[package]]
 name = "bevy_rerecast_editor_integration"
 version = "0.3.0-rc.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f764424c6c0baa7c8dedb33144e63e500d7812da81b20a3966f2fa422c744360"
+source = "git+https://github.com/janhohenheim/rerecast#8c5464ba7f4573af0cbbd00f254e0868af218a02"
 dependencies = [
  "anyhow",
  "base64",
@@ -1739,12 +1710,12 @@ dependencies = [
  "bevy_reflect",
  "bevy_remote",
  "bevy_render",
- "bevy_rerecast_core 0.3.0-rc.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "bevy_rerecast_core",
  "bevy_tasks",
  "bevy_transform",
  "bincode",
  "flate2",
- "rerecast 0.2.0-rc (registry+https://github.com/rust-lang/crates.io-index)",
+ "rerecast",
  "serde",
  "serde_json",
  "thiserror 2.0.16",
@@ -4676,9 +4647,9 @@ dependencies = [
 
 [[package]]
 name = "memchr"
-version = "2.7.5"
+version = "2.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "32a282da65faaf38286cf3be983213fcf1d2e2a58700e808f83f4ea9a4804bc0"
+checksum = "f52b00d39961fc5b2736ea853c9cc86238e165017a493d1d5c8eac6bdc4cc273"
 
 [[package]]
 name = "memmap2"
@@ -5980,22 +5951,6 @@ name = "renderdoc-sys"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "19b30a45b0cd0bcca8037f3d0dc3421eaf95327a17cad11964fb8179b4fc4832"
-
-[[package]]
-name = "rerecast"
-version = "0.2.0-rc"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79731946d14617bfaac50d3b18d1b59740e29b5890aa4037f5ae08bdd28faa90"
-dependencies = [
- "anyhow",
- "bevy_reflect",
- "bitflags 2.9.4",
- "glam 0.30.8",
- "serde",
- "slotmap",
- "thiserror 2.0.16",
- "tracing",
-]
 
 [[package]]
 name = "rerecast"
