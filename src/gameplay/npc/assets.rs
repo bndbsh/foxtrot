@@ -11,7 +11,6 @@ use crate::{
 use super::Npc;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<NpcAssets>();
     app.load_resource::<NpcAssets>();
 }
 

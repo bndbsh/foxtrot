@@ -26,10 +26,6 @@ pub(super) fn plugin(app: &mut App) {
         go_back.run_if(in_state(Menu::Settings).and(input_just_pressed(KeyCode::Escape))),
     );
 
-    app.register_type::<GlobalVolumeLabel>();
-    app.register_type::<VsyncLabel>();
-    app.register_type::<FpsLimiterEnabledLabel>();
-    app.register_type::<FpsLimiterTargetLabel>();
     app.add_systems(
         Update,
         (

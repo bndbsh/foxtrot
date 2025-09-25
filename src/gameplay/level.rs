@@ -13,7 +13,6 @@ use landmass_rerecast::{Island3dBundle, NavMeshHandle3d};
 
 pub(super) fn plugin(app: &mut App) {
     app.load_resource::<LevelAssets>();
-    app.register_type::<Level>();
 }
 
 /// A system that spawns the main level.

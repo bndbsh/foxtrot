@@ -9,8 +9,6 @@ use bevy_yarnspinner_example_dialogue_view::prelude::*;
 use crate::screens::Screen;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<YarnNode>();
-
     app.add_plugins((
         // In Wasm, we need to load the dialogue file manually. If we're not targeting Wasm, we can just use `YarnSpinnerPlugin::default()` instead.
         YarnSpinnerPlugin::with_yarn_sources(vec![YarnFileSource::file("dialogue/npc.yarn")]),

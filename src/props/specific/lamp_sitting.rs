@@ -8,7 +8,6 @@ use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::dyn
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_lamp_sitting);
-    app.register_type::<LampSitting>();
 }
 
 #[point_class(

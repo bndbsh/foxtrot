@@ -26,8 +26,6 @@ pub(super) fn plugin(app: &mut App) {
         accumulate_input.after(EnhancedInputSystems::Apply),
     );
     app.add_observer(init_accumulated_input);
-
-    app.register_type::<AccumulatedInput>();
 }
 
 #[derive(Component, Reflect, Default)]

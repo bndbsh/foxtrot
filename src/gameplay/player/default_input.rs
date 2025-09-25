@@ -12,7 +12,6 @@ pub(super) fn plugin(app: &mut App) {
     app.add_observer(bind_default_inputs);
 
     app.init_resource::<BlocksInput>();
-    app.register_type::<BlocksInput>();
     app.add_systems(
         PreUpdate,
         update_player_input_binding.run_if(resource_changed::<BlocksInput>),

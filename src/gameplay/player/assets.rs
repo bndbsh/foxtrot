@@ -11,7 +11,6 @@ use crate::{
 use super::Player;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<PlayerAssets>();
     app.load_resource::<PlayerAssets>();
 }
 

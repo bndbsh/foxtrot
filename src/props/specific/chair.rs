@@ -8,7 +8,6 @@ use crate::third_party::{avian3d::CollisionLayer, bevy_trenchbroom::LoadTrenchbr
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_chair);
-    app.register_type::<Chair>();
 }
 
 #[point_class(

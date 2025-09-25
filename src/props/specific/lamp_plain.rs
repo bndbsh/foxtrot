@@ -7,7 +7,6 @@ use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::sta
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_lamp_wall_electric);
-    app.register_type::<LampPlain>();
 }
 
 #[point_class(

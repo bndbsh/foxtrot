@@ -21,7 +21,6 @@ mod sound;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((ai::plugin, animation::plugin, assets::plugin, sound::plugin));
-    app.register_type::<Npc>();
     app.add_observer(on_add);
 }
 

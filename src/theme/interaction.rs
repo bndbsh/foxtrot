@@ -4,7 +4,6 @@ use bevy_seedling::sample::{AudioSample, SamplePlayer};
 use crate::{PostPhysicsAppSystems, asset_tracking::LoadResource, audio::SfxPool};
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<InteractionPalette>();
     app.load_resource::<InteractionAssets>();
     app.add_systems(
         Update,

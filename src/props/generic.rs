@@ -18,20 +18,6 @@ pub(super) fn plugin(app: &mut App) {
 
     app.add_observer(setup_nonphysical_prop::<IvyPart8>)
         .add_observer(setup_nonphysical_prop::<SmallDoorSign1>);
-
-    app.register_type::<Grate>();
-    app.register_type::<Table>();
-    app.register_type::<Bookshelf>();
-    app.register_type::<Generator2>();
-    app.register_type::<BarrelLargeClosed>();
-    app.register_type::<Barrel01>();
-    app.register_type::<CrateSquare>();
-    app.register_type::<FenceBarsDecorativeSingle>();
-    app.register_type::<PackageMedium>();
-    app.register_type::<PackageSmall>();
-    app.register_type::<DoorStainedGlass>();
-    app.register_type::<IvyPart8>();
-    app.register_type::<SmallDoorSign1>();
 }
 
 // generic dynamic props

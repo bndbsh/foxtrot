@@ -17,7 +17,6 @@ use bevy::prelude::*;
 pub(super) fn plugin(app: &mut App) {
     // This causes https://github.com/bevyengine/bevy/issues/18980
     app.load_resource::<BurningLogsAssets>();
-    app.register_type::<Flicker>();
     app.add_systems(
         Update,
         flicker_light
@@ -26,7 +25,6 @@ pub(super) fn plugin(app: &mut App) {
     );
     app.add_observer(setup_burning_logs);
     //app.add_observer(add_particle_effects);
-    app.register_type::<BurningLogs>();
 }
 
 #[point_class(

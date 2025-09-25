@@ -11,7 +11,6 @@ use crate::{PostPhysicsAppSystems, gameplay::animation::AnimationPlayers, screen
 use super::assets::NpcAssets;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<NpcAnimations>();
     app.add_systems(
         Update,
         play_animations

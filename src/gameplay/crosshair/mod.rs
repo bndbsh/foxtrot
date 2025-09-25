@@ -15,8 +15,6 @@ use std::any::{Any as _, TypeId};
 pub(crate) mod assets;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<CrosshairState>();
-
     app.add_systems(
         Update,
         update_crosshair

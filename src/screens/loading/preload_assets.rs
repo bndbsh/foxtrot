@@ -4,7 +4,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    asset_tracking::{ResourceHandles, all_assets_loaded},
+    asset_tracking::ResourceHandles,
     theme::{palette::SCREEN_BACKGROUND, prelude::*},
 };
 
@@ -24,8 +24,6 @@ pub(super) fn plugin(app: &mut App) {
                 .run_if(all_assets_loaded.and(in_state(LoadingScreen::Assets))),
         ),
     );
-
-    app.register_type::<LoadingAssetsLabel>();
 }
 
 fn spawn_or_skip_asset_loading_screen(
@@ -64,4 +62,7 @@ fn update_loading_assets_label(
             resource_handles.total_count()
         );
     }
+}
+fn all_assets_loaded(resource_handles: Res<ResourceHandles>) -> bool {
+    resource_handles.is_all_done()
 }

@@ -27,7 +27,6 @@ pub(crate) mod navmesh_position;
 pub(crate) mod pickup;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<Player>();
     app.add_plugins((
         animation::plugin,
         assets::plugin,

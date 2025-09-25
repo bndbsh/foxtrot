@@ -4,9 +4,6 @@ use bevy_seedling::prelude::*;
 pub(crate) mod perceptual;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<MusicPool>();
-    app.register_type::<SpatialPool>();
-
     app.add_systems(Startup, initialize_audio);
 }
 

@@ -13,8 +13,6 @@ pub(super) fn plugin(app: &mut App) {
 
     app.sub_app_mut(RenderApp)
         .add_systems(ExtractSchedule, update_loaded_pipeline_count);
-
-    app.register_type::<LoadedPipelineCount>();
 }
 
 pub(crate) fn spawn_shader_compilation_map(

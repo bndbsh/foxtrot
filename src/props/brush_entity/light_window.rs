@@ -5,7 +5,6 @@ use bevy_trenchbroom::prelude::*;
 use crate::props::effects::disable_shadow_casting;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<LightWindow>();
     app.add_observer(setup_light_window_brush_entity);
 }
 

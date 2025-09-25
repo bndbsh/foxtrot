@@ -23,9 +23,6 @@ use super::{NPC_FLOAT_HEIGHT, NPC_RADIUS, Npc};
 pub(crate) const NPC_MAX_SLOPE: f32 = TAU / 6.0;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<Agent>();
-    app.register_type::<AgentOf>();
-    app.register_type::<WantsToFollowPlayer>();
     app.add_systems(
         RunFixedMainLoop,
         (sync_agent_velocity, set_controller_velocity)

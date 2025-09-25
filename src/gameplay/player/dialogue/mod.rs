@@ -28,8 +28,6 @@ use super::{
 };
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<InteractionPrompt>();
-
     app.configure_sets(
         Update,
         (

@@ -9,7 +9,6 @@ use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::sta
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_lamp_shaded);
-    app.register_type::<LampShaded>();
 }
 
 #[point_class(

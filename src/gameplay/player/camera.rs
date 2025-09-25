@@ -59,10 +59,6 @@ pub(super) fn plugin(app: &mut App) {
             .run_if(resource_changed::<WorldModelFov>)
             .in_set(PostPhysicsAppSystems::Update),
     );
-    app.register_type::<PlayerCamera>();
-    app.register_type::<WorldModelCamera>();
-    app.register_type::<CameraSensitivity>();
-    app.register_type::<WorldModelFov>();
 }
 
 /// The parent entity of the player's cameras.

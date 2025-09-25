@@ -13,8 +13,6 @@ use crate::{
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_crate_small);
     app.add_observer(setup_static_prop_with_convex_hull::<CrateBig>);
-    app.register_type::<CrateBig>();
-    app.register_type::<CrateSmall>();
 }
 
 #[point_class(

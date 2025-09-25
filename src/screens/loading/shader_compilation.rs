@@ -28,8 +28,6 @@ pub(super) fn plugin(app: &mut App) {
             .chain()
             .run_if(in_state(LoadingScreen::Shaders)),
     );
-
-    app.register_type::<LoadingShadersLabel>();
 }
 
 fn spawn_or_skip_shader_compilation_loading_screen(

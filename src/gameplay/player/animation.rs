@@ -15,7 +15,6 @@ use crate::{
 use super::assets::PlayerAssets;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<PlayerAnimations>();
     app.add_systems(
         Update,
         play_animations
