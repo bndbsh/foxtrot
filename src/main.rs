@@ -145,7 +145,7 @@ fn main() -> AppExit {
 }
 
 /// High-level groupings of systems for the app in the [`RunFixedMainLoop`] schedule
-/// and the [`RunFixedMainLoopSystem::BeforeFixedMainLoop`] system set.
+/// and the [`RunFixedMainLoopSystems::BeforeFixedMainLoop`] system set.
 /// When adding a new variant, make sure to order it in the `configure_sets`
 /// call above.
 #[derive(SystemSet, Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
