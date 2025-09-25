@@ -199,5 +199,5 @@ bevy-tnua-avian3d = { git = "https://github.com/janhohenheim/bevy-tnua", branch 
 avian_rerecast = { git = "https://github.com/janhohenheim/rerecast" }
 bevy_framepace = { git = "https://github.com/aevyrie/bevy_framepace" }
 avian_pickup = { git = "https://github.com/janhohenheim/avian_pickup" }
-# Fix crash on Chromium
+# Fix [crash on Chromium](https://github.com/CorvusPrudens/bevy_seedling/issues/60)
 firewheel-web-audio = { git = "https://github.com/CorvusPrudens/firewheel-web-audio", rev = "65888f3" }
