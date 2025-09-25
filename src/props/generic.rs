@@ -1,3 +1,7 @@
+use crate::{
+    asset_tracking::LoadResource, third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _,
+};
+
 use super::setup::*;
 use bevy::prelude::*;
 use bevy_trenchbroom::prelude::*;
@@ -19,98 +23,87 @@ pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_nonphysical_prop::<IvyPart8>)
         .add_observer(setup_nonphysical_prop::<SmallDoorSign1>);
 
-    app.register_type::<Grate>();
-    app.register_type::<Table>();
-    app.register_type::<Bookshelf>();
-    app.register_type::<Generator2>();
-    app.register_type::<BarrelLargeClosed>();
-    app.register_type::<Barrel01>();
-    app.register_type::<CrateSquare>();
-    app.register_type::<FenceBarsDecorativeSingle>();
-    app.register_type::<PackageMedium>();
-    app.register_type::<PackageSmall>();
-    app.register_type::<DoorStainedGlass>();
-    app.register_type::<IvyPart8>();
-    app.register_type::<SmallDoorSign1>();
+    app.load_asset::<Gltf>(PackageMedium::model_path())
+        .load_asset::<Gltf>(PackageSmall::model_path())
+        .load_asset::<Gltf>(Grate::model_path())
+        .load_asset::<Gltf>(Table::model_path())
+        .load_asset::<Gltf>(Bookshelf::model_path())
+        .load_asset::<Gltf>(Generator2::model_path())
+        .load_asset::<Gltf>(BarrelLargeClosed::model_path())
+        .load_asset::<Gltf>(Barrel01::model_path())
+        .load_asset::<Gltf>(CrateSquare::model_path())
+        .load_asset::<Gltf>(FenceBarsDecorativeSingle::model_path())
+        .load_asset::<Gltf>(DoorStainedGlass::model_path())
+        .load_asset::<Gltf>(IvyPart8::model_path())
+        .load_asset::<Gltf>(SmallDoorSign1::model_path());
 }
 
 // generic dynamic props
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/package_medium.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/package_medium.gltf")
 )]
 pub(crate) struct PackageMedium;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/package_small.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/package_small.gltf")
 )]
 pub(crate) struct PackageSmall;
 
 // generic static props
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/fireplace/grate.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/fireplace/grate.gltf")
 )]
 pub(crate) struct Grate;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/furniture/tables/rtable1.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/furniture/tables/rtable1.gltf")
 )]
 pub(crate) struct Table;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/furniture/shelves/bookshelf02.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/furniture/shelves/bookshelf02.gltf")
 )]
 pub(crate) struct Bookshelf;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/mechanical/generator2/generator2.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/mechanical/generator2/generator2.gltf")
 )]
 pub(crate) struct Generator2;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/barrel_large_closed.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/barrel_large_closed.gltf")
 )]
 pub(crate) struct BarrelLargeClosed;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/barrel01.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/barrel01.gltf")
 )]
 pub(crate) struct Barrel01;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/crate_square.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/crate_square.gltf")
 )]
 pub(crate) struct CrateSquare;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/architecture/fencing/fence_bars_decorative01_single.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/architecture/fencing/fence_bars_decorative01_single.gltf")
 )]
 pub(crate) struct FenceBarsDecorativeSingle;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/architecture/doors/door_stained_glass_118x52.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/architecture/doors/door_stained_glass_118x52.gltf")
 )]
 pub(crate) struct DoorStainedGlass;
 
@@ -118,14 +111,12 @@ pub(crate) struct DoorStainedGlass;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/nature/ivy_part08.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/nature/ivy_part08.gltf")
 )]
 pub(crate) struct IvyPart8;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/decorative/signs/small_door_sign1.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/decorative/signs/small_door_sign1.gltf")
 )]
 pub(crate) struct SmallDoorSign1;

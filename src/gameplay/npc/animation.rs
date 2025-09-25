@@ -3,8 +3,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::{TnuaAnimatingState, TnuaAnimatingStateDirective, prelude::*};
 
 use crate::{PostPhysicsAppSystems, gameplay::animation::AnimationPlayers, screens::Screen};
@@ -12,7 +11,6 @@ use crate::{PostPhysicsAppSystems, gameplay::animation::AnimationPlayers, screen
 use super::assets::NpcAssets;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<NpcAnimations>();
     app.add_systems(
         Update,
         play_animations
@@ -29,15 +27,14 @@ struct NpcAnimations {
     run: AnimationNodeIndex,
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 pub(crate) fn setup_npc_animations(
-    trigger: Trigger<OnAdd, AnimationPlayers>,
+    add: On<Add, AnimationPlayers>,
     q_anim_players: Query<&AnimationPlayers>,
     mut commands: Commands,
     assets: Res<NpcAssets>,
     mut graphs: ResMut<Assets<AnimationGraph>>,
 ) {
-    let anim_players = q_anim_players.get(trigger.target()).unwrap();
+    let anim_players = q_anim_players.get(add.entity).unwrap();
     for anim_player in anim_players.iter() {
         let (graph, indices) = AnimationGraph::from_clips([
             assets.run_animation.clone(),
@@ -72,7 +69,6 @@ pub(crate) enum NpcAnimationState {
     Running(f32),
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_animations(
     mut query: Query<(
         &mut TnuaAnimatingState<NpcAnimationState>,

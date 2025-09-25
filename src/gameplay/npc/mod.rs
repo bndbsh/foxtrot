@@ -3,15 +3,18 @@
 use animation::{NpcAnimationState, setup_npc_animations};
 use avian3d::prelude::*;
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::{TnuaAnimatingState, prelude::*};
 use bevy_tnua_avian3d::TnuaAvian3dSensorShape;
 use bevy_trenchbroom::prelude::*;
 
-use crate::third_party::{
-    avian3d::CollisionLayer, bevy_trenchbroom::LoadTrenchbroomModel as _,
-    bevy_yarnspinner::YarnNode,
+use crate::{
+    asset_tracking::LoadResource,
+    third_party::{
+        avian3d::CollisionLayer,
+        bevy_trenchbroom::{GetTrenchbroomModelPath, LoadTrenchbroomModel as _},
+        bevy_yarnspinner::YarnNode,
+    },
 };
 
 use super::animation::AnimationPlayerAncestor;
@@ -22,15 +25,11 @@ mod sound;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((ai::plugin, animation::plugin, assets::plugin, sound::plugin));
-    app.register_type::<Npc>();
+    app.load_asset::<Gltf>(Npc::model_path());
     app.add_observer(on_add);
 }
 
-#[point_class(
-    base(Transform, Visibility),
-    model("models/fox/Fox.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
-)]
+#[point_class(base(Transform, Visibility), model("models/fox/Fox.gltf"))]
 pub(crate) struct Npc;
 
 pub(crate) const NPC_RADIUS: f32 = 0.6;
@@ -39,10 +38,9 @@ pub(crate) const NPC_HEIGHT: f32 = NPC_CAPSULE_LENGTH + 2.0 * NPC_RADIUS;
 const NPC_HALF_HEIGHT: f32 = NPC_HEIGHT / 2.0;
 const NPC_FLOAT_HEIGHT: f32 = NPC_HALF_HEIGHT + 0.01;
 
-#[cfg_attr(feature = "hot_patch", hot)]
-fn on_add(trigger: Trigger<OnAdd, Npc>, mut commands: Commands, assets: Res<AssetServer>) {
+fn on_add(add: On<Add, Npc>, mut commands: Commands, assets: Res<AssetServer>) {
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert((
             Npc,
             Collider::capsule(NPC_RADIUS, NPC_CAPSULE_LENGTH),

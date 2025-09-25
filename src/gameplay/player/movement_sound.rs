@@ -6,8 +6,7 @@ use crate::{PostPhysicsAppSystems, screens::Screen};
 use avian3d::prelude::LinearVelocity;
 use bevy::prelude::*;
 use bevy_seedling::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::{builtins::TnuaBuiltinJumpState, prelude::*};
 
 pub(super) fn plugin(app: &mut App) {
@@ -19,7 +18,6 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_jump_grunt(
     mut commands: Commands,
     player: Single<(Entity, &TnuaController), With<Player>>,
@@ -45,8 +43,8 @@ fn play_jump_grunt(
     }
     *is_jumping = true;
 
-    if sound_cooldown.finished() {
-        let rng = &mut rand::thread_rng();
+    if sound_cooldown.is_finished() {
+        let rng = &mut rand::rng();
         let grunt = player_assets.jump_grunts.pick(rng).clone();
         let jump_start = player_assets.jump_start_sounds.pick(rng).clone();
 
@@ -64,7 +62,6 @@ fn play_jump_grunt(
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_step_sound(
     mut commands: Commands,
     player: Single<(Entity, &TnuaController, &LinearVelocity), With<Player>>,
@@ -75,7 +72,7 @@ fn play_step_sound(
     let timer =
         timer.get_or_insert_with(|| Timer::new(Duration::from_millis(300), TimerMode::Repeating));
     timer.tick(time.delta());
-    if !timer.finished() {
+    if !timer.is_finished() {
         return;
     }
 
@@ -86,7 +83,7 @@ fn play_step_sound(
     if linear_velocity.length_squared() < 5.0 {
         return;
     }
-    let rng = &mut rand::thread_rng();
+    let rng = &mut rand::rng();
     let sound = player_assets.steps.pick(rng).clone();
     commands.entity(entity).with_child((
         SamplePlayer::new(sound),
@@ -95,7 +92,6 @@ fn play_step_sound(
     ));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_land_sound(
     mut commands: Commands,
     player: Single<(Entity, &TnuaController), With<Player>>,
@@ -113,7 +109,7 @@ fn play_land_sound(
     }
     *was_airborne = false;
 
-    let rng = &mut rand::thread_rng();
+    let rng = &mut rand::rng();
     let sound = player_assets.land_sounds.pick(rng).clone();
     commands.entity(entity).with_child((
         SamplePlayer::new(sound),

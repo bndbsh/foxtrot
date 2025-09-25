@@ -5,8 +5,6 @@ pub(super) fn plugin(app: &mut App) {
 
     app.add_systems(PreUpdate, reset_did_fixed_update_happen);
     app.add_systems(FixedFirst, set_did_fixed_update_happen);
-
-    app.register_type::<DidFixedUpdateHappen>();
 }
 
 fn reset_did_fixed_update_happen(mut did_fixed_update_happen: ResMut<DidFixedUpdateHappen>) {

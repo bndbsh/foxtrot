@@ -3,8 +3,6 @@
 use std::collections::VecDeque;
 
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 pub(super) fn plugin(app: &mut App) {
     app.init_resource::<ResourceHandles>();
@@ -16,6 +14,7 @@ pub(crate) trait LoadResource {
     /// have been loaded, it will be inserted as a resource. This ensures that the resource only
     /// exists when the assets are ready.
     fn load_resource<T: Resource + Asset + Clone + FromWorld>(&mut self) -> &mut Self;
+    fn load_asset<T: Asset>(&mut self, path: impl Into<String>) -> &mut Self;
 }
 
 impl LoadResource for App {
@@ -34,6 +33,15 @@ impl LoadResource for App {
                     world.insert_resource(value.clone());
                 }
             }));
+        self
+    }
+
+    fn load_asset<T: Asset>(&mut self, path: impl Into<String>) -> &mut Self {
+        let handle: Handle<T> = self.world().load_asset(path.into());
+        let mut handles = self.world_mut().resource_mut::<ResourceHandles>();
+        handles
+            .waiting
+            .push_back((handle.untyped(), |_world, _handle| {}));
         self
     }
 }
@@ -64,7 +72,6 @@ impl ResourceHandles {
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn load_resource_assets(world: &mut World) {
     world.resource_scope(|world, mut resource_handles: Mut<ResourceHandles>| {
         world.resource_scope(|world, assets: Mut<AssetServer>| {
@@ -79,8 +86,4 @@ fn load_resource_assets(world: &mut World) {
             }
         });
     });
-}
-
-pub(crate) fn all_assets_loaded(resource_handles: Res<ResourceHandles>) -> bool {
-    resource_handles.is_all_done()
 }

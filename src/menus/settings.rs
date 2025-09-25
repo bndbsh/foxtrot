@@ -6,8 +6,6 @@ use bevy::window::PresentMode;
 use bevy::{input::common_conditions::input_just_pressed, prelude::*, ui::Val::*};
 use bevy_framepace::{FramepaceSettings, Limiter};
 use bevy_seedling::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use crate::{
     Pause,
@@ -28,10 +26,6 @@ pub(super) fn plugin(app: &mut App) {
         go_back.run_if(in_state(Menu::Settings).and(input_just_pressed(KeyCode::Escape))),
     );
 
-    app.register_type::<GlobalVolumeLabel>();
-    app.register_type::<VsyncLabel>();
-    app.register_type::<FpsLimiterEnabledLabel>();
-    app.register_type::<FpsLimiterTargetLabel>();
     app.add_systems(
         Update,
         (
@@ -49,11 +43,10 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn spawn_settings_menu(mut commands: Commands, paused: Res<State<Pause>>) {
     let mut entity_commands = commands.spawn((
         widget::ui_root("Settings Screen"),
-        StateScoped(Menu::Settings),
+        DespawnOnExit(Menu::Settings),
         GlobalZIndex(2),
         children![
             widget::header("Settings"),
@@ -173,7 +166,6 @@ impl Default for VolumeSliderSettings {
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_global_volume(
     mut master: Single<&mut VolumeNode, With<MainBus>>,
     volume_step: Res<VolumeSliderSettings>,
@@ -181,13 +173,11 @@ fn update_global_volume(
     master.volume = PerceptualVolumeConverter::default().to_volume(volume_step.fraction());
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
-fn lower_volume(_trigger: Trigger<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
+fn lower_volume(_on: On<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
     volume_step.decrement();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
-fn raise_volume(_trigger: Trigger<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
+fn raise_volume(_on: On<Pointer<Click>>, mut volume_step: ResMut<VolumeSliderSettings>) {
     volume_step.increment();
 }
 
@@ -195,7 +185,6 @@ fn raise_volume(_trigger: Trigger<Pointer<Click>>, mut volume_step: ResMut<Volum
 #[reflect(Component)]
 struct GlobalVolumeLabel;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_volume_label(
     mut label: Single<&mut Text, With<GlobalVolumeLabel>>,
     slider: Res<VolumeSliderSettings>,
@@ -211,9 +200,8 @@ fn update_volume_label(
 #[reflect(Component)]
 struct CameraSensitivityLabel;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn lower_camera_sensitivity(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut camera_sensitivity: ResMut<CameraSensitivity>,
 ) {
     camera_sensitivity.0 -= 0.1;
@@ -222,9 +210,8 @@ fn lower_camera_sensitivity(
     camera_sensitivity.y = camera_sensitivity.y.max(MIN_SENSITIVITY);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn raise_camera_sensitivity(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut camera_sensitivity: ResMut<CameraSensitivity>,
 ) {
     camera_sensitivity.0 += 0.1;
@@ -233,7 +220,6 @@ fn raise_camera_sensitivity(
     camera_sensitivity.y = camera_sensitivity.y.min(MAX_SENSITIVITY);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_camera_sensitivity_label(
     mut label: Single<&mut Text, With<CameraSensitivityLabel>>,
     camera_sensitivity: Res<CameraSensitivity>,
@@ -245,18 +231,16 @@ fn update_camera_sensitivity_label(
 #[reflect(Component)]
 struct CameraFovLabel;
 
-fn lower_camera_fov(_trigger: Trigger<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
+fn lower_camera_fov(_on: On<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
     camera_fov.0 -= 1.0;
     camera_fov.0 = camera_fov.0.max(45.0);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
-fn raise_camera_fov(_trigger: Trigger<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
+fn raise_camera_fov(_on: On<Pointer<Click>>, mut camera_fov: ResMut<WorldModelFov>) {
     camera_fov.0 += 1.0;
     camera_fov.0 = camera_fov.0.min(130.0);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_camera_fov_label(
     mut label: Single<&mut Text, With<CameraFovLabel>>,
     camera_fov: Res<WorldModelFov>,
@@ -277,11 +261,11 @@ impl Default for VsyncSetting {
 #[reflect(Component)]
 struct VsyncLabel;
 
-fn enable_vsync(_trigger: Trigger<Pointer<Click>>, mut setting: ResMut<VsyncSetting>) {
+fn enable_vsync(_on: On<Pointer<Click>>, mut setting: ResMut<VsyncSetting>) {
     setting.0 = true;
 }
 
-fn disable_vsync(_trigger: Trigger<Pointer<Click>>, mut setting: ResMut<VsyncSetting>) {
+fn disable_vsync(_on: On<Pointer<Click>>, mut setting: ResMut<VsyncSetting>) {
     setting.0 = false;
 }
 
@@ -321,7 +305,7 @@ struct FpsLimiterEnabledLabel;
 struct FpsLimiterTargetLabel;
 
 fn enable_fps_limiter(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut settings: ResMut<FpsLimiterSettings>,
     mut framepace: ResMut<FramepaceSettings>,
 ) {
@@ -330,7 +314,7 @@ fn enable_fps_limiter(
 }
 
 fn disable_fps_limiter(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     mut settings: ResMut<FpsLimiterSettings>,
     mut framepace: ResMut<FramepaceSettings>,
 ) {
@@ -338,13 +322,13 @@ fn disable_fps_limiter(
     framepace.limiter = Limiter::Off;
 }
 
-fn lower_fps_target(_trigger: Trigger<Pointer<Click>>, mut settings: ResMut<FpsLimiterSettings>) {
+fn lower_fps_target(_on: On<Pointer<Click>>, mut settings: ResMut<FpsLimiterSettings>) {
     let min_fps = 30;
     let step = 5;
     settings.target_fps = settings.target_fps.saturating_sub(step).max(min_fps);
 }
 
-fn raise_fps_target(_trigger: Trigger<Pointer<Click>>, mut settings: ResMut<FpsLimiterSettings>) {
+fn raise_fps_target(_on: On<Pointer<Click>>, mut settings: ResMut<FpsLimiterSettings>) {
     let max_fps = 360;
     let step = 5;
     settings.target_fps = (settings.target_fps + step).min(max_fps);
@@ -376,9 +360,8 @@ fn update_fps_limiter_target_label(
     label.0 = format!("{}", settings.target_fps);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn go_back_on_click(
-    _trigger: Trigger<Pointer<Click>>,
+    _on: On<Pointer<Click>>,
     screen: Res<State<Screen>>,
     mut next_menu: ResMut<NextState<Menu>>,
 ) {
@@ -389,7 +372,6 @@ fn go_back_on_click(
     });
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn go_back(screen: Res<State<Screen>>, mut next_menu: ResMut<NextState<Menu>>) {
     next_menu.set(if screen.get() == &Screen::Title {
         Menu::Main

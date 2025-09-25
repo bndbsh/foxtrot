@@ -1,21 +1,18 @@
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_trenchbroom::prelude::*;
 
 use crate::props::effects::disable_shadow_casting;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<LightWindow>();
     app.add_observer(setup_light_window_brush_entity);
 }
 
 #[solid_class(base(Transform, Visibility))]
 pub(crate) struct LightWindow;
 
-#[cfg_attr(feature = "hot_patch", hot)]
-fn setup_light_window_brush_entity(trigger: Trigger<OnAdd, LightWindow>, mut commands: Commands) {
-    let entity = trigger.target();
+fn setup_light_window_brush_entity(add: On<Add, LightWindow>, mut commands: Commands) {
+    let entity = add.entity;
     commands
         .entity(entity)
         // Using `children!` here would run into https://github.com/Noxmore/bevy_trenchbroom/issues/95

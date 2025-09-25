@@ -1,26 +1,23 @@
 use avian3d::prelude::*;
-use bevy::render::view::RenderLayers;
-use bevy_hanabi::prelude::*;
+//use bevy_hanabi::prelude::*;
 use bevy_seedling::prelude::*;
-use bevy_seedling::sample::Sample;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
-use bevy_trenchbroom::prelude::*;
-use std::f32::consts::TAU;
+use bevy_seedling::sample::AudioSample;
 
+use bevy_trenchbroom::prelude::*;
+
+use crate::asset_tracking::LoadResource as _;
+use crate::third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _;
 use crate::{
     PostPhysicsAppSystems,
     audio::SpatialPool,
     props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle},
     screens::Screen,
 };
-use crate::{RenderLayer, asset_tracking::LoadResource as _};
 use bevy::prelude::*;
 
 pub(super) fn plugin(app: &mut App) {
     // This causes https://github.com/bevyengine/bevy/issues/18980
     app.load_resource::<BurningLogsAssets>();
-    app.register_type::<Flicker>();
     app.add_systems(
         Update,
         flicker_light
@@ -28,14 +25,13 @@ pub(super) fn plugin(app: &mut App) {
             .in_set(PostPhysicsAppSystems::Update),
     );
     app.add_observer(setup_burning_logs);
-    app.add_observer(add_particle_effects);
-    app.register_type::<BurningLogs>();
+    app.load_asset::<Gltf>(BurningLogs::model_path());
+    //app.add_observer(add_particle_effects);
 }
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/fireplace/burntwood.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/fireplace/burntwood.gltf")
 )]
 pub(crate) struct BurningLogs;
 
@@ -44,7 +40,7 @@ struct BurningLogsAssets {
     #[dependency]
     texture: Handle<Image>,
     #[dependency]
-    sound: Handle<Sample>,
+    sound: Handle<AudioSample>,
 }
 
 impl FromWorld for BurningLogsAssets {
@@ -71,18 +67,17 @@ const SOUND_PATH: &str = "audio/music/loop_flames_03.ogg";
 
 const BASE_INTENSITY: f32 = 150_000.0;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_burning_logs(
-    trigger: Trigger<OnAdd, BurningLogs>,
+    add: On<Add, BurningLogs>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
     let static_bundle =
         static_bundle::<BurningLogs>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
-    let sound_effect: Handle<Sample> = asset_server.load(SOUND_PATH);
+    let sound_effect: Handle<AudioSample> = asset_server.load(SOUND_PATH);
 
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert((
             static_bundle,
             SamplePlayer::new(sound_effect)
@@ -108,7 +103,6 @@ fn setup_burning_logs(
 #[reflect(Component)]
 struct Flicker;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn flicker_light(time: Res<Time>, mut query: Query<&mut PointLight, With<Flicker>>) {
     for mut light in &mut query {
         let flickers_per_second = 20.0;
@@ -117,16 +111,15 @@ fn flicker_light(time: Res<Time>, mut query: Query<&mut PointLight, With<Flicker
         light.intensity = BASE_INTENSITY + flicker * BASE_INTENSITY * flicker_percentage;
     }
 }
-
-#[cfg_attr(feature = "hot_patch", hot)]
+/*
 pub(super) fn add_particle_effects(
-    trigger: Trigger<OnAdd, BurningLogs>,
+    add: On<Add, BurningLogs>,
     asset_server: Res<AssetServer>,
     mut effects: ResMut<Assets<EffectAsset>>,
     mut commands: Commands,
 ) {
     let particle_bundle = particle_bundle(&asset_server, &mut effects);
-    commands.entity(trigger.target()).insert(particle_bundle);
+    commands.entity(trigger.entity).insert(particle_bundle);
 }
 
 fn particle_bundle(asset_server: &AssetServer, effects: &mut Assets<EffectAsset>) -> impl Bundle {
@@ -222,3 +215,4 @@ fn setup_particles(effects: &mut Assets<EffectAsset>) -> Handle<EffectAsset> {
 
     effects.add(effect)
 }
+ */

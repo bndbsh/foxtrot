@@ -13,9 +13,10 @@ categories = ["game-development"]
 homepage = "https://janhohenheim.itch.io/foxtrot"
 
 [dependencies]
-bevy = { version = "0.16.1", default-features = false, features = [
+bevy = { version = "0.17.0-rc", default-features = false, features = [
     "animation",
     "bevy_asset",
+    "bevy_anti_alias",
     "bevy_color",
     "bevy_core_pipeline",
     "bevy_gilrs",
@@ -24,13 +25,14 @@ bevy = { version = "0.16.1", default-features = false, features = [
     "bevy_mesh_picking_backend",
     "bevy_pbr",
     "bevy_picking",
+    "bevy_post_process",
     "bevy_render",
     "bevy_scene",
     "bevy_sprite",
     "bevy_sprite_picking_backend",
     "bevy_state",
     "bevy_text",
-    "bevy_ui",
+    "bevy_ui_render",
     "bevy_ui_picking_backend",
     "bevy_window",
     "bevy_winit",
@@ -46,43 +48,36 @@ bevy = { version = "0.16.1", default-features = false, features = [
     "ktx2",
     "png",
     "wayland",
-    "configurable_error_handler",
-    # Due to some Bevy bug, we need to enable the UI debug plugin even in non-dev builds,
-    # otherwise we only render the view model and the skybox.
-    "bevy_ui_debug",
+    "zstd_rust",
+    "reflect_auto_register"
 ] }
-bevy_enhanced_input = "0.16.0"
+bevy_enhanced_input = "0.19.0-rc"
 
 # physics
-avian3d = "0.3.1"
-avian_pickup = "0.2.0"
+avian3d = "0.3.0"
+avian_pickup = "0.3.0-dev"
 
 # character controller
-bevy-tnua = "0.24"
-bevy-tnua-avian3d = "0.5"
+bevy-tnua = "0.25.0-rc"
+bevy-tnua-avian3d = "0.6.0-rc"
 
 # navigation
 bevy_landmass = "0.10.0"
 landmass_rerecast = "0.1.0"
-bevy_rerecast = { version = "0.2.0", default-features = false }
-avian_rerecast = "0.2.0"
+bevy_rerecast = { version = "0.3.0-rc", default-features = false }
+avian_rerecast = "0.3.0-rc"
 
 # Level editor
-bevy_trenchbroom = { version = "0.9.2", features = ["avian"] }
+bevy_trenchbroom = {version = "0.9.3", features = ["avian"]}
 
 # dialogue
-bevy_yarnspinner = "0.5"
-bevy_yarnspinner_example_dialogue_view = "0.5"
+bevy_yarnspinner = "0.6.0-rc"
+bevy_yarnspinner_example_dialogue_view = "0.6.0-rc"
 
-bevy_hanabi = { version = "0.16.0", default-features = false, features = [
-    "3d",
-    "gpu_tests",
-    # "serde" fails on Wasm
-] }
-bevy_shuffle_bag = "0.2"
+bevy_shuffle_bag = "0.3.0-rc"
 
 # Keep this in sync with Bevy
-rand = "0.8.5"
+rand = "0.9"
 
 # Compile low-severity logs out of web builds for performance.
 tracing = { version = "0.1", features = [
@@ -93,18 +88,24 @@ getrandom = { version = "0.3", default-features = false, features = [
     "wasm_js",
 ] }
 
-bevy_simple_subsecond_system = { version = "0.2.0", optional = true }
-bevy_mod_skinned_aabb = "0.2.0"
+bevy_mod_skinned_aabb = "0.3.0-rc"
 
 bitflags = "2.9.1"
 anyhow = "1.0.99"
-bevy-inspector-egui = { version = "0.33.1", optional = true }
-bevy_fix_cursor_unlock_web = "0.1.2"
+bevy-inspector-egui = { version = "0.34", optional = true }
+bevy_fix_cursor_unlock_web = "0.2.0-rc"
 regex = "1.11.1"
-bevy_framepace = "0.19.1"
-bevy_seedling = "0.4.4"
-firewheel-web-audio = { version = "0.1.0", optional = true }
+bevy_framepace = "0.20.0-rc"
+bevy_seedling = "0.6.0-rc"
 bincode = "2"
+# Latest version that works with bevy_seedling
+wasm-bindgen = { version = "=0.2.101", optional = true }
+
+# Not on 0.17 yet
+#bevy_hanabi = { version = "0.16.0", default-features = false, features = [
+#    "3d",
+#    "gpu_tests",
+#] }
 
 [features]
 default = [
@@ -127,7 +128,6 @@ dev = [
 dev_native = [
     "dev",
     "native",
-    "hot_patch",
     "bevy/bevy_remote",
     # Enable asset hot reloading for native dev builds.
     "bevy/file_watcher",
@@ -135,9 +135,8 @@ dev_native = [
     "bevy/embedded_watcher",
     "bevy_rerecast/editor_integration",
 ]
-web = ["bevy/webgpu", "dep:firewheel-web-audio"]
+web = ["bevy/webgpu", "bevy_seedling/web_audio", "dep:wasm-bindgen"]
 release = []
-hot_patch = ["dep:bevy_simple_subsecond_system"]
 
 [package.metadata.bevy_cli]
 default-features = false
@@ -153,7 +152,6 @@ features = ["release"]
 
 [package.metadata.bevy_cli.web]
 features = ["web"]
-rustflags = ["--cfg", "getrandom_backend=\"wasm_js\""]
 
 [package.metadata.bevy_cli.web.dev]
 features = ["dev"]
@@ -190,6 +188,14 @@ opt-level = 3
 debug-assertions = false
 
 [patch.crates-io]
-# 0.10.0 is not released yet.
-bevy_landmass = { git = "https://github.com/andriyDev/landmass" }
-landmass_rerecast = { git = "https://github.com/andriyDev/landmass" }
+bevy-inspector-egui = { git = "https://github.com/dsgallups/bevy-inspector-egui", branch = "dsgallups/0.17" }
+bevy_landmass = { git = "https://github.com/andriyDev/landmass", branch = "bevy-0.17" }
+landmass = { git = "https://github.com/andriyDev/landmass", branch = "bevy-0.17" }
+landmass_rerecast = { git = "https://github.com/andriyDev/landmass", branch = "bevy-0.17" }
+bevy_trenchbroom = { git = "https://github.com/Noxmore/bevy_trenchbroom", branch = "bevy-0.17" }
+avian3d = { git = "https://github.com/Jondolf/avian", branch = "bevy-0.17" }
+bevy-tnua = { git = "https://github.com/janhohenheim/bevy-tnua", branch = "bevy-0.17.0-dev" }
+bevy-tnua-avian3d = { git = "https://github.com/janhohenheim/bevy-tnua", branch = "bevy-0.17.0-dev" }
+avian_rerecast = { git = "https://github.com/janhohenheim/rerecast" }
+bevy_framepace = { git = "https://github.com/aevyrie/bevy_framepace" }
+avian_pickup = { git = "https://github.com/janhohenheim/avian_pickup" }

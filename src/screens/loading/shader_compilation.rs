@@ -2,8 +2,6 @@
 //! This reduces stuttering, especially for audio on Wasm.
 
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use crate::{
     shader_compilation::{LoadedPipelineCount, all_pipelines_loaded, spawn_shader_compilation_map},
@@ -30,11 +28,8 @@ pub(super) fn plugin(app: &mut App) {
             .chain()
             .run_if(in_state(LoadingScreen::Shaders)),
     );
-
-    app.register_type::<LoadingShadersLabel>();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn spawn_or_skip_shader_compilation_loading_screen(
     mut commands: Commands,
     loaded_pipeline_count: Res<LoadedPipelineCount>,
@@ -47,12 +42,11 @@ fn spawn_or_skip_shader_compilation_loading_screen(
     commands.spawn((
         widget::ui_root("Loading Screen"),
         BackgroundColor(SCREEN_BACKGROUND),
-        StateScoped(LoadingScreen::Shaders),
+        DespawnOnExit(LoadingScreen::Shaders),
         children![(widget::label("Compiling shaders..."), LoadingShadersLabel)],
     ));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn enter_spawn_level_screen(mut next_screen: ResMut<NextState<LoadingScreen>>) {
     next_screen.set(LoadingScreen::Level);
 }
@@ -61,7 +55,6 @@ fn enter_spawn_level_screen(mut next_screen: ResMut<NextState<LoadingScreen>>) {
 #[reflect(Component)]
 struct LoadingShadersLabel;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_loading_shaders_label(
     mut query: Query<&mut Text, With<LoadingShadersLabel>>,
     loaded_pipeline_count: Res<LoadedPipelineCount>,

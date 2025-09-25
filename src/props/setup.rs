@@ -6,36 +6,32 @@ use crate::third_party::avian3d::CollisionLayer;
 use crate::third_party::bevy_trenchbroom::LoadTrenchbroomModel as _;
 use avian3d::prelude::*;
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::TnuaNotPlatform;
 use bevy_trenchbroom::class::QuakeClass;
 
 pub(super) fn plugin(_app: &mut App) {}
 
-#[cfg_attr(feature = "hot_patch", hot)]
 pub(crate) fn setup_static_prop_with_convex_hull<T: QuakeClass>(
-    trigger: Trigger<OnAdd, T>,
+    add: On<Add, T>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
     let bundle = static_bundle::<T>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
-    commands.entity(trigger.target()).insert(bundle);
+    commands.entity(add.entity).insert(bundle);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 pub(crate) fn setup_nonphysical_prop<T: QuakeClass>(
-    trigger: Trigger<OnAdd, T>,
+    add: On<Add, T>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
     let model = asset_server.load_trenchbroom_model::<T>();
-    commands.entity(trigger.target()).insert(SceneRoot(model));
+    commands.entity(add.entity).insert(SceneRoot(model));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 pub(crate) fn setup_static_prop_with_convex_decomposition<T: QuakeClass>(
-    trigger: Trigger<OnAdd, T>,
+    add: On<Add, T>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
@@ -43,17 +39,16 @@ pub(crate) fn setup_static_prop_with_convex_decomposition<T: QuakeClass>(
         &asset_server,
         ColliderConstructor::ConvexDecompositionFromMesh,
     );
-    commands.entity(trigger.target()).insert(bundle);
+    commands.entity(add.entity).insert(bundle);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 pub(crate) fn setup_dynamic_prop_with_convex_hull<T: QuakeClass>(
-    trigger: Trigger<OnAdd, T>,
+    add: On<Add, T>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
     let bundle = dynamic_bundle::<T>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
-    commands.entity(trigger.target()).insert(bundle);
+    commands.entity(add.entity).insert(bundle);
 }
 
 pub(crate) fn dynamic_bundle<T: QuakeClass>(

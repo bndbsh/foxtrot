@@ -1,21 +1,23 @@
 use avian3d::prelude::*;
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_trenchbroom::prelude::*;
 
-use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle};
+use crate::{
+    asset_tracking::LoadResource as _,
+    props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle},
+    third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _,
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_lamp_wall_electric);
-    app.register_type::<LampPlain>();
+    app.load_asset::<Gltf>(LampPlain::model_path());
 }
 
 #[point_class(
     base(Transform, Visibility),
     model("models/darkmod/lights/non-extinguishable/electric_plain1_unattached.gltf"),
-    classname("light_lamp_plain"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    classname("light_lamp_plain")
 )]
 struct LampPlain {
     color: Color,
@@ -31,17 +33,16 @@ impl Default for LampPlain {
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_lamp_wall_electric(
-    trigger: Trigger<OnAdd, LampPlain>,
+    add: On<Add, LampPlain>,
     lamp: Query<&LampPlain>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
-    let lamp = lamp.get(trigger.target()).unwrap();
+    let lamp = lamp.get(add.entity).unwrap();
     let bundle = static_bundle::<LampPlain>(&asset_server, ColliderConstructor::ConvexHullFromMesh);
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert(bundle)
         .with_child((
             Transform::from_xyz(0.0, -0.08, -0.35),

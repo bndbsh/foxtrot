@@ -4,9 +4,11 @@
 
 use super::{DialogueSystems, InteractionPrompt};
 use crate::{PostPhysicsAppSystems, gameplay::crosshair::CrosshairState, screens::Screen};
-use bevy::{prelude::*, window::CursorGrabMode};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+use bevy::{
+    prelude::*,
+    window::{CursorGrabMode, CursorOptions},
+};
+
 use bevy_yarnspinner::events::{DialogueCompleteEvent, DialogueStartEvent};
 use std::any::Any;
 
@@ -21,15 +23,14 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(
         Update,
         (
-            hide_crosshair_on_dialogue_start.run_if(on_event::<DialogueStartEvent>),
-            show_crosshair_on_dialogue_end.run_if(on_event::<DialogueCompleteEvent>),
+            hide_crosshair_on_dialogue_start.run_if(on_message::<DialogueStartEvent>),
+            show_crosshair_on_dialogue_end.run_if(on_message::<DialogueCompleteEvent>),
         )
             .run_if(in_state(Screen::Gameplay))
             .in_set(PostPhysicsAppSystems::ChangeUi),
     );
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 pub(crate) fn setup_interaction_prompt(mut commands: Commands) {
     commands
         .spawn((
@@ -41,7 +42,7 @@ pub(crate) fn setup_interaction_prompt(mut commands: Commands) {
                 align_items: AlignItems::Center,
                 ..default()
             },
-            StateScoped(Screen::Gameplay),
+            DespawnOnExit(Screen::Gameplay),
             Pickable::IGNORE,
         ))
         .with_children(|parent| {
@@ -57,7 +58,6 @@ pub(crate) fn setup_interaction_prompt(mut commands: Commands) {
         });
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_interaction_prompt_ui(
     dialogue_prompt: Single<(&mut Text, &mut Visibility, Ref<InteractionPrompt>)>,
     mut crosshair: Single<&mut CrosshairState>,
@@ -79,24 +79,22 @@ fn update_interaction_prompt_ui(
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn hide_crosshair_on_dialogue_start(
     mut crosshair: Single<&mut CrosshairState>,
-    mut window: Single<&mut Window>,
+    mut cursor_options: Single<&mut CursorOptions>,
 ) {
     crosshair
         .wants_invisible
         .insert(hide_crosshair_on_dialogue_start.type_id());
-    window.cursor_options.grab_mode = CursorGrabMode::None;
+    cursor_options.grab_mode = CursorGrabMode::None;
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn show_crosshair_on_dialogue_end(
     mut crosshair: Single<&mut CrosshairState>,
-    mut window: Single<&mut Window>,
+    mut cursor_options: Single<&mut CursorOptions>,
 ) {
     crosshair
         .wants_invisible
         .remove(&hide_crosshair_on_dialogue_start.type_id());
-    window.cursor_options.grab_mode = CursorGrabMode::Locked;
+    cursor_options.grab_mode = CursorGrabMode::Locked;
 }

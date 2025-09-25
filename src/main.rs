@@ -18,14 +18,15 @@ mod third_party;
 mod ui_camera;
 
 use asset_processing::default_image_sampler_descriptor;
-use bevy::ecs::error::{GLOBAL_ERROR_HANDLER, error};
+use bevy::gltf::GltfPlugin;
 use bevy::pbr::DefaultOpaqueRendererMethod;
+use bevy::{camera::visibility::RenderLayers, ecs::error::error};
 use bevy_landmass::LandmassSystemSet;
 use bevy_mod_skinned_aabb::SkinnedAabbPlugin;
+use bevy_seedling::SeedlingPlugin;
 use bitflags::bitflags;
 
-use bevy::core_pipeline::experimental::taa::TemporalAntiAliasPlugin;
-use bevy::{asset::AssetMetaCheck, prelude::*, render::view::RenderLayers};
+use bevy::{asset::AssetMetaCheck, prelude::*};
 
 #[cfg(all(feature = "native", feature = "web"))]
 compile_error!(
@@ -45,16 +46,13 @@ compile_error!(
 );
 
 fn main() -> AppExit {
-    // Don't panic on Bevy system errors, just log them.
-    GLOBAL_ERROR_HANDLER
-        .set(error)
-        .expect("Error handler already set");
-
     let mut app = App::new();
+    // Don't panic on Bevy system errors, just log them.
+    app.set_error_handler(error);
 
     // Add Bevy plugins.
     app.insert_resource(DefaultOpaqueRendererMethod::deferred());
-    app.add_plugins(
+    app.add_plugins((
         DefaultPlugins
             .set(AssetPlugin {
                 // Wasm builds will check for meta files (that don't exist) if this isn't set.
@@ -74,24 +72,19 @@ fn main() -> AppExit {
             })
             .set(ImagePlugin {
                 default_sampler: default_image_sampler_descriptor(),
+            })
+            .set(GltfPlugin {
+                use_model_forward_direction: true,
+                ..default()
             }),
-    );
+        #[cfg(feature = "native")]
+        SeedlingPlugin::default(),
+        #[cfg(feature = "web")]
+        SeedlingPlugin::new_web_audio(),
+    ));
 
-    // Add next-gen audio backend
-    #[cfg(feature = "native")]
-    app.add_plugins(bevy_seedling::SeedlingPlugin::default());
-    // right now, `Default` isn't implemented for any non-cpal backend
-    #[cfg(feature = "web")]
-    app.add_plugins(
-        bevy_seedling::SeedlingPlugin::<firewheel_web_audio::WebAudioBackend> {
-            config: Default::default(),
-            stream_config: Default::default(),
-            spawn_default_pool: true,
-            pool_size: 4..=32,
-        },
-    );
     app.insert_resource(AmbientLight::NONE);
-    app.add_plugins((TemporalAntiAliasPlugin, SkinnedAabbPlugin));
+    app.add_plugins(SkinnedAabbPlugin);
 
     // Order new `AppSet` variants by adding them here:
     app.configure_sets(
@@ -113,7 +106,7 @@ fn main() -> AppExit {
             LandmassSystemSet::SyncExistence,
         )
             .chain()
-            .in_set(RunFixedMainLoopSystem::BeforeFixedMainLoop),
+            .in_set(RunFixedMainLoopSystems::BeforeFixedMainLoop),
     );
     // Set up the `Pause` state.
     app.init_state::<Pause>();
@@ -152,7 +145,7 @@ fn main() -> AppExit {
 }
 
 /// High-level groupings of systems for the app in the [`RunFixedMainLoop`] schedule
-/// and the [`RunFixedMainLoopSystem::BeforeFixedMainLoop`] system set.
+/// and the [`RunFixedMainLoopSystems::BeforeFixedMainLoop`] system set.
 /// When adding a new variant, make sure to order it in the `configure_sets`
 /// call above.
 #[derive(SystemSet, Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]

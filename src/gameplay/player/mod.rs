@@ -7,15 +7,17 @@ use animation::{PlayerAnimationState, setup_player_animations};
 use avian3d::prelude::*;
 use bevy::prelude::*;
 use bevy_landmass::{Character, prelude::*};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::{TnuaAnimatingState, prelude::*};
 use bevy_tnua_avian3d::TnuaAvian3dSensorShape;
 use bevy_trenchbroom::prelude::*;
 use default_input::DefaultInputContext;
 use navmesh_position::LastValidPlayerNavmeshPosition;
 
-use crate::third_party::avian3d::CollisionLayer;
+use crate::{
+    asset_tracking::LoadResource,
+    third_party::{avian3d::CollisionLayer, bevy_trenchbroom::GetTrenchbroomModelPath as _},
+};
 
 mod animation;
 pub(crate) mod assets;
@@ -28,7 +30,6 @@ pub(crate) mod navmesh_position;
 pub(crate) mod pickup;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<Player>();
     app.add_plugins((
         animation::plugin,
         assets::plugin,
@@ -41,13 +42,13 @@ pub(super) fn plugin(app: &mut App) {
         navmesh_position::plugin,
     ));
     app.add_observer(setup_player);
+    app.load_asset::<Gltf>(Player::model_path());
     app.add_systems(PreUpdate, assert_only_one_player);
 }
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/view_model/view_model.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/view_model/view_model.gltf")
 )]
 pub(crate) struct Player;
 
@@ -69,14 +70,13 @@ const PLAYER_HALF_HEIGHT: f32 = PLAYER_HEIGHT / 2.0;
 /// In this case, we use 30 cm of padding to make the player float nicely up stairs.
 const PLAYER_FLOAT_HEIGHT: f32 = PLAYER_HALF_HEIGHT + 0.01;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_player(
-    trigger: Trigger<OnAdd, Player>,
+    add: On<Add, Player>,
     mut commands: Commands,
     archipelago: Single<Entity, With<Archipelago3d>>,
 ) {
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert((
             RigidBody::Dynamic,
             DefaultInputContext,
@@ -115,7 +115,6 @@ fn setup_player(
         .observe(setup_player_animations);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn assert_only_one_player(player: Populated<(), With<Player>>) {
     assert_eq!(1, player.iter().count());
 }

@@ -4,8 +4,6 @@ use std::any::TypeId;
 
 use bevy::{platform::collections::HashSet, prelude::*};
 use bevy_enhanced_input::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use super::Player;
 
@@ -14,7 +12,6 @@ pub(super) fn plugin(app: &mut App) {
     app.add_observer(bind_default_inputs);
 
     app.init_resource::<BlocksInput>();
-    app.register_type::<BlocksInput>();
     app.add_systems(
         PreUpdate,
         update_player_input_binding.run_if(resource_changed::<BlocksInput>),
@@ -52,11 +49,11 @@ pub(crate) struct DefaultInputContext;
 #[reflect(Resource)]
 pub(crate) struct BlocksInput(HashSet<TypeId>);
 
-fn bind_default_inputs(trigger: Trigger<OnAdd, DefaultInputContext>, mut commands: Commands) {
+fn bind_default_inputs(add: On<Add, DefaultInputContext>, mut commands: Commands) {
     const DEFAULT_SENSITIVITY: f32 = 0.002;
     const DEFAULT_SPEED: f32 = 8.0;
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert(actions!(DefaultInputContext[
             (
                 Action::<Move>::new(), DeadZone::default(),
@@ -78,7 +75,6 @@ fn bind_default_inputs(trigger: Trigger<OnAdd, DefaultInputContext>, mut command
         ]));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_player_input_binding(
     player: Single<Entity, With<Player>>,
     blocks_input: Res<BlocksInput>,

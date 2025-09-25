@@ -1,29 +1,30 @@
 use avian_pickup::prop::PreferredPickupRotation;
 use avian3d::prelude::*;
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_trenchbroom::prelude::*;
 
-use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::dynamic_bundle};
+use crate::{
+    asset_tracking::LoadResource as _,
+    props::{effects::disable_shadow_casting_on_instance_ready, setup::dynamic_bundle},
+    third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _,
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_lamp_sitting);
-    app.register_type::<LampSitting>();
+    app.load_asset::<Gltf>(LampSitting::model_path());
 }
 
 #[point_class(
     base(Transform, Visibility),
     model(
         "models/darkmod/lights/non-extinguishable/round_lantern_sitting/round_lantern_sitting.gltf"
-    ),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    )
 )]
 pub(crate) struct LampSitting;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_lamp_sitting(
-    trigger: Trigger<OnAdd, LampSitting>,
+    add: On<Add, LampSitting>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
@@ -32,7 +33,7 @@ fn setup_lamp_sitting(
         ColliderConstructor::ConvexDecompositionFromMesh,
     );
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         // The prop should be held upright.
         .insert((bundle, PreferredPickupRotation(Quat::IDENTITY)))
         // The lamp's origin is at the bottom of the lamp, so we need to offset the light a bit.

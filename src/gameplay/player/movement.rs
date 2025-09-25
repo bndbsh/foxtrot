@@ -2,8 +2,7 @@ use std::f32::consts::TAU;
 
 use bevy::prelude::*;
 use bevy_enhanced_input::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::prelude::*;
 
 use crate::fixed_update_inspection::did_fixed_update_happen;
@@ -22,10 +21,11 @@ pub(super) fn plugin(app: &mut App) {
         Update,
         clear_accumulated_input.run_if(did_fixed_update_happen),
     );
-    app.add_systems(PreUpdate, accumulate_input.after(EnhancedInputSet::Apply));
+    app.add_systems(
+        PreUpdate,
+        accumulate_input.after(EnhancedInputSystems::Apply),
+    );
     app.add_observer(init_accumulated_input);
-
-    app.register_type::<AccumulatedInput>();
 }
 
 #[derive(Component, Reflect, Default)]
@@ -37,7 +37,6 @@ struct AccumulatedInput {
     jumped: bool,
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn accumulate_input(
     mut input: Single<&mut AccumulatedInput>,
     move_: Single<(&Action<Move>, &ActionState)>,
@@ -53,21 +52,18 @@ fn accumulate_input(
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
-fn init_accumulated_input(trigger: Trigger<OnAdd, Player>, mut commands: Commands) {
+fn init_accumulated_input(add: On<Add, Player>, mut commands: Commands) {
     commands
-        .entity(trigger.target())
+        .entity(add.entity)
         .insert(AccumulatedInput::default());
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn clear_accumulated_input(mut accumulated_inputs: Query<&mut AccumulatedInput>) {
     for mut accumulated_input in &mut accumulated_inputs {
         *accumulated_input = default();
     }
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn apply_movement(
     controller: Single<(&mut TnuaController, &AccumulatedInput)>,
     transform: Single<&Transform, With<PlayerCamera>>,
@@ -91,7 +87,6 @@ fn apply_movement(
     });
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn apply_jump(controller: Single<(&mut TnuaController, &AccumulatedInput)>) {
     let (mut controller, input) = controller.into_inner();
     if input.jumped {

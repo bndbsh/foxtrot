@@ -2,50 +2,50 @@ use avian_pickup::prop::PreferredPickupRotation;
 use avian3d::prelude::*;
 use bevy::prelude::*;
 use bevy_landmass::{Character, prelude::*};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_trenchbroom::prelude::*;
 
 use crate::{
+    asset_tracking::LoadResource as _,
     props::setup::setup_static_prop_with_convex_hull,
-    third_party::{avian3d::CollisionLayer, bevy_trenchbroom::LoadTrenchbroomModel as _},
+    third_party::{
+        avian3d::CollisionLayer,
+        bevy_trenchbroom::{GetTrenchbroomModelPath as _, LoadTrenchbroomModel as _},
+    },
 };
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_crate_small);
     app.add_observer(setup_static_prop_with_convex_hull::<CrateBig>);
-    app.register_type::<CrateBig>();
-    app.register_type::<CrateSmall>();
+    app.load_asset::<Gltf>(CrateBig::model_path())
+        .load_asset::<Gltf>(CrateSmall::model_path());
 }
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/crate01_big.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/crate01_big.gltf")
 )]
 pub(crate) struct CrateBig;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/crate01_small.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/crate01_small.gltf")
 )]
 pub(crate) struct CrateSmall;
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_crate_small(
-    trigger: Trigger<OnAdd, CrateSmall>,
+    add: On<Add, CrateSmall>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     archipelago: Single<Entity, With<Archipelago3d>>,
 ) {
     let model = asset_server.load_trenchbroom_model::<CrateSmall>();
-    commands.entity(trigger.target()).insert(Character3dBundle {
+    commands.entity(add.entity).insert(Character3dBundle {
         character: Character::default(),
         settings: CharacterSettings { radius: 0.5 },
         archipelago_ref: ArchipelagoRef3d::new(*archipelago),
     });
-    commands.entity(trigger.target()).insert((
+    commands.entity(add.entity).insert((
         ColliderConstructorHierarchy::new(ColliderConstructor::ConvexHullFromMesh)
             .with_default_layers(CollisionLayers::new(CollisionLayer::Prop, LayerMask::ALL))
             .with_default_density(1_000.0),

@@ -26,11 +26,7 @@ allowing stutterless audio playback in the web browser. As such, you'll need to 
 ```sh
 rustup default nightly
 ```
-
-And the Bevy CLI alpha from the current `main`:
-```sh
-cargo install bevy_cli --git https://github.com/TheBevyFlock/bevy_cli
-```
+and the current [Bevy CLI alpha](https://github.com/TheBevyFlock/bevy_cli).
 
 Then finally, you can simply run:
 ```sh

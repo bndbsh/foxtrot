@@ -3,8 +3,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
+
 use bevy_tnua::{TnuaAnimatingState, TnuaAnimatingStateDirective};
 
 use crate::{
@@ -16,7 +15,6 @@ use crate::{
 use super::assets::PlayerAssets;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<PlayerAnimations>();
     app.add_systems(
         Update,
         play_animations
@@ -32,15 +30,14 @@ pub(crate) struct PlayerAnimations {
     a_pose: AnimationNodeIndex,
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 pub(crate) fn setup_player_animations(
-    trigger: Trigger<OnAdd, AnimationPlayers>,
+    add: On<Add, AnimationPlayers>,
     q_anim_players: Query<&AnimationPlayers>,
     mut commands: Commands,
     assets: Res<PlayerAssets>,
     mut graphs: ResMut<Assets<AnimationGraph>>,
 ) {
-    let anim_players = q_anim_players.get(trigger.target()).unwrap();
+    let anim_players = q_anim_players.get(add.entity).unwrap();
     for anim_player in anim_players.iter() {
         let (graph, indices) = AnimationGraph::from_clips([
             assets.idle_animation.clone(),
@@ -71,7 +68,6 @@ pub(crate) enum PlayerAnimationState {
     Idle,
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn play_animations(
     mut query: Query<(
         &mut TnuaAnimatingState<PlayerAnimationState>,

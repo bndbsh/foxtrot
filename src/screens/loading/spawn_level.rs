@@ -2,8 +2,6 @@
 
 use bevy::{prelude::*, scene::SceneInstance};
 use bevy_landmass::{NavMesh, coords::ThreeD};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 use crate::{
     gameplay::level::spawn_level,
@@ -24,24 +22,22 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn spawn_level_loading_screen(mut commands: Commands) {
     commands.spawn((
         widget::ui_root("Loading Screen"),
         BackgroundColor(SCREEN_BACKGROUND),
-        StateScoped(LoadingScreen::Level),
+        DespawnOnExit(LoadingScreen::Level),
         children![widget::label("Spawning Level...")],
     ));
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn advance_to_gameplay_screen(
     mut next_screen: ResMut<NextState<Screen>>,
     scene_spawner: Res<SceneSpawner>,
     scene_instances: Query<&SceneInstance>,
     just_added_scenes: Query<(), (With<SceneRoot>, Without<SceneInstance>)>,
     just_added_meshes: Query<(), Added<Mesh3d>>,
-    nav_mesh_events: EventReader<AssetEvent<NavMesh<ThreeD>>>,
+    nav_mesh_events: MessageReader<AssetEvent<NavMesh<ThreeD>>>,
 ) {
     if !(just_added_meshes.is_empty() && just_added_scenes.is_empty()) {
         return;

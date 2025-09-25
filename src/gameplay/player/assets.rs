@@ -1,7 +1,7 @@
 //! Assets for the player.
 
 use bevy::{asset::RenderAssetUsages, gltf::GltfLoaderSettings, prelude::*};
-use bevy_seedling::sample::Sample;
+use bevy_seedling::sample::AudioSample;
 use bevy_shuffle_bag::ShuffleBag;
 
 use crate::{
@@ -11,7 +11,6 @@ use crate::{
 use super::Player;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<PlayerAssets>();
     app.load_resource::<PlayerAssets>();
 }
 
@@ -21,15 +20,15 @@ pub(crate) struct PlayerAssets {
     #[dependency]
     pub(crate) _model: Handle<Scene>,
     #[dependency]
-    pub(crate) throw_sound: Handle<Sample>,
+    pub(crate) throw_sound: Handle<AudioSample>,
     #[dependency]
-    pub(crate) steps: ShuffleBag<Handle<Sample>>,
+    pub(crate) steps: ShuffleBag<Handle<AudioSample>>,
     #[dependency]
-    pub(crate) jump_grunts: ShuffleBag<Handle<Sample>>,
+    pub(crate) jump_grunts: ShuffleBag<Handle<AudioSample>>,
     #[dependency]
-    pub(crate) land_sounds: ShuffleBag<Handle<Sample>>,
+    pub(crate) land_sounds: ShuffleBag<Handle<AudioSample>>,
     #[dependency]
-    pub(crate) jump_start_sounds: ShuffleBag<Handle<Sample>>,
+    pub(crate) jump_start_sounds: ShuffleBag<Handle<AudioSample>>,
     #[dependency]
     pub(crate) idle_animation: Handle<AnimationClip>,
     #[dependency]
@@ -39,7 +38,7 @@ pub(crate) struct PlayerAssets {
 impl FromWorld for PlayerAssets {
     fn from_world(world: &mut World) -> Self {
         let assets = world.resource::<AssetServer>();
-        let rng = &mut rand::thread_rng();
+        let rng = &mut rand::rng();
         Self {
             _model: assets.load_with_settings(
                 Player::scene_path(),

@@ -8,7 +8,8 @@ use crate::gameplay::crosshair::CrosshairState;
 use crate::gameplay::level::LevelAssets;
 use crate::{PostPhysicsAppSystems, theme::widget};
 use avian3d::prelude::*;
-use bevy::render::view::RenderLayers;
+use bevy::camera::visibility::RenderLayers;
+use bevy::dev_tools::fps_overlay::FrameTimeGraphConfig;
 use bevy::ui::Val::*;
 use bevy::{
     dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin},
@@ -18,8 +19,6 @@ use bevy_enhanced_input::prelude::*;
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 use bevy_landmass::debug::{EnableLandmassDebug, Landmass3dDebugPlugin, LandmassGizmos};
 use bevy_rerecast::debug::{DetailNavmeshGizmo, NavmeshGizmoConfig};
-#[cfg(feature = "hot_patch")]
-use bevy_simple_subsecond_system::hot;
 
 pub(super) fn plugin(app: &mut App) {
     app.init_resource::<DebugState>();
@@ -27,6 +26,10 @@ pub(super) fn plugin(app: &mut App) {
     app.add_plugins(FpsOverlayPlugin {
         config: FpsOverlayConfig {
             enabled: false,
+            frame_time_graph_config: FrameTimeGraphConfig {
+                enabled: false,
+                ..default()
+            },
             ..default()
         },
     });
@@ -115,7 +118,6 @@ fn add_navmesh_gizmo(
     gizmo_config.detail_navmesh.render_layers = RenderLayers::from(RenderLayer::GIZMO3);
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn setup_debug_ui_text(mut commands: Commands) {
     commands.spawn((
         Name::new("Debug UI"),
@@ -134,15 +136,10 @@ fn setup_debug_ui_text(mut commands: Commands) {
 #[derive(Component)]
 struct DebugUiText;
 
-#[cfg_attr(feature = "hot_patch", hot)]
-fn advance_debug_state(
-    _trigger: Trigger<Started<ToggleDebugUi>>,
-    mut debug_state: ResMut<DebugState>,
-) {
+fn advance_debug_state(_on: On<Start<ToggleDebugUi>>, mut debug_state: ResMut<DebugState>) {
     *debug_state = debug_state.next();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn update_debug_ui_text(
     debug_state: Res<DebugState>,
     mut text: Single<&mut Text, With<DebugUiText>>,
@@ -157,12 +154,10 @@ fn update_debug_ui_text(
     .to_string();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn toggle_debug_ui(mut options: ResMut<UiDebugOptions>) {
     options.toggle();
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn toggle_physics_debug_ui(
     mut config_store: ResMut<GizmoConfigStore>,
     mut physics_diagnostics: ResMut<PhysicsDiagnosticsUiSettings>,
@@ -172,13 +167,11 @@ fn toggle_physics_debug_ui(
     physics_diagnostics.enabled = !physics_diagnostics.enabled;
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn toggle_lighting_debug_ui(mut config_store: ResMut<GizmoConfigStore>) {
     let config = config_store.config_mut::<LightGizmoConfigGroup>().0;
     config.enabled = !config.enabled;
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn toggle_landmass_debug_ui(
     mut debug: ResMut<EnableLandmassDebug>,
     mut navmesh: ResMut<NavmeshGizmoConfig>,
@@ -187,14 +180,13 @@ fn toggle_landmass_debug_ui(
     navmesh.detail_navmesh.enabled = !navmesh.detail_navmesh.enabled;
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn toggle_fps_overlay(mut config: ResMut<FpsOverlayConfig>) {
     config.enabled = !config.enabled;
+    config.frame_time_graph_config.enabled = config.enabled;
 }
 
-#[cfg_attr(feature = "hot_patch", hot)]
 fn toggle_egui_inspector(
-    _trigger: Trigger<Started<ForceFreeCursor>>,
+    _on: On<Start<ForceFreeCursor>>,
     mut crosshair_state: Single<&mut CrosshairState>,
     mut inspector_active: ResMut<InspectorActive>,
 ) {
@@ -239,7 +231,7 @@ impl DebugState {
     }
 }
 
-fn toggled_state(state: DebugState) -> impl Condition<()> {
+fn toggled_state(state: DebugState) -> impl SystemCondition<()> {
     IntoSystem::into_system(move |current_state: Res<DebugState>| {
         let was_just_changed = current_state.is_changed() && !current_state.is_added();
         let entered_state = *current_state == state;

@@ -4,9 +4,6 @@ use bevy_seedling::prelude::*;
 pub(crate) mod perceptual;
 
 pub(super) fn plugin(app: &mut App) {
-    app.register_type::<MusicPool>();
-    app.register_type::<SpatialPool>();
-
     app.add_systems(Startup, initialize_audio);
 }
 
@@ -36,6 +33,7 @@ fn initialize_audio(mut master: Single<&mut VolumeNode, With<MainBus>>, mut comm
         SamplerPool(MusicPool),
         VolumeNode {
             volume: DEFAULT_POOL_VOLUME,
+            ..default()
         },
     ));
     commands.spawn((
@@ -44,6 +42,7 @@ fn initialize_audio(mut master: Single<&mut VolumeNode, With<MainBus>>, mut comm
         sample_effects![(SpatialBasicNode::default(), SpatialScale(Vec3::splat(2.0)))],
         VolumeNode {
             volume: DEFAULT_POOL_VOLUME,
+            ..default()
         },
     ));
     commands.spawn((
@@ -51,6 +50,7 @@ fn initialize_audio(mut master: Single<&mut VolumeNode, With<MainBus>>, mut comm
         SamplerPool(SfxPool),
         VolumeNode {
             volume: DEFAULT_POOL_VOLUME,
+            ..default()
         },
     ));
 }
