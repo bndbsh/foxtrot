@@ -5,17 +5,21 @@ use bevy::prelude::*;
 
 use bevy_trenchbroom::prelude::*;
 
-use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle};
+use crate::{
+    asset_tracking::LoadResource as _,
+    props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle},
+    third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _,
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_lamp_shaded);
+    app.load_asset::<Gltf>(LampShaded::model_path());
 }
 
 #[point_class(
     base(Transform, Visibility),
     model("models/darkmod/lights/non-extinguishable/lamp_shaded03/lamp_shaded03.gltf"),
-    classname("light_lamp_shaded03"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    classname("light_lamp_shaded03")
 )]
 pub(crate) struct LampShaded;
 

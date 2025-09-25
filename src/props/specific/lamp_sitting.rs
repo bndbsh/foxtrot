@@ -4,18 +4,22 @@ use bevy::prelude::*;
 
 use bevy_trenchbroom::prelude::*;
 
-use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::dynamic_bundle};
+use crate::{
+    asset_tracking::LoadResource as _,
+    props::{effects::disable_shadow_casting_on_instance_ready, setup::dynamic_bundle},
+    third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _,
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_lamp_sitting);
+    app.load_asset::<Gltf>(LampSitting::model_path());
 }
 
 #[point_class(
     base(Transform, Visibility),
     model(
         "models/darkmod/lights/non-extinguishable/round_lantern_sitting/round_lantern_sitting.gltf"
-    ),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    )
 )]
 pub(crate) struct LampSitting;
 

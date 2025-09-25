@@ -4,16 +4,22 @@ use bevy_landmass::{Character, prelude::*};
 
 use bevy_trenchbroom::prelude::*;
 
-use crate::third_party::{avian3d::CollisionLayer, bevy_trenchbroom::LoadTrenchbroomModel as _};
+use crate::{
+    asset_tracking::LoadResource as _,
+    third_party::{
+        avian3d::CollisionLayer,
+        bevy_trenchbroom::{GetTrenchbroomModelPath as _, LoadTrenchbroomModel as _},
+    },
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_chair);
+    app.load_asset::<Gltf>(Chair::model_path());
 }
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/furniture/seating/wchair1.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/furniture/seating/wchair1.gltf")
 )]
 pub(crate) struct Chair;
 

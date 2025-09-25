@@ -8,9 +8,13 @@ use bevy_tnua::{TnuaAnimatingState, prelude::*};
 use bevy_tnua_avian3d::TnuaAvian3dSensorShape;
 use bevy_trenchbroom::prelude::*;
 
-use crate::third_party::{
-    avian3d::CollisionLayer, bevy_trenchbroom::LoadTrenchbroomModel as _,
-    bevy_yarnspinner::YarnNode,
+use crate::{
+    asset_tracking::LoadResource,
+    third_party::{
+        avian3d::CollisionLayer,
+        bevy_trenchbroom::{GetTrenchbroomModelPath, LoadTrenchbroomModel as _},
+        bevy_yarnspinner::YarnNode,
+    },
 };
 
 use super::animation::AnimationPlayerAncestor;
@@ -21,14 +25,11 @@ mod sound;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((ai::plugin, animation::plugin, assets::plugin, sound::plugin));
+    app.load_asset::<Gltf>(Npc::model_path());
     app.add_observer(on_add);
 }
 
-#[point_class(
-    base(Transform, Visibility),
-    model("models/fox/Fox.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
-)]
+#[point_class(base(Transform, Visibility), model("models/fox/Fox.gltf"))]
 pub(crate) struct Npc;
 
 pub(crate) const NPC_RADIUS: f32 = 0.6;

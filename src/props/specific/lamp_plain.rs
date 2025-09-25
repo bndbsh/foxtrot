@@ -3,17 +3,21 @@ use bevy::prelude::*;
 
 use bevy_trenchbroom::prelude::*;
 
-use crate::props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle};
+use crate::{
+    asset_tracking::LoadResource as _,
+    props::{effects::disable_shadow_casting_on_instance_ready, setup::static_bundle},
+    third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _,
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_lamp_wall_electric);
+    app.load_asset::<Gltf>(LampPlain::model_path());
 }
 
 #[point_class(
     base(Transform, Visibility),
     model("models/darkmod/lights/non-extinguishable/electric_plain1_unattached.gltf"),
-    classname("light_lamp_plain"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    classname("light_lamp_plain")
 )]
 struct LampPlain {
     color: Color,

@@ -6,6 +6,7 @@ use bevy_seedling::sample::AudioSample;
 use bevy_trenchbroom::prelude::*;
 
 use crate::asset_tracking::LoadResource as _;
+use crate::third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _;
 use crate::{
     PostPhysicsAppSystems,
     audio::SpatialPool,
@@ -24,13 +25,13 @@ pub(super) fn plugin(app: &mut App) {
             .in_set(PostPhysicsAppSystems::Update),
     );
     app.add_observer(setup_burning_logs);
+    app.load_asset::<Gltf>(BurningLogs::model_path());
     //app.add_observer(add_particle_effects);
 }
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/fireplace/burntwood.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/fireplace/burntwood.gltf")
 )]
 pub(crate) struct BurningLogs;
 

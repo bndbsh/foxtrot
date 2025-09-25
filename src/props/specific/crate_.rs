@@ -6,26 +6,30 @@ use bevy_landmass::{Character, prelude::*};
 use bevy_trenchbroom::prelude::*;
 
 use crate::{
+    asset_tracking::LoadResource as _,
     props::setup::setup_static_prop_with_convex_hull,
-    third_party::{avian3d::CollisionLayer, bevy_trenchbroom::LoadTrenchbroomModel as _},
+    third_party::{
+        avian3d::CollisionLayer,
+        bevy_trenchbroom::{GetTrenchbroomModelPath as _, LoadTrenchbroomModel as _},
+    },
 };
 
 pub(super) fn plugin(app: &mut App) {
     app.add_observer(setup_crate_small);
     app.add_observer(setup_static_prop_with_convex_hull::<CrateBig>);
+    app.load_asset::<Gltf>(CrateBig::model_path())
+        .load_asset::<Gltf>(CrateSmall::model_path());
 }
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/crate01_big.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/crate01_big.gltf")
 )]
 pub(crate) struct CrateBig;
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/darkmod/containers/crate01_small.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/darkmod/containers/crate01_small.gltf")
 )]
 pub(crate) struct CrateSmall;
 

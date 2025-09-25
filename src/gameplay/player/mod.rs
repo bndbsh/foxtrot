@@ -14,7 +14,10 @@ use bevy_trenchbroom::prelude::*;
 use default_input::DefaultInputContext;
 use navmesh_position::LastValidPlayerNavmeshPosition;
 
-use crate::third_party::avian3d::CollisionLayer;
+use crate::{
+    asset_tracking::LoadResource,
+    third_party::{avian3d::CollisionLayer, bevy_trenchbroom::GetTrenchbroomModelPath as _},
+};
 
 mod animation;
 pub(crate) mod assets;
@@ -39,13 +42,13 @@ pub(super) fn plugin(app: &mut App) {
         navmesh_position::plugin,
     ));
     app.add_observer(setup_player);
+    app.load_asset::<Gltf>(Player::model_path());
     app.add_systems(PreUpdate, assert_only_one_player);
 }
 
 #[point_class(
     base(Transform, Visibility),
-    model("models/view_model/view_model.gltf"),
-    hooks(SpawnHooks::new().preload_model::<Self>())
+    model("models/view_model/view_model.gltf")
 )]
 pub(crate) struct Player;
 
