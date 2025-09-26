@@ -56,11 +56,11 @@ impl FromWorld for BurningLogsAssets {
 pub(crate) const TEXTURE_PATH: &str = {
     #[cfg(feature = "dev")]
     {
-        "images/Flame.png"
+        "particles/Flame.png"
     }
     #[cfg(feature = "release")]
     {
-        "images/Flame.ktx2"
+        "particles/Flame.ktx2"
     }
 };
 const SOUND_PATH: &str = "audio/music/loop_flames_03.ogg";
