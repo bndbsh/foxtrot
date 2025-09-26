@@ -1,10 +1,6 @@
 //! A splash screen that plays briefly at startup.
 
-use bevy::{
-    image::{ImageLoaderSettings, ImageSampler},
-    input::common_conditions::input_just_pressed,
-    prelude::*,
-};
+use bevy::{asset::embedded_asset, input::common_conditions::input_just_pressed, prelude::*};
 
 use crate::{PostPhysicsAppSystems, screens::Screen, theme::prelude::*};
 
@@ -12,6 +8,7 @@ pub(super) fn plugin(app: &mut App) {
     // Spawn splash screen.
     app.insert_resource(ClearColor(SPLASH_BACKGROUND_COLOR));
     app.add_systems(OnEnter(Screen::Splash), spawn_splash_screen);
+    embedded_asset!(app, "files/splash.png");
 
     // Animate splash screen.
     app.add_systems(
@@ -59,19 +56,7 @@ fn spawn_splash_screen(mut commands: Commands, asset_server: Res<AssetServer>) {
                     width: Val::Percent(70.0),
                     ..default()
                 },
-                ImageNode::new(asset_server.load_with_settings(
-                    // This should be an embedded asset for instant loading, but that is
-                    // currently [broken on Windows Wasm builds](https://github.com/bevyengine/bevy/issues/14246).
-                    #[cfg(feature = "dev")]
-                    "images/splash.png",
-                    #[cfg(feature = "release")]
-                    "images/splash.ktx2",
-                    |settings: &mut ImageLoaderSettings| {
-                        // Make an exception for the splash image in case
-                        // `ImagePlugin::default_nearest()` is used for pixel art.
-                        settings.sampler = ImageSampler::linear();
-                    },
-                )),
+                ImageNode::new(asset_server.load("embedded://foxtrot/screens/files/splash.png")),
                 ImageNodeFadeInOut {
                     total_duration: SPLASH_DURATION_SECS,
                     fade_duration: SPLASH_FADE_DURATION_SECS,
