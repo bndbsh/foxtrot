@@ -21,7 +21,7 @@ use asset_processing::default_image_sampler_descriptor;
 use bevy::gltf::GltfPlugin;
 use bevy::pbr::DefaultOpaqueRendererMethod;
 use bevy::{camera::visibility::RenderLayers, ecs::error::error};
-use bevy_landmass::LandmassSystemSet;
+use bevy_landmass::LandmassSystems;
 use bevy_mod_skinned_aabb::SkinnedAabbPlugin;
 use bevy_seedling::SeedlingPlugin;
 use bitflags::bitflags;
@@ -103,7 +103,7 @@ fn main() -> AppExit {
         (
             PrePhysicsAppSystems::UpdateNavmeshPositions,
             PrePhysicsAppSystems::UpdateNavmeshTargets,
-            LandmassSystemSet::SyncExistence,
+            LandmassSystems::SyncExistence,
         )
             .chain()
             .in_set(RunFixedMainLoopSystems::BeforeFixedMainLoop),
