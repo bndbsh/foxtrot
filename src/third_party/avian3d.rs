@@ -25,6 +25,14 @@ fn enable_interpolation(
         return;
     };
     if rigid_body.is_dynamic() {
-        commands.entity(add.entity).insert(TransformInterpolation);
+        commands.entity(add.entity).insert((
+            TransformInterpolation,
+            SleepThreshold {
+                // need to make the sleep threshold a bit more aggressive than the default,
+                // otherwise some objects jitter around
+                linear: 0.45,
+                angular: 0.45,
+            },
+        ));
     }
 }
