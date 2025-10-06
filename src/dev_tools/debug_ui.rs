@@ -39,7 +39,7 @@ pub(super) fn plugin(app: &mut App) {
     ));
 
     app.add_plugins((
-        PhysicsDebugPlugin::default(),
+        PhysicsDebugPlugin,
         PhysicsDiagnosticsPlugin,
         PhysicsDiagnosticsUiPlugin,
         Landmass3dDebugPlugin {
