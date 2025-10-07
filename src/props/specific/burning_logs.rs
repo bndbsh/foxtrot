@@ -1,10 +1,14 @@
+use std::f32::consts::TAU;
+
 use avian3d::prelude::*;
-//use bevy_hanabi::prelude::*;
+use bevy::camera::visibility::RenderLayers;
+use bevy_hanabi::prelude::{Gradient, *};
 use bevy_seedling::prelude::*;
 use bevy_seedling::sample::AudioSample;
 
 use bevy_trenchbroom::prelude::*;
 
+use crate::RenderLayer;
 use crate::asset_tracking::LoadResource as _;
 use crate::third_party::bevy_trenchbroom::GetTrenchbroomModelPath as _;
 use crate::{
@@ -26,7 +30,7 @@ pub(super) fn plugin(app: &mut App) {
     );
     app.add_observer(setup_burning_logs);
     app.load_asset::<Gltf>(BurningLogs::model_path());
-    //app.add_observer(add_particle_effects);
+    app.add_observer(add_particle_effects);
 }
 
 #[point_class(
@@ -111,7 +115,7 @@ fn flicker_light(time: Res<Time>, mut query: Query<&mut PointLight, With<Flicker
         light.intensity = BASE_INTENSITY + flicker * BASE_INTENSITY * flicker_percentage;
     }
 }
-/*
+
 pub(super) fn add_particle_effects(
     add: On<Add, BurningLogs>,
     asset_server: Res<AssetServer>,
@@ -119,7 +123,7 @@ pub(super) fn add_particle_effects(
     mut commands: Commands,
 ) {
     let particle_bundle = particle_bundle(&asset_server, &mut effects);
-    commands.entity(trigger.entity).insert(particle_bundle);
+    commands.entity(add.entity).insert(particle_bundle);
 }
 
 fn particle_bundle(asset_server: &AssetServer, effects: &mut Assets<EffectAsset>) -> impl Bundle {
@@ -215,4 +219,3 @@ fn setup_particles(effects: &mut Assets<EffectAsset>) -> Handle<EffectAsset> {
 
     effects.add(effect)
 }
- */

@@ -87,7 +87,6 @@ tracing = { version = "0.1", features = [
 getrandom = { version = "0.3", default-features = false, features = [
     "wasm_js",
 ] }
-
 bevy_mod_skinned_aabb = "0.3.0"
 
 bitflags = "2.9.1"
@@ -101,11 +100,10 @@ bincode = "2"
 # Latest version that works with bevy_seedling
 wasm-bindgen = { version = "=0.2.101", optional = true }
 
-# Not on 0.17 yet
-#bevy_hanabi = { version = "0.16.0", default-features = false, features = [
-#    "3d",
-#    "gpu_tests",
-#] }
+bevy_hanabi = { version = "0.17.0", default-features = false, features = [
+    "3d",
+    "gpu_tests",
+] }
 
 [features]
 default = [
@@ -198,3 +196,5 @@ bevy_framepace = { git = "https://github.com/aevyrie/bevy_framepace" }
 avian_pickup = { git = "https://github.com/janhohenheim/avian_pickup" }
 # Fix [crash on Chromium](https://github.com/CorvusPrudens/bevy_seedling/issues/60)
 firewheel-web-audio = { git = "https://github.com/CorvusPrudens/firewheel-web-audio", rev = "65888f3" }
+# Hanabi-Batched (does not use getrandom@0.3 yet)
+# bevy_hanabi = { git = "https://github.com/pcwalton/bevy_hanabi/"}
