@@ -80,7 +80,19 @@ fn main() -> AppExit {
             })
             .set(LogPlugin {
                 filter: format!(
-                    "{default},symphonia_format_ogg::demuxer=off,calloop::loop_logic=error",
+                    concat!(
+                        "{default},",
+                        "wgpu=error,",
+                        "naga=warn,",
+                        "symphonia_bundle_mp3::demuxer=warn,",
+                        "symphonia_format_caf::demuxer=warn,",
+                        "symphonia_format_isompf4::demuxer=warn,",
+                        "symphonia_format_mkv::demuxer=warn,",
+                        "symphonia_format_ogg::demuxer=warn,",
+                        "symphonia_format_riff::demuxer=warn,",
+                        "symphonia_format_wav::demuxer=warn,",
+                        "calloop::loop_logic=error,",
+                    ),
                     default = bevy::log::DEFAULT_FILTER
                 ),
                 ..default()
