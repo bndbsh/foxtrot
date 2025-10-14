@@ -87,9 +87,6 @@ fn setup_player(
             TnuaController::default(),
             // A sensor shape is not strictly necessary, but without it we'll get weird results.
             TnuaAvian3dSensorShape(Collider::cylinder(PLAYER_RADIUS - 0.01, 0.0)),
-            // Tnua can fix the rotation, but the character will still get rotated before it can do so.
-            // By locking the rotation we can prevent this.
-            LockedAxes::ROTATION_LOCKED,
             // Movement feels nicer without friction.
             Friction {
                 dynamic_coefficient: 0.0,

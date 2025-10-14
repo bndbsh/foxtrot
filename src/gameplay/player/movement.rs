@@ -15,7 +15,7 @@ use super::{Player, camera::PlayerCamera};
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(
         FixedUpdate,
-        (apply_movement, apply_jump).in_set(TnuaUserControlsSystemSet),
+        (apply_movement, apply_jump).in_set(TnuaUserControlsSystems),
     );
     app.add_systems(
         Update,

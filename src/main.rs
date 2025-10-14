@@ -19,6 +19,7 @@ mod ui_camera;
 
 use asset_processing::default_image_sampler_descriptor;
 use bevy::gltf::GltfPlugin;
+use bevy::log::LogPlugin;
 use bevy::pbr::DefaultOpaqueRendererMethod;
 use bevy::{camera::visibility::RenderLayers, ecs::error::error};
 use bevy_landmass::LandmassSystems;
@@ -75,6 +76,13 @@ fn main() -> AppExit {
             })
             .set(GltfPlugin {
                 use_model_forward_direction: true,
+                ..default()
+            })
+            .set(LogPlugin {
+                filter: format!(
+                    "{default},symphonia_format_ogg::demuxer=off,calloop::loop_logic=error",
+                    default = bevy::log::DEFAULT_FILTER
+                ),
                 ..default()
             }),
         #[cfg(feature = "native")]
