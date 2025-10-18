@@ -20,6 +20,7 @@ mod ui_camera;
 use asset_processing::default_image_sampler_descriptor;
 use bevy::gltf::GltfPlugin;
 use bevy::log::LogPlugin;
+use bevy::log::tracing_subscriber::field::MakeExt;
 use bevy::pbr::DefaultOpaqueRendererMethod;
 use bevy::{camera::visibility::RenderLayers, ecs::error::error};
 use bevy_landmass::LandmassSystems;
@@ -81,9 +82,7 @@ fn main() -> AppExit {
             .set(LogPlugin {
                 filter: format!(
                     concat!(
-                        "{default},",
-                        "wgpu=error,",
-                        "naga=warn,",
+                        "{default}",
                         "symphonia_bundle_mp3::demuxer=warn,",
                         "symphonia_format_caf::demuxer=warn,",
                         "symphonia_format_isompf4::demuxer=warn,",
@@ -95,6 +94,14 @@ fn main() -> AppExit {
                     ),
                     default = bevy::log::DEFAULT_FILTER
                 ),
+                fmt_layer: |_| {
+                    Some(Box::new(
+                        bevy::log::tracing_subscriber::fmt::Layer::default()
+                            .without_time()
+                            .map_fmt_fields(MakeExt::debug_alt)
+                            .with_writer(std::io::stderr),
+                    ))
+                },
                 ..default()
             }),
         #[cfg(feature = "native")]
